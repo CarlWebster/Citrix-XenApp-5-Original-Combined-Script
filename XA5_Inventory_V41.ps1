@@ -214,9 +214,9 @@
 	No objects are output from this script.  This script creates a Word or PDF document.
 .NOTES
 	NAME: XA5_Inventory_V41.ps1
-	VERSION: 4.11
+	VERSION: 4.12
 	AUTHOR: Carl Webster (with a lot of help from Michael B. Smith and Jeff Wouters)
-	LASTEDIT: April 1, 2014
+	LASTEDIT: April 12, 2014
 #>
 
 
@@ -379,6 +379,10 @@ If($Summary -eq $Null)
 #Version 4.11
 #	Save current settings for Spell Check and Grammar Check before disabling them
 #	Before closing Word, put Spelling and Grammar settings back to original
+#Version 4.12
+#	Add updated WriteWordLine function
+#	Change Command Line and Working Directory for Applications to a different size font and make them bold
+#	Citrix Services table, added a Startup Type column and color stopped services in red only if Startup Type is Auto 
 
 Set-StrictMode -Version 2
 
@@ -1322,10 +1326,20 @@ Function WriteWordLine
 #Function created by Ryan Revord
 #@rsrevord on Twitter
 #Function created to make output to Word easy in this script
+#updated 27-Mar-2014 to include font name, font size, italics and bold options
 {
-	Param([int]$style = 0, [int]$tabs = 0, [string]$name = '', [string]$value = '', [string]$newline = "'n", [Switch]$nonewline)
-	$output=""
+	Param([int]$style=0, 
+	[int]$tabs = 0, 
+	[string]$name = '', 
+	[string]$value = '', 
+	[string]$fontName=$null,
+	[int]$fontSize=0,
+	[bool]$italics=$false,
+	[bool]$boldface=$false,
+	[Switch]$nonewline)
+	
 	#Build output style
+	[string]$output = ""
 	Switch ($style)
 	{
 		0 {$Selection.Style = $myHash.Word_NoSpacing}
@@ -1335,19 +1349,44 @@ Function WriteWordLine
 		4 {$Selection.Style = $myHash.Word_Heading4}
 		Default {$Selection.Style = $myHash.Word_NoSpacing}
 	}
+	
 	#build # of tabs
-	While($tabs -gt 0) { 
+	While($tabs -gt 0)
+	{ 
 		$output += "`t"; $tabs--; 
 	}
-		
+ 
+	If(![String]::IsNullOrEmpty($fontName)) 
+	{
+		$Selection.Font.name = $fontName
+	} 
+
+	If($fontSize -ne 0) 
+	{
+		$Selection.Font.size = $fontSize
+	} 
+ 
+	If($italics -eq $True) 
+	{
+		$Selection.Font.Italic = $True
+	} 
+ 
+	If($boldface -eq $True) 
+	{
+		$Selection.Font.Bold = $True
+	} 
+
 	#output the rest of the parameters.
 	$output += $name + $value
 	$Selection.TypeText($output)
-	
+ 
 	#test for new WriteWordLine 0.
-	If($nonewline){
+	If($nonewline)
+	{
 		# Do nothing.
-	} Else {
+	} 
+	Else 
+	{
 		$Selection.TypeParagraph()
 	}
 }
@@ -4574,28 +4613,31 @@ If($? -and $Applications -ne $Null)
 			#location properties
 			If(!$streamedapp)
 			{
+				#requested by Pavel Stadler to put Command Line and Working Directory in a different sized font and make it bold
 				If(![String]::IsNullOrEmpty($Application.CommandLineExecutable))
 				{
 					If($Application.CommandLineExecutable.Length -lt 40)
 					{
-						WriteWordLine 0 1 "Command Line`t`t`t: " $Application.CommandLineExecutable
+						WriteWordLine 0 1 "Command Line`t`t`t: " -NoNewLine
+						WriteWordLine 0 0 $Application.CommandLineExecutable "" "Courier New" 9 $False $True
 					}
 					Else
 					{
 						WriteWordLine 0 1 "Command Line: " 
-						WriteWordLine 0 2 $Application.CommandLineExecutable
+						WriteWordLine 0 2 $Application.CommandLineExecutable "" "Courier New" 9 $False $True
 					}
 				}
 				If(![String]::IsNullOrEmpty($Application.WorkingDirectory))
 				{
 					If($Application.WorkingDirectory.Length -lt 40)
 					{
-						WriteWordLine 0 1 "Working directory`t`t: " $Application.WorkingDirectory
+						WriteWordLine 0 1 "Working directory`t`t: " -NoNewLine
+						WriteWordLine 0 0 $Application.WorkingDirectory "" "Courier New" 9 $False $True
 					}
 					Else
 					{
 						WriteWordLine 0 1 "Working directory: " 
-						WriteWordLine 0 2 $Application.WorkingDirectory
+						WriteWordLine 0 2 $Application.WorkingDirectory "" "Courier New" 9 $False $True
 					}
 				}
 				
@@ -5807,19 +5849,19 @@ If($?)
 			Write-Verbose "$(Get-Date): `t`tTesting to see if $($server.ServerName) is online and reachable"
 			If(Test-Connection -ComputerName $server.servername -quiet -EA 0)
 			{
-				Write-Verbose "$(Get-Date): `t`tProcessing Citrix services for server $($server.ServerName)"
+				Write-Verbose "$(Get-Date): `t`tProcessing Citrix services for server $($server.ServerName) by calling Get-Service"
 				$services = get-service -ComputerName $server.ServerName -EA 0 | where-object {$_.DisplayName -like "*Citrix*"} | Sort-Object DisplayName
 				WriteWordLine 0 1 "Citrix Services"
 				Write-Verbose "$(Get-Date): `t`tCreate Word Table for Citrix services"
 				$TableRange = $doc.Application.Selection.Range
-				[int]$Columns = 2
+				[int]$Columns = 3
 				[int]$Rows = $services.count + 1
-				Write-Verbose "$(Get-Date): `t`tAdd Citrix Services table to doc"
+				Write-Verbose "$(Get-Date): `t`tAdd Citrix services table to doc"
 				$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
 				$table.Style = $myHash.Word_TableGrid
 				$table.Borders.InsideLineStyle = 1
 				$table.Borders.OutsideLineStyle = 1
-				$xRow = 1
+				[int]$xRow = 1
 				Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
 				$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
 				$Table.Cell($xRow,1).Range.Font.Bold = $True
@@ -5827,18 +5869,37 @@ If($?)
 				$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
 				$Table.Cell($xRow,2).Range.Font.Bold = $True
 				$Table.Cell($xRow,2).Range.Text = "Status"
+				$Table.Cell($xRow,3).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell($xRow,3).Range.Font.Bold = $True
+				$Table.Cell($xRow,3).Range.Text = "Startup Type"
 				ForEach($Service in $Services)
 				{
 					Write-Verbose "$(Get-Date): `t`t`tProcessing Citrix service $($Service.DisplayName)"
 					$xRow++
 					$Table.Cell($xRow,1).Range.Text = $Service.DisplayName
-					If($Service.Status -eq "Stopped")
+					
+					#startup type requested by Pavel Stadler
+					Try
+					{
+						Write-Verbose "$(Get-Date): `t`t`t`tGetting startup type for $($Service.DisplayName)"
+						$StartupType = (Get-WMIObject Win32_Service -Filter "Name='$($Service.Name)'").StartMode
+					}
+					
+					Catch
+					{
+						Write-Verbose "$(Get-Date): `t`t`t`tGetting startup type for $($Service.DisplayName) failed"
+						$StartupType = "Not Found"
+					}
+					
+					#also requested by Pavel Stadler, if service is stopped only color it red if startup type is automatic
+					If($Service.Status -eq "Stopped" -and $StartupType -eq "Auto")
 					{
 						$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorRed
 						$Table.Cell($xRow,2).Range.Font.Bold  = $True
 						$Table.Cell($xRow,2).Range.Font.Color = $WDColorBlack
 					}
 					$Table.Cell($xRow,2).Range.Text = $Service.Status
+					$Table.Cell($xRow,3).Range.Text = $StartupType
 				}
 
 				Write-Verbose "$(Get-Date): `t`tMove table of Citrix services to the right"
