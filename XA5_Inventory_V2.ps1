@@ -87,9 +87,9 @@
 	http://www.carlwebster.com/documenting-a-citrix-xenapp-5-farm-with-microsoft-powershell-and-word-version-2
 .NOTES
 	NAME: XA5_Inventory_V2.ps1
-	VERSION: 2.02
+	VERSION: 2.03
 	AUTHOR: Carl Webster (with a lot of help from Michael B. Smith and Jeff Wouters)
-	LASTEDIT: June 10, 2013
+	LASTEDIT: June 28, 2013
 #>
 
 
@@ -4002,49 +4002,56 @@ If( $? )
 			Write-Verbose "`t`t$($server.ServerName) is online.  Citrix Services and Hotfix areas processed."
 			Write-Verbose "`t`tProcessing Citrix services for server $($server.ServerName)"
 			$services = get-service -ComputerName $server.ServerName -EA 0 | where-object {$_.DisplayName -like "*Citrix*"} | sort-object DisplayName
-			WriteWordLine 0 1 "Citrix Services"
-			Write-Verbose "`t`tCreate Word Table for Citrix services"
-			$TableRange = $doc.Application.Selection.Range
-			[int]$Columns = 2
-			[int]$Rows = $services.count + 1
-			Write-Verbose "`t`tadd Citrix Services table to doc"
-			$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
-			$table.Style = "Table Grid"
-			$table.Borders.InsideLineStyle = 1
-			$table.Borders.OutsideLineStyle = 1
-			$xRow = 1
-			Write-Verbose "`t`tformat first row with column headings"
-			$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
-			$Table.Cell($xRow,1).Range.Font.Bold = $True
-			$Table.Cell($xRow,1).Range.Text = "Display Name"
-			$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
-			$Table.Cell($xRow,2).Range.Font.Bold = $True
-			$Table.Cell($xRow,2).Range.Text = "Status"
-			ForEach($Service in $Services)
+			If( !$? –or $services –eq $null )
 			{
-				$xRow++
-				$Table.Cell($xRow,1).Range.Text = $Service.DisplayName
-				If($Service.Status -eq "Stopped")
-				{
-					$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorRed
-					$Table.Cell($xRow,2).Range.Font.Bold  = $True
-					$Table.Cell($xRow,2).Range.Font.Color = $WDColorBlack
-				}
-				$Table.Cell($xRow,2).Range.Text = $Service.Status
+				Write-Warning “Citrix services for server $($server.ServerName) could not be retrieved”
+				WriteWordLine 0 1 “Citrix services for server $($server.ServerName) could not be retrieved”
 			}
+			Else
+			{
+				WriteWordLine 0 1 "Citrix Services"
+				Write-Verbose "`t`tCreate Word Table for Citrix services"
+				$TableRange = $doc.Application.Selection.Range
+				[int]$Columns = 2
+				[int]$Rows = $services.count + 1
+				Write-Verbose "`t`tadd Citrix Services table to doc"
+				$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+				$table.Style = "Table Grid"
+				$table.Borders.InsideLineStyle = 1
+				$table.Borders.OutsideLineStyle = 1
+				$xRow = 1
+				Write-Verbose "`t`tformat first row with column headings"
+				$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell($xRow,1).Range.Font.Bold = $True
+				$Table.Cell($xRow,1).Range.Text = "Display Name"
+				$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell($xRow,2).Range.Font.Bold = $True
+				$Table.Cell($xRow,2).Range.Text = "Status"
+				ForEach($Service in $Services)
+				{
+					$xRow++
+					$Table.Cell($xRow,1).Range.Text = $Service.DisplayName
+					If($Service.Status -eq "Stopped")
+					{
+						$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorRed
+						$Table.Cell($xRow,2).Range.Font.Bold  = $True
+						$Table.Cell($xRow,2).Range.Font.Color = $WDColorBlack
+					}
+					$Table.Cell($xRow,2).Range.Text = $Service.Status
+				}
 
-			Write-Verbose "`t`tMove table of Citrix services to the right"
-			$Table.Rows.SetLeftIndent(43,1)
-			$table.AutoFitBehavior(1)
+				Write-Verbose "`t`tMove table of Citrix services to the right"
+				$Table.Rows.SetLeftIndent(43,1)
+				$table.AutoFitBehavior(1)
 
-			#return focus back to document
-			Write-Verbose "`t`treturn focus back to document"
-			$doc.ActiveWindow.ActivePane.view.SeekView=$wdSeekMainDocument
+				#return focus back to document
+				Write-Verbose "`t`treturn focus back to document"
+				$doc.ActiveWindow.ActivePane.view.SeekView=$wdSeekMainDocument
 
-			#move to the end of the current document
-			Write-Verbose "`t`tmove to the end of the current document"
-			$selection.EndKey($wdStory,$wdMove) | Out-Null
-			
+				#move to the end of the current document
+				Write-Verbose "`t`tmove to the end of the current document"
+				$selection.EndKey($wdStory,$wdMove) | Out-Null
+			}
 			#Citrix hotfixes installed
 			Write-Verbose "`t`tGet list of Citrix hotfixes installed"
 			$hotfixes = Get-XAServerHotfix -ServerName $server.ServerName -EA 0 | sort-object HotfixName
