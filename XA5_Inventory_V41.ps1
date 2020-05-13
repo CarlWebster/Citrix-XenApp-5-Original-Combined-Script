@@ -214,9 +214,9 @@
 	No objects are output from this script.  This script creates a Word or PDF document.
 .NOTES
 	NAME: XA5_Inventory_V41.ps1
-	VERSION: 4.1
+	VERSION: 4.11
 	AUTHOR: Carl Webster (with a lot of help from Michael B. Smith and Jeff Wouters)
-	LASTEDIT: January 19, 2013
+	LASTEDIT: April 1, 2014
 #>
 
 
@@ -376,6 +376,9 @@ If($Summary -eq $Null)
 #	For applications, move list of servers to table
 #	For the software inventory add DisplayVersion to the table
 #	Removed the extra blank line between Administrators
+#Version 4.11
+#	Save current settings for Spell Check and Grammar Check before disabling them
+#	Before closing Word, put Spelling and Grammar settings back to original
 
 Set-StrictMode -Version 2
 
@@ -3271,6 +3274,10 @@ $Word.ActiveDocument.DefaultTabStop = 36
 
 #Disable Spell and Grammar Check to resolve issue and improve performance (from Pat Coughlin)
 Write-Verbose "$(Get-Date): Disable grammar and spell checking"
+#bug reported 1-Apr-2014 by Tim Mangan
+#save current options first before turning them off
+$CurrentGrammarOption = $Word.Options.CheckGrammarAsYouType
+$CurrentSpellingOption = $Word.Options.CheckSpellingAsYouType
 $Word.Options.CheckGrammarAsYouType=$False
 $Word.Options.CheckSpellingAsYouType=$False
 
@@ -6997,6 +7004,11 @@ If($CoverPagesExist)
 	#update the Table of Contents
 	$doc.TablesOfContents.item(1).Update()
 }
+
+#bug fix 1-Apr-2014
+#reset Grammar and Spelling options back to their original settings
+$Word.Options.CheckGrammarAsYouType = $CurrentGrammarOption
+$Word.Options.CheckSpellingAsYouType = $CurrentSpellingOption
 
 #the $saveFormat below passes StrictMode 2
 #I found this at the following two links
