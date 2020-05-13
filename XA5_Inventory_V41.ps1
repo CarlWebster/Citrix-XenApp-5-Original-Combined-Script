@@ -9,7 +9,7 @@
 	Works for Presentation Server 4.5 Server 2003 32-bit and 64-bit
 	Creates either a Word document or PDF named after the XenApp 5 farm.
 	Document includes a Cover Page, Table of Contents and Footer.
-	Version 4 includes support for the following language versions of Microsoft Word:
+	Version 4.xx includes support for the following language versions of Microsoft Word:
 		Catalan
 		Danish
 		Dutch
@@ -72,8 +72,19 @@
 	SoftwareExclusions.txt can be an empty file to have no installed applications excluded.
 	See Get-Help About-Wildcards for help on formatting the lines to exclude applications.
 	This parameter is disabled by default.
-.EXAMPLE
-	PS C:\PSScript > .\XA5_Inventory_V4.ps1
+.PARAMETER StartDate
+	Start date, in MM/DD/YYYY HH:MM format, for the Configuration Logging report.
+	Default is today's date minus seven days.
+	If the StartDate is entered as 01/01/2014, the date becomes 01/01/2014 00:00:00.
+.PARAMETER EndDate
+	End date, in MM/DD/YYYY HH:MM format, for the Configuration Logging report.
+	Default is today's date.
+	If the EndDate is entered as 01/01/2014, the date becomes 01/01/2014 00:00:00.
+.PARAMETER Summary
+	Only give summary information, no details.
+	This parameter is disabled by default.
+	This parameter cannot be used with either the Hardware, Software, StartDate or EndDate parameters..EXAMPLE
+	PS C:\PSScript > .\XA5_Inventory_V41.ps1
 	
 	Will use all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
@@ -84,7 +95,7 @@
 	Conservative for the Cover Page format.
 	Administrator for the User Name.
 .EXAMPLE
-	PS C:\PSScript > .\XA5_Inventory_V4.ps1 -verbose
+	PS C:\PSScript > .\XA5_Inventory_V41.ps1 -verbose
 	
 	Will use all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
@@ -96,7 +107,7 @@
 	Administrator for the User Name.
 	Will display verbose messages as the script is running.
 .EXAMPLE
-	PS C:\PSScript > .\XA5_Inventory_V4.ps1 -PDF -verbose
+	PS C:\PSScript > .\XA5_Inventory_V41.ps1 -PDF -verbose
 	
 	Will use all Default values and save the document as a PDF file.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
@@ -108,7 +119,32 @@
 	Administrator for the User Name.
 	Will display verbose messages as the script is running.
 .EXAMPLE
-	PS C:\PSScript > .\XA5_Inventory_V4.ps1 -Hardware -verbose
+	PS C:\PSScript > .\XA5_Inventory_V41.ps1 -Summary
+	
+	Creates a Summary report with no detail.
+	Will use all Default values.
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
+	$env:username = Administrator
+
+	Carl Webster for the Company Name.
+	Sideline for the Cover Page format.
+	Administrator for the User Name.
+.EXAMPLE
+	PS C:\PSScript > .\XA5_Inventory_V41.ps1 -PDF -Summary -verbose
+	
+	Creates a Summary report with no detail.
+	Will use all Default values and save the document as a PDF file.
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
+	$env:username = Administrator
+
+	Carl Webster for the Company Name.
+	Sideline for the Cover Page format.
+	Administrator for the User Name.
+	Will display verbose messages as the script is running.
+.EXAMPLE
+	PS C:\PSScript > .\XA5_Inventory_V41.ps1 -Hardware -verbose
 	
 	Will use all Default values and add additional information for each server about its hardware.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
@@ -120,14 +156,53 @@
 	Administrator for the User Name.
 	Will display verbose messages as the script is running.
 .EXAMPLE
-	PS C:\PSScript .\XA5_Inventory_V4.ps1 -CompanyName "Carl Webster Consulting" -CoverPage "Mod" -UserName "Carl Webster"
+	PS C:\PSScript > .\XA5_Inventory_V41.ps1 -StartDate "01/01/2014" -EndDate "01/02/2014" -verbose
+	
+	Will use all Default values and add additional information for each server about its installed applications.
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
+	$env:username = Administrator
+
+	Carl Webster for the Company Name.
+	Sideline for the Cover Page format.
+	Administrator for the User Name.
+	Will display verbose messages as the script is running.
+	Will return all Configuration Logging entries from "01/01/2014 00:00:00" through "01/02/2014 "00:00:00".
+.EXAMPLE
+	PS C:\PSScript > .\XA5_Inventory_V41.ps1 -StartDate "01/01/2014" -EndDate "01/01/2014" -verbose
+	
+	Will use all Default values and add additional information for each server about its installed applications.
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
+	$env:username = Administrator
+
+	Carl Webster for the Company Name.
+	Sideline for the Cover Page format.
+	Administrator for the User Name.
+	Will display verbose messages as the script is running.
+	Will return all Configuration Logging entries from "01/01/2014 00:00:00" through "01/01/2014 "00:00:00".  In other words, nothing is returned.
+.EXAMPLE
+	PS C:\PSScript > .\XA5_Inventory_V41.ps1 -StartDate "01/01/2014 21:00:00" -EndDate "01/01/2014 22:00:00" -verbose
+	
+	Will use all Default values and add additional information for each server about its installed applications.
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
+	$env:username = Administrator
+
+	Carl Webster for the Company Name.
+	Sideline for the Cover Page format.
+	Administrator for the User Name.
+	Will display verbose messages as the script is running.
+	Will return all Configuration Logging entries from 9PM to 10PM on 01/01/2014.
+.EXAMPLE
+	PS C:\PSScript .\XA5_Inventory_V41.ps1 -CompanyName "Carl Webster Consulting" -CoverPage "Mod" -UserName "Carl Webster"
 
 	Will use:
 		Carl Webster Consulting for the Company Name.
 		Mod for the Cover Page format.
 		Carl Webster for the User Name.
 .EXAMPLE
-	PS C:\PSScript .\XA5_Inventory_V4.ps1 -CN "Carl Webster Consulting" -CP "Mod" -UN "Carl Webster"
+	PS C:\PSScript .\XA5_Inventory_V41.ps1 -CN "Carl Webster Consulting" -CP "Mod" -UN "Carl Webster"
 
 	Will use:
 		Carl Webster Consulting for the Company Name (alias CN).
@@ -136,63 +211,111 @@
 .INPUTS
 	None.  You cannot pipe objects to this script.
 .OUTPUTS
-	No objects are output from this script.  This script creates a Word document.
+	No objects are output from this script.  This script creates a Word or PDF document.
 .NOTES
-	NAME: XA5_Inventory_V4.ps1
-	VERSION: 4.01
+	NAME: XA5_Inventory_V41.ps1
+	VERSION: 4.1
 	AUTHOR: Carl Webster (with a lot of help from Michael B. Smith and Jeff Wouters)
-	LASTEDIT: November 12, 2013
+	LASTEDIT: January 19, 2013
 #>
 
 
-#thanks to @jeffwouters for helping me with these parameters
-[CmdletBinding( SupportsShouldProcess = $False, ConfirmImpact = "None", DefaultParameterSetName = "") ]
+#thanks to @jeffwouters and Michael B. Smith for helping me with these parameters
+[CmdletBinding(SupportsShouldProcess = $False, ConfirmImpact = "None", DefaultParameterSetName = "Standard") ]
 
-Param([parameter(
+Param(
+	[parameter(ParameterSetName="Standard",
 	Position = 0, 
-	Mandatory=$False)
+	Mandatory=$false )
+	] 
+	[parameter(ParameterSetName="Summary",
+	Position = 0, 
+	Mandatory=$false )
 	] 
 	[Alias("CN")]
+	[ValidateNotNullOrEmpty()]
 	[string]$CompanyName="",
     
-	[parameter(
+	[parameter(ParameterSetName="Standard",
 	Position = 1, 
-	Mandatory=$False)
+	Mandatory=$false )
+	] 
+	[parameter(ParameterSetName="Summary",
+	Position = 1, 
+	Mandatory=$false )
 	] 
 	[Alias("CP")]
 	[ValidateNotNullOrEmpty()]
 	[string]$CoverPage="Sideline", 
 
-	[parameter(
+	[parameter(ParameterSetName="Standard",
 	Position = 2, 
-	Mandatory=$False)
+	Mandatory=$false )
+	] 
+	[parameter(ParameterSetName="Summary",
+	Position = 2, 
+	Mandatory=$false )
 	] 
 	[Alias("UN")]
 	[ValidateNotNullOrEmpty()]
 	[string]$UserName=$env:username,
 
-	[parameter(
+	[parameter(ParameterSetName="Standard",
 	Position = 3, 
-	Mandatory=$False)
+	Mandatory=$false )
 	] 
-	[Switch]$PDF,
+	[parameter(ParameterSetName="Summary",
+	Position = 3, 
+	Mandatory=$false )
+	] 
+	[Switch]$PDF=$False,
 
-	[parameter(
+	[parameter(ParameterSetName="Standard",
 	Position = 4, 
-	Mandatory=$False)
+	Mandatory=$false )
 	] 
-	[Switch]$Hardware, 
+	[Switch]$Hardware=$False, 
 
-	[parameter(
+	[parameter(ParameterSetName="Standard",
 	Position = 5, 
+	Mandatory=$false )
+	] 
+	[Switch]$Software=$False,
+
+	[parameter(ParameterSetName="Standard",
+	Position = 6, 
 	Mandatory=$False)
 	] 
-	[Switch]$Software  
+	[Datetime]$StartDate = ((Get-Date -displayhint date).AddDays(-7)),
+
+	[parameter(ParameterSetName="Standard",
+	Position = 7, 
+	Mandatory=$False)
+	] 
+	[Datetime]$EndDate = (Get-Date -displayhint date),
+	
+	[parameter(ParameterSetName="Summary",
+	Position = 8, 
+	Mandatory=$false )
+	] 
+	[Switch]$Summary=$False	
 	)
 
 
 #force -verbose on for PoSH V3
 $PSDefaultParameterValues = @{"*:Verbose"=$True}
+If($Hardware -eq $Null)
+{
+	$Hardware = $False
+}
+If($Software -eq $Null)
+{
+	$Software = $False
+}	
+If($Summary -eq $Null)
+{
+	$Summary = $False
+}
 	
 #Original Script created 8/17/2010 by Michael Bogobowicz, Citrix Systems.
 #To contact, please message @mikebogo on Twitter
@@ -240,6 +363,19 @@ $PSDefaultParameterValues = @{"*:Verbose"=$True}
 #	Verify Word object is created.  If not, write error & suggestion to document and abort script
 #Updated 12-Nov-2013
 #	Added back in the French sections that somehow got removed
+#Version 4.1 Updates and fixes:
+#	Added additional error checking when retrieving Network Interface WMI data
+#	Added beginning and ending dates for retrieving Configuration Logging data
+#	Added help text to show the script produces a Word or PDF document
+#	Added help text to show the Summary option cannot be used with either the Software or Hardware options
+#	Added Parameter sets to support the Summary option
+#	Added Summary report option
+#	Changed Configuration Logging section to a Word table
+#	Changed to using $PSCulture for Word culture setting
+#	Don't abort script if Cover Page is not found
+#	For applications, move list of servers to table
+#	For the software inventory add DisplayVersion to the table
+#	Removed the extra blank line between Administrators
 
 Set-StrictMode -Version 2
 
@@ -248,6 +384,7 @@ Set-StrictMode -Version 2
 #http://msdn.microsoft.com/en-us/library/office/aa211923(v=office.11).aspx
 [int]$wdAlignPageNumberRight = 2
 [long]$wdColorGray15 = 14277081
+[long]$wdColorGray05 = 15987699 
 [int]$wdMove = 0
 [int]$wdSeekMainDocument = 0
 [int]$wdSeekPrimaryFooter = 4
@@ -258,6 +395,10 @@ Set-StrictMode -Version 2
 [int]$wdWord2010 = 14
 [int]$wdWord2013 = 15
 [int]$wdSaveFormatPDF = 17
+[int]$wdCaptionPositionAbove  = 0
+[int]$wdCaptionTable  = -2
+[bool]$wdExcludeLabel = $True
+[string]$wdTitleAutoText = ""
 [string]$RunningOS = (Get-WmiObject -class Win32_OperatingSystem).Caption
 
 $hash = @{}
@@ -283,70 +424,70 @@ $hash = @{}
 #pt - Portuguese
 #sv - Swedish
 
-Switch ($PSUICulture.Substring(0,3))
+Switch ($PSCulture.Substring(0,3))
 {
 	'ca-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents' = 'Taula automática 2';
 			}
 		}
 
 	'da-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents' = 'Automatisk tabel 2';
 			}
 		}
 
 	'de-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents' = 'Automatische Tabelle 2';
 			}
 		}
 
 	'en-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents'  = 'Automatic Table 2';
 			}
 		}
 
 	'es-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents' = 'Tabla automática 2';
 			}
 		}
 
 	'fi-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents' = 'Automaattinen taulukko 2';
 			}
 		}
 
 	'fr-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents' = 'Sommaire Automatique 2';
 			}
 		}
 
 	'nb-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents' = 'Automatisk tabell 2';
 			}
 		}
 
 	'nl-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents' = 'Automatische inhoudsopgave 2';
 			}
 		}
 
 	'pt-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents' = 'Sumário Automático 2';
 			}
 		}
 
 	'sv-'	{
-			$hash.($($PSUICulture)) = @{
+			$hash.($($PSCulture)) = @{
 				'Word_TableOfContents' = 'Automatisk innehållsförteckning2';
 			}
 		}
@@ -365,7 +506,7 @@ $wdStyleHeading4 = -5
 $wdStyleNoSpacing = -158
 $wdTableGrid = -155
 
-$myHash = $hash.$PSUICulture
+$myHash = $hash.$PSCulture
 
 If($myHash -eq $Null)
 {
@@ -385,7 +526,7 @@ Function ValidateCoverPage
 	
 	$xArray = ""
 	
-	Switch ($PSUICulture.Substring(0,3))
+	Switch ($PSCulture.Substring(0,3))
 	{
 		'ca-'	{
 				If($xWordVersion -eq $wdWord2013)
@@ -872,7 +1013,8 @@ Function GetComputerWMIInfo
 	Try
 	{
 		$Results = Get-WmiObject -computername $RemoteComputerName win32_networkadapterconfiguration 
-		$Nics = $Results| where {$_.ipenabled -eq $True}
+		$Nics = $Results | where {$_.ipenabled -eq $True}
+		$Results = $Null
 	}
 	
 	Catch
@@ -883,6 +1025,15 @@ Function GetComputerWMIInfo
 		WriteWordLine 0 0 "Get-WmiObject win32_networkadapterconfiguration failed for $($RemoteComputerName)"
 		WriteWordLine 0 0 "On $($RemoteComputerName) you may need to run winmgmt /verifyrepository and winmgmt /salvagerepository"
 	}
+
+	if( $Nics -eq $Null ) 
+	{ 
+		$GotNics = $False 
+	} 
+	else 
+	{ 
+		$GotNics = !($Nics.__PROPERTY_COUNT -eq 0) 
+	} 
 	
 	If($GotNics)
 	{
@@ -1033,7 +1184,9 @@ Function SWExclusions
 {
 	# original work by Shaun Ritchie
 	# performance improvements by Jeff Wouters, PowerShell MVP
-	# modified by Webster	$var = ""
+	# modified by Webster
+	# modified 3-jan-2014 to add displayversion
+	$var = ""
 	$Tmp = '$InstalledApps | Where-Object {'
 	$Exclusions = Get-Content "$($pwd.path)\SoftwareExclusions.txt" -EA 0
 	If($Exclusions -ne $Null -and $Exclusions.Count -gt 0)
@@ -1043,7 +1196,7 @@ Function SWExclusions
 			$Tmp += "(`$`_.DisplayName -notlike ""$($Exclusion)"") -and "
 		}
 		$var += $Tmp.Substring(0,($Tmp.Length - 6))
-		$var += "} | Select-Object DisplayName | Sort DisplayName -unique"
+		$var += "} | Select-Object DisplayName, DisplayVersion | Sort DisplayName -unique"
 	}
 	return $var
 }
@@ -2695,6 +2848,70 @@ Function AbortScript
 	Exit
 }
 
+Function BuildTableForServer
+{
+	Param([Array]$xArray)
+	
+	If(-not ($xArray -is [Array]))
+	{
+		$xArray = (,$xArray)
+	}
+	[int]$MaxLength = 0
+	[int]$TmpLength = 0
+	ForEach($xName in $xArray)
+	{
+		$TmpLength = $xName.Length
+		If($TmpLength -gt $MaxLength)
+		{
+			$MaxLength = $TmpLength
+		}
+	}
+	Write-Verbose "$(Get-Date): `t`tMax length of server name is $($MaxLength)"
+	$TableRange = $doc.Application.Selection.Range
+	[int]$Columns = [Math]::Floor(60 / $MaxLength)
+	If($xArray.count -lt $Columns)
+	{
+		[int]$Rows = 1
+		#not enough array items to fill columns so use array count
+		$MaxCells = $xArray.Count
+		#reset column count so there are no empty columns
+		$Columns = $xArray.Count 
+	}
+	Else
+	{
+		[int]$Rows = [Math]::Floor( ( $xArray.count + $Columns - 1 ) / $Columns)
+		#more array items than columns so don't go past last column
+		$MaxCells = $Columns
+	}
+	$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+	$table.Style = $myHash.Word_TableGrid
+	$table.Borders.InsideLineStyle = 1
+	$table.Borders.OutsideLineStyle = 1
+	[int]$xRow = 1
+	[int]$ArrayItem = 0
+	While($xRow -le $Rows)
+	{
+		For($xCell=1; $xCell -le $MaxCells; $xCell++)
+		{
+			$Table.Cell($xRow,$xCell).Range.Text = $xArray[$ArrayItem]
+			$ArrayItem++
+		}
+		$xRow++
+	}
+	Write-Verbose "$(Get-Date): `t`tMove table to the right"
+	$Table.Rows.SetLeftIndent(36,1)
+	$table.AutoFitBehavior(1)
+
+	#return focus back to document
+	Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
+	$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
+
+	#move to the end of the current document
+	Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
+	$selection.EndKey($wdStory,$wdMove) | Out-Null
+	$xArray = $Null
+}
+
 #script begins
 
 $Script:StartTime = get-date
@@ -2756,10 +2973,24 @@ If($?)
 	
 	$FarmName = $farm.FarmName
 	$Title="Inventory Report for the $($FarmName) Farm"
-	$filename1="$($pwd.path)\$($farm.FarmName).docx"
+	If($Summary)
+	{
+		[string]$filename1 = "$($pwd.path)\$($farm.FarmName)_Summary.docx"
+	}
+	Else
+	{
+		[string]$filename1 = "$($pwd.path)\$($farm.FarmName).docx"
+	}
 	If($PDF)
 	{
-		$filename2="$($pwd.path)\$($farm.FarmName).pdf"
+		If($Summary)
+		{
+			[string]$filename2 = "$($pwd.path)\$($farm.FarmName)_Summary.pdf"
+		}
+		Else
+		{
+			[string]$filename2 = "$($pwd.path)\$($farm.FarmName).pdf"
+		}
 	}
 } 
 Else 
@@ -2834,7 +3065,7 @@ If([String]::IsNullOrEmpty($CompanyName))
 
 Write-Verbose "$(Get-Date): Check Default Cover Page for language specific version"
 [bool]$CPChanged = $False
-Switch ($PSUICulture.Substring(0,3))
+Switch ($PSCulture.Substring(0,3))
 {
 	'ca-'	{
 			If($CoverPage -eq "Sideline")
@@ -2946,6 +3177,12 @@ Write-Verbose "$(Get-Date): User Name    : $UserName"
 Write-Verbose "$(Get-Date): Save As PDF  : $PDF"
 Write-Verbose "$(Get-Date): HW Inventory : $Hardware"
 Write-Verbose "$(Get-Date): SW Inventory : $Software"
+If(!$Summary)
+{
+	Write-Verbose "$(Get-Date): Start Date   : $StartDate"
+	Write-Verbose "$(Get-Date): End Date     : $EndDate"
+}
+Write-Verbose "$(Get-Date): Summary      : $Summary"
 Write-Verbose "$(Get-Date): Farm Name    : $FarmName"
 Write-Verbose "$(Get-Date): Title        : $Title"
 Write-Verbose "$(Get-Date): Filename1    : $filename1"
@@ -3007,9 +3244,8 @@ If($BuildingBlocks -ne $Null)
 If(!$CoverPagesExist)
 {
 	Write-Verbose "$(Get-Date): Cover Pages are not installed or the Cover Page $($CoverPage) does not exist."
-	Write-Error "Cover Pages are not installed or the Cover Page $($CoverPage) does not exist.  Script cannot continue."
-	Write-Verbose "$(Get-Date): Closing Word"
-	AbortScript
+	Write-Warning "Cover Pages are not installed or the Cover Page $($CoverPage) does not exist."
+	Write-Warning "This report will not have a Cover Page."
 }
 
 Write-Verbose "$(Get-Date): Create empty word doc"
@@ -3038,7 +3274,7 @@ Write-Verbose "$(Get-Date): Disable grammar and spell checking"
 $Word.Options.CheckGrammarAsYouType=$False
 $Word.Options.CheckSpellingAsYouType=$False
 
-If($BuildingBlocksExist)
+If($CoverPagesExist)
 {
 	#insert new page, getting ready for table of contents
 	Write-Verbose "$(Get-Date): Insert new page, getting ready for table of contents"
@@ -3107,922 +3343,927 @@ $selection.EndKey($wdStory,$wdMove) | Out-Null
 Write-Verbose "$(Get-Date): Getting Farm Configuration data"
 $Server2008 = $False
 $ConfigLog = $False
-$farm = Get-XAFarmConfiguration -EA 0
 
-If($?)
+If(!$Summary)
 {
-	If($CoverPagesExist)
-	{
-		#only need the blank page inserted if there is a Table of Contents
-		$selection.InsertNewPage()
-	}
-	WriteWordLine 1 0 "Farm Configuration Settings"
-	
-	WriteWordLine 2 0 "Farm-wide"
+	$farm = Get-XAFarmConfiguration -EA 0
 
-	Write-Verbose "$(Get-Date): `tFarm-wide"
-	Write-Verbose "$(Get-Date): `t`tConnection Access Controls"
-	WriteWordLine 0 1 "Connection Access Controls"
-	
-	Switch ($Farm.ConnectionAccessControls)
+	If($?)
 	{
-		"AllowAnyConnection" {WriteWordLine 0 2 "Any connections"}
-		"AllowOneTypeOnly"   {
-						If($FarmOS -eq "2003")
-						{
-							WriteWordLine 0 2 "Citrix Access Gateway, Citrix online plug-in, and Web Interface connections only"
-						}
-						Else
-						{
-							WriteWordLine 0 2 "Citrix Access Gateway, Citrix XenApp plug-in, and Web Interface connections only"
-						}
-					}
-		"AllowMultipleTypes" {WriteWordLine 0 2 "Citrix Access Gateway connections only"}
-		Default {WriteWordLine 0 0 "Connection Access Controls could not be determined: $($Farm.ConnectionAccessControls)"}
-	}
-
-	Write-Verbose "$(Get-Date): `t`tConnection Limits"
-	WriteWordLine 0 1 "Connection Limits" 
-	WriteWordLine 0 2 "Connections per user"
-	WriteWordLine 0 3 "Maximum connections per user: " -NoNewLine
-	If($Farm.ConnectionLimitsMaximumPerUser -eq -1)
-	{
-		WriteWordLine 0 0 "No limit set"
-	}
-	Else
-	{
-		WriteWordLine 0 0 $Farm.ConnectionLimitsMaximumPerUser
-	}
-	If($Farm.ConnectionLimitsEnforceAdministrators)
-	{
-		WriteWordLine 0 3 "Enforce limit on administrators"
-	}
-	Else
-	{
-		WriteWordLine 0 3 "Do not enforce limit on administrators"
-	}
-
-	If($Farm.ConnectionLimitsLogOverLimits)
-	{
-		WriteWordLine 0 3 "Log over-the-limit denials"
-	}
-	Else
-	{
-		WriteWordLine 0 3 "Do not log over-the-limit denials"
-	}
-
-	#For Server 2003, the Isolation Environment section is not returned by Citrix
-	
-	Write-Verbose "$(Get-Date): `t`tHealth Monitoring & Recovery"
-	WriteWordLine 0 1 "Health Monitoring & Recovery"
-	WriteWordLine 0 2 "Limit server for load balancing"
-	WriteWordLine 0 3 "Limit servers (%): " $Farm.HmrMaximumServerPercent
-
-	Write-Verbose "$(Get-Date): `t`tConfiguration Logging"
-	WriteWordLine 0 1 "Configuration Logging"
-	If($Farm.ConfigLogEnabled)
-	{
-		$ConfigLog = $True
-
-		WriteWordLine 0 2 "Database configuration"
-		WriteWordLine 0 3 "Database type: " -nonewline
-		Switch ($Farm.ConfigLogDatabaseType)
+		If($CoverPagesExist)
 		{
-			"SqlServer" {WriteWordLine 0 0 "Microsoft SQL Server"}
-			"Oracle"    {WriteWordLine 0 0 "Oracle"}
-			Default {WriteWordLine 0 0 "Database type could not be determined: $($Farm.ConfigLogDatabaseType)"}
+			#only need the blank page inserted if there is a Table of Contents
+			$selection.InsertNewPage()
 		}
-		If($Farm.ConfigLogDatabaseAuthenticationMode -eq "Native")
-		{
-			WriteWordLine 0 3 "Use SQL Server authentication"
-		}
-		Else
-		{
-			WriteWordLine 0 3 "Use Windows integrated security"
-		}
-
-		WriteWordLine 0 3 "Connection String: " -NoNewLine
-
-		$StringMembers = "`n`t`t`t`t`t" + $Farm.ConfigLogDatabaseConnectionString.replace(";","`n`t`t`t`t`t")
+		WriteWordLine 1 0 "Farm Configuration Settings"
 		
-		WriteWordLine 0 3 $StringMembers -NoNewLine
-		WriteWordLine 0 0 "User name=" $Farm.ConfigLogDatabaseUserName
+		WriteWordLine 2 0 "Farm-wide"
 
-		If($FarmOS -eq "2003")
+		Write-Verbose "$(Get-Date): `tFarm-wide"
+		Write-Verbose "$(Get-Date): `t`tConnection Access Controls"
+		WriteWordLine 0 1 "Connection Access Controls"
+		
+		Switch ($Farm.ConnectionAccessControls)
 		{
-			WriteWordLine 0 3 "Log administrative tasks to logging database: " -nonewline
+			"AllowAnyConnection" {WriteWordLine 0 2 "Any connections"}
+			"AllowOneTypeOnly"   {
+							If($FarmOS -eq "2003")
+							{
+								WriteWordLine 0 2 "Citrix Access Gateway, Citrix online plug-in, and Web Interface connections only"
+							}
+							Else
+							{
+								WriteWordLine 0 2 "Citrix Access Gateway, Citrix XenApp plug-in, and Web Interface connections only"
+							}
+						}
+			"AllowMultipleTypes" {WriteWordLine 0 2 "Citrix Access Gateway connections only"}
+			Default {WriteWordLine 0 0 "Connection Access Controls could not be determined: $($Farm.ConnectionAccessControls)"}
+		}
+
+		Write-Verbose "$(Get-Date): `t`tConnection Limits"
+		WriteWordLine 0 1 "Connection Limits" 
+		WriteWordLine 0 2 "Connections per user"
+		WriteWordLine 0 3 "Maximum connections per user: " -NoNewLine
+		If($Farm.ConnectionLimitsMaximumPerUser -eq -1)
+		{
+			WriteWordLine 0 0 "No limit set"
 		}
 		Else
 		{
-			WriteWordLine 0 3 "Log administrative tasks to Configuration Logging database: " -nonewline
+			WriteWordLine 0 0 $Farm.ConnectionLimitsMaximumPerUser
 		}
+		If($Farm.ConnectionLimitsEnforceAdministrators)
+		{
+			WriteWordLine 0 3 "Enforce limit on administrators"
+		}
+		Else
+		{
+			WriteWordLine 0 3 "Do not enforce limit on administrators"
+		}
+
+		If($Farm.ConnectionLimitsLogOverLimits)
+		{
+			WriteWordLine 0 3 "Log over-the-limit denials"
+		}
+		Else
+		{
+			WriteWordLine 0 3 "Do not log over-the-limit denials"
+		}
+
+		#For Server 2003, the Isolation Environment section is not returned by Citrix
+		
+		Write-Verbose "$(Get-Date): `t`tHealth Monitoring & Recovery"
+		WriteWordLine 0 1 "Health Monitoring & Recovery"
+		WriteWordLine 0 2 "Limit server for load balancing"
+		WriteWordLine 0 3 "Limit servers (%): " $Farm.HmrMaximumServerPercent
+
+		Write-Verbose "$(Get-Date): `t`tConfiguration Logging"
+		WriteWordLine 0 1 "Configuration Logging"
 		If($Farm.ConfigLogEnabled)
 		{
-			WriteWordLine 0 0 "Yes"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-		If($FarmOS -eq "2003")
-		{
-			WriteWordLine 0 3 "Allow changes to the farm when database is disconnected: " -nonewline
-		}
-		Else
-		{
-			WriteWordLine 0 3 "Allow changes to the farm when logging database is disconnected: " -nonewline
-		}
-		
-		If($Farm.ConfigLogChangesWhileDisconnectedAllowed)
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-		WriteWordLine 0 3 "Require admins to enter database credentials before clearing the log: " -nonewline
-		If($Farm.ConfigLogCredentialsOnClearLogRequired)
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-	}
-	Else
-	{
-		WriteWordLine 0 2 "Configuration logging is not enabled"
-	}
-	
-	Write-Verbose "$(Get-Date): `t`tMemory/CPU"	
-	WriteWordLine 0 1 "Memory/CPU"
+			$ConfigLog = $True
 
-	WriteWordLine 0 2 "Applications that memory optimization ignores: "
-	If($Farm.MemoryOptimizationExcludedApplications)
-	{
-		ForEach($App in $Farm.MemoryOptimizationExcludedApplications)
-		{
-			WriteWordLine 0 3 $App
-		}
-	}
-	Else
-	{
-		WriteWordLine 0 3 "No applications are listed"
-	}
-
-	WriteWordLine 0 2 "Optimization interval: " $Farm.MemoryOptimizationScheduleType
-
-	If($Farm.MemoryOptimizationScheduleType -eq "Weekly")
-	{
-		WriteWordLine 0 2 "Day of week: " $Farm.MemoryOptimizationScheduleDayOfWeek
-	}
-	If($Farm.MemoryOptimizationScheduleType -eq "Monthly")
-	{
-		WriteWordLine 0 2 "Day of month: " $Farm.MemoryOptimizationScheduleDayOfMonth
-	}
-
-	WriteWordLine 0 2 "Optimization time: " $Farm.MemoryOptimizationScheduleTime
-	WriteWordLine 0 2 "Memory optimization user: " -nonewline
-	If($Farm.MemoryOptimizationLocalSystemAccountUsed)
-	{
-		WriteWordLine 0 0 "Use local system account"
-	}
-	Else
-	{
-		WriteWordLine 0 0 $Farm.MemoryOptimizationUser
-	}
-	
-	Write-Verbose "$(Get-Date): `t`tXenApp"
-	WriteWordLine 0 1 "XenApp"
-	WriteWordLine 0 2 "General"
-	WriteWordLine 0 3 "Respond to client broadcast messages"
-	WriteWordLine 0 4 "Data collectors: " -nonewline
-	If($Farm.RespondDataCollectors)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-	WriteWordLine 0 4 "RAS servers: " -nonewline
-	If($Farm.RespondRasServers)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-	WriteWordLine 0 3 "Client time zones"
-	WriteWordLine 0 4 "Use client's local time: " -nonewline
-	If($Farm.ClientLocalTimeEnabled)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-	WriteWordLine 0 4 "Estimate local time for clients: " -nonewline
-	If($Farm.ClientLocalTimeEstimationEnabled)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-	WriteWordLine 0 3 "XML Service DNS address resolution: " -nonewline
-	If($Farm.DNSAddressResolution)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-	WriteWordLine 0 3 "Novell Directory Services"
-	WriteWordLine 0 4 "NDS preferred tree: " -NoNewLine
-	If($Farm.NdsPreferredTree)
-	{
-		WriteWordLine 0 0 $Farm.NdsPreferredTree
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No NDS Tree entered"
-	}
-	If($FarmOS -eq "2003")
-	{
-		WriteWordLine 0 3 "Enable 32 bit icon color depth: " -nonewline
-	}
-	Else
-	{
-		WriteWordLine 0 3 "Enhanced icon support: " -nonewline
-	}
-	If($Farm.EnhancedIconEnabled)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-
-	WriteWordLine 0 2 "Shadow Policies"
-	WriteWordLine 0 3 "Merge shadowers in multiple policies: " -nonewline
-	If($Farm.ShadowPoliciesMerge)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-
-	If($FarmOS -eq "2003")
-	{
-		Write-Verbose "$(Get-Date): `t`tHDX Broadcast"
-		WriteWordLine 0 1 "HDX Broadcast"
-		WriteWordLine 0 2 "Session Reliability"
-	}
-	Else
-	{
-		Write-Verbose "$(Get-Date): `t`tSession Reliability"
-		WriteWordLine 0 1 "Session Reliability"
-	}
-	
-	If($FarmOS -eq "2003")
-	{
-		WriteWordLine 0 3 "Allow users to view sessions during broken connection: " -nonewline
-	}
-	Else
-	{
-		WriteWordLine 0 2 "Keep sessions open during loss of network connectivity: " -nonewline
-	}
-	If($Farm.SessionReliabilityEnabled)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-	If($FarmOS -eq "2003")
-	{
-		WriteWordLine 0 3 "Port number (Default 2598): " $Farm.SessionReliabilityPort
-	}
-	Else
-	{
-		WriteWordLine 0 2 "Port number (Default 2598): " $Farm.SessionReliabilityPort
-	}
-	
-	If($FarmOS -eq "2003")
-	{
-		WriteWordLine 0 3 "Seconds to keep sessions active: " $Farm.SessionReliabilityTimeout
-	}
-	Else
-	{
-		WriteWordLine 0 2 "Seconds to keep sessions open: " $Farm.SessionReliabilityTimeout
-	}
-
-	Write-Verbose "$(Get-Date): `t`tCitrix Streaming Server"
-	WriteWordLine 0 1 "Citrix Streaming Server"
-	If($FarmOS -eq "2003")
-	{
-		WriteWordLine 0 2 "Log application events to event log: " -nonewline
-	}
-	Else
-	{
-		WriteWordLine 0 2 "Log application streaming events to event log: " -nonewline
-	}
-	If($Farm.StreamingLogEvents)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-	If($FarmOS -eq "2003")
-	{
-		WriteWordLine 0 2 "Trust Citrix Delivery Clients: " -nonewline
-	}
-	Else
-	{
-		WriteWordLine 0 2 "Trust XenApp Plugin for Streamed Apps: " -nonewline
-	}
-	If($Farm.StreamingTrustCLient)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-
-	If($FarmOS -eq "2008")
-	{
-		Write-Verbose "$(Get-Date): `t`tRestart Options"
-		WriteWordLine 0 1 "Restart Options"
-		WriteWordLine 0 2 "Message Options"
-		WriteWordLine 0 3 "Send message to logged-on users before server restart: " -nonewline
-		If($Farm.RestartSendMessage)
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-		WriteWordLine 0 3 "Send first message before restart: $($Farm.RestartMessageWait) minutes"
-		WriteWordLine 0 3 "Send reminder message every: $($Farm.RestartMessageInterval) minutes"
-		If($Farm.RestartCustomMessageEnabled)
-		{
-			WriteWordLine 0 3 "Additional text for restart message:"
-			WriteWordLine 0 3 $Farm.RestartCustomMessage
-		}
-		If($Farm.RestartDisabledLogOnsInterval -gt 0)
-		{
-			WriteWordLine 0 3 "Disable logons before restart: " -nonewline
-			WriteWordLine 0 0 "Yes"
-			WriteWordLine 0 3 "Before restart, logons disabled by: $($Farm.RestartDisabledLogOnsInterval) minutes"
-		}
-		Else
-		{
-			WriteWordLine 0 3 "Disable logons before restart: No"
-		}
-	}
-	
-	Write-Verbose "$(Get-Date): `t`tVirtual IP"
-	WriteWordLine 0 1 "Virtual IP"
-	WriteWordLine 0 2 "Address Configuration"
-	WriteWordLine 0 3 "Virtual IP address ranges:"
-
-	$VirtualIPs = Get-XAVirtualIPRange -EA 0
-	If($? -and $VirtualIPs)
-	{
-		ForEach($VirtualIP in $VirtualIPs)
-		{
-			WriteWordLine 0 4 "IP Range: " $VirtualIP
-		}
-	}
-	Else
-	{
-		WriteWordLine 0 4 "No virtual IP address range defined"
-	}
-	$VirtualIPs = $Null
-
-	WriteWordLine 0 3 "Enable logging of IP address assignment and release: " -nonewline
-	If($Farm.VirtualIPLoggingEnabled)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-	WriteWordLine 0 2 "Process Configuration"
-	WriteWordLine 0 3 "Virtual IP Processes"
-	If($Farm.VirtualIPProcesses)
-	{
-		WriteWordLine 0 4 "Monitor the following processes:"
-		ForEach($Process in $Farm.VirtualIPProcesses)
-		{
-			WriteWordLine 0 5 "Process: " $Process
-		}
-	}
-	Else
-	{
-		WriteWordLine 0 4 "No virtual IP processes defined"
-	}
-	WriteWordLine 0 3 "Virtual Loopback Processes"
-	If($Farm.VirtualIPLoopbackProcesses)
-	{
-		WriteWordLine 0 4 "Monitor the following processes:"
-		ForEach($Process in $Farm.VirtualIPLoopbackProcesses)
-		{
-			WriteWordLine 0 5 "Process: " $Process
-		}
-	}
-	Else
-	{
-		WriteWordLine 0 4 "No virtual IP Loopback processes defined"
-	}
-		
-	$selection.InsertNewPage()
-	Write-Verbose "$(Get-Date): `tServer Default"
-	WriteWordLine 2 0 "Server Default"
-	If($FarmOS -eq "2003")
-	{
-		Write-Verbose "$(Get-Date): `t`tHDX Broadcast"
-		WriteWordLine 0 1 "HDX Broadcast"
-	}
-	Else
-	{
-		Write-Verbose "$(Get-Date): `t`tICA"
-		WriteWordLine 0 1 "ICA"
-	}
-	WriteWordLine 0 2 "Auto Client Reconnect"
-	If($Farm.AcrEnabled)
-	{
-		WriteWordLine 0 3 "Reconnect automatically"
-		WriteWordLine 0 3 "Log automatic reconnection attempts: " -NoNewLine
-
-		If($Farm.AcrLogReconnections)
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-	}
-	Else
-	{
-		WriteWordLine 0 4 "Require user authentication"
-	}
-	
-	WriteWordLine 0 2 "Display"
-	WriteWordLine 0 3 "Discard queued image that is replaced by another image: " -nonewline
-	If($Farm.DisplayDiscardQueuedImages)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-	WriteWordLine 0 3 "Cache image to make scrolling smoother: " -nonewline
-	If($Farm.DisplayCacheImageForSmoothScrolling)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-	WriteWordLine 0 3 "Maximum memory to use for each session's graphics (KB): " $Farm.DisplayMaximumGraphicsMemory
-	WriteWordLine 0 3 "Degradation bias"
-	If($Farm.DisplayDegradationBias -eq "Resolution")
-	{
-		WriteWordLine 0 4 "Degrade resolution first"
-	}
-	Else
-	{
-		WriteWordLine 0 4 "Degrade color depth first"
-	}
-	WriteWordLine 0 3 "Notify user of session degradation: " -nonewline
-	If($Farm.DisplayNotifyUser)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-
-	WriteWordLine 0 2 "Keep-Alive"
-	If($Farm.KeepAliveEnabled)
-	{
-		If($FarmOS -eq "2003")
-		{
-			WriteWordLine 0 3 "HDX Broadcast Keep-Alive time-out value (seconds): " $Farm.KeepAliveTimeout
-		}
-		Else
-		{
-			WriteWordLine 0 3 "ICA Keep-Alive time-out value (seconds): " $Farm.KeepAliveTimeout
-		}
-	}
-	Else
-	{
-		If($FarmOS -eq "2003")
-		{
-			WriteWordLine 0 3 "HDX Broadcast Keep-Alive is not enabled"
-		}
-		Else
-		{
-			WriteWordLine 0 3 "ICA Keep-Alive is not enabled"
-		}
-	}
-	
-	If($FarmOS -eq "2003")
-	{
-		WriteWordLine 0 2 "Remote Console Connections"
-		WriteWordLine 0 3 "Remote connections to the console: " -nonewline
-		If($Farm.RemoteConsoleEnabled)
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-	}
-	
-	#For server 2003, Isolation Environment data is not available
-	
-	Write-Verbose "$(Get-Date): `t`tLicense Server"
-	WriteWordLine 0 1 "License Server"
-	WriteWordLine 0 2 "Name: " $Farm.LicenseServerName
-	WriteWordLine 0 2 "Port number (Default 27000): " $Farm.LicenseServerPortNumber
-	
-	Write-Verbose "$(Get-Date): `t`tMemory/CPU"
-	WriteWordLine 0 1 "Memory/CPU"
-	WriteWordLine 0 2 "CPU Utilization Management: " -NoNewLine
-	If($Farm.CpuManagementLevel.ToString() -eq "255")
-	{
-		WriteWordLine 0 0 "Cannot be determined for XenApp 5 on Server 2003"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "" -nonewline
-		Switch ($Farm.CpuManagementLevel)
-		{
-			"NoManagement"  {WriteWordLine 0 0 "No CPU utilization management"}
-			"Fair"          {WriteWordLine 0 0 "Fair sharing of CPU between sessions"}
-			"ResourceBased" {WriteWordLine 0 0 "CPU Sharing based on Resource Allotments"}
-			Default {WriteWordLine 0 0 "CPU Utilization Management could not be determined: $($Farm.CpuManagementLevel)"}
-		}
-	}
-	WriteWordLine 0 2 "Memory Optimization: " -nonewline
-	If($Farm.MemoryOptimizationEnabled)
-	{
-		WriteWordLine 0 0 "Enabled"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "Not Enabled"
-	}
-	
-	Write-Verbose "$(Get-Date): `t`tHealth Monitoring & Recovery"
-	WriteWordLine 0 1 "Health Monitoring & Recovery"
-	If($Farm.HmrEnabled)
-	{
-		$HmrTests = Get-XAHmrTest -EA 0 | Sort-Object TestName
-		If($?)
-		{
-			ForEach($HmrTest in $HmrTests)
+			WriteWordLine 0 2 "Database configuration"
+			WriteWordLine 0 3 "Database type: " -nonewline
+			Switch ($Farm.ConfigLogDatabaseType)
 			{
-				Write-Verbose "$(Get-Date): `t`t`tCreate Table for HMR Test $($HmrTest.TestName)"
-				$TableRange = $doc.Application.Selection.Range
-				[int]$Columns = 2
-				If(![String]::IsNullOrEmpty($Hmrtest.Arguments))
-				{
-					[int]$Rows = 9
-				}
-				Else
-				{
-					[int]$Rows = 8
-				}
-				$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
-				$table.Style = $myHash.Word_TableGrid
-				$table.Borders.InsideLineStyle = 0
-				$table.Borders.OutsideLineStyle = 0
-				[int]$xRow = 1
-				$Table.Cell($xRow,1).Range.Text = "Test Name"
-				$Table.Cell($xRow,2).Range.Text = $Hmrtest.TestName
-				$xRow++
-				$Table.Cell($xRow,1).Range.Text = "Interval"
-				$Table.Cell($xRow,2).Range.Text = $Hmrtest.Interval
-				$xRow++
-				$Table.Cell($xRow,1).Range.Text = "Threshold"
-				$Table.Cell($xRow,2).Range.Text = $Hmrtest.Threshold
-				$xRow++
-				$Table.Cell($xRow,1).Range.Text = "Time-out"
-				$Table.Cell($xRow,2).Range.Text = $Hmrtest.Timeout
-				$xRow++
-				$Table.Cell($xRow,1).Range.Text = "Test File Name"
-				$Table.Cell($xRow,2).Range.Text = $Hmrtest.FilePath
-				If(![String]::IsNullOrEmpty($Hmrtest.Arguments))
-				{
-					$xRow++
-					$Table.Cell($xRow,1).Range.Text = "Arguments"
-					$Table.Cell($xRow,2).Range.Text = $Hmrtest.Arguments
-				}
-				$xRow++
-				$Table.Cell($xRow,1).Range.Text = "Recovery Action"
-				Switch ($Hmrtest.RecoveryAction)
-				{
-					"AlertOnly"                     {$Table.Cell($xRow,2).Range.Text = "Alert Only"}
-					"RemoveServerFromLoadBalancing" {$Table.Cell($xRow,2).Range.Text = "Remove Server from load balancing"}
-					"RestartIma"                    {$Table.Cell($xRow,2).Range.Text = "Restart IMA"}
-					"ShutdownIma"                   {$Table.Cell($xRow,2).Range.Text = "Shutdown IMA"}
-					"RebootServer"                  {$Table.Cell($xRow,2).Range.Text = "Reboot Server"}
-					Default {$Table.Cell($xRow,2).Range.Text = "Recovery Action could not be determined: $($Hmrtest.RecoveryAction)"}
-				}
-				If(![String]::IsNullOrEmpty($Hmrtest.Description))
-				{
-					$xRow++
-					$Table.Cell($xRow,1).Range.Text = "Test Description"
-					$Table.Cell($xRow,2).Range.Text = $Hmrtest.Description
-				}
-
-				$Table.Rows.SetLeftIndent(108,1)
-				$table.AutoFitBehavior(1)
-
-				#return focus back to document
-				Write-Verbose "$(Get-Date): `t`t`t`t`tReturn focus back to document"
-				$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
-
-				#move to the end of the current document
-				Write-Verbose "$(Get-Date): `t`t`t`t`tMove to the end of the current document"
-				$selection.EndKey($wdStory,$wdMove) | Out-Null
+				"SqlServer" {WriteWordLine 0 0 "Microsoft SQL Server"}
+				"Oracle"    {WriteWordLine 0 0 "Oracle"}
+				Default {WriteWordLine 0 0 "Database type could not be determined: $($Farm.ConfigLogDatabaseType)"}
 			}
-		}
-		Else
-		{
-			WriteWordLine 0 2 "Health Monitoring & Recovery Tests could not be retrieved"
-		}
-	}
-	Else
-	{
-		WriteWordLine 0 2 "Health Monitoring & Recovery is not enabled"
-	}
-
-	If($FarmOS -eq "2003")
-	{
-		Write-Verbose "$(Get-Date): `t`tHDX Plug and Play"
-		WriteWordLine 0 1 "HDX Plug and Play"
-	}
-	Else
-	{
-		Write-Verbose "$(Get-Date): `t`tXenApp"
-		WriteWordLine 0 1 "XenApp"
-	}
-	WriteWordLine 0 2 "Content redirection from server to client: " -nonewline
-	If($Farm.ContentRedirectionEnabled)
-	{
-		WriteWordLine 0 0 "Yes"
-	}
-	Else
-	{
-		WriteWordLine 0 0 "No"
-	}
-
-	If($FarmOS -eq "2008")
-	{
-		WriteWordLine 0 2 "Remote Console Connections"
-		WriteWordLine 0 3 "Remote connections to the console: " -nonewline
-		If($Farm.RemoteConsoleEnabled)
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-	}
-
-	Write-Verbose "$(Get-Date): `t`tSNMP"
-	WriteWordLine 0 1 "SNMP"
-	If($Farm.SnmpEnabled)
-	{
-		WriteWordLine 0 2 "Send session traps to selected SNMP agent on all farm servers"
-		WriteWordLine 0 3 "SNMP agent session traps"
-		WriteWordLine 0 4 "Logon`t`t`t: " -nonewline
-		If($Farm.SnmpLogonEnabled)
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-		WriteWordLine 0 4 "Logoff`t`t`t: " -nonewline
-		If($Farm.SnmpLogoffEnabled)
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-		WriteWordLine 0 4 "Disconnect`t`t: " -nonewline
-		If($Farm.SnmpDisconnectEnabled)
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-		WriteWordLine 0 4 "Session limit per server`t: " -nonewline
-		If($Farm.SnmpLimitEnabled)
-		{
-			WriteWordLine 0 0 " " $Farm.SnmpLimitPerServer
-		}
-		Else
-		{
-			WriteWordLine 0 0 "No"
-		}
-	}
-	Else
-	{
-		WriteWordLine 0 2 "SNMP is not enabled"
-	}
-
-	If($FarmOS -eq "2003")
-	{
-		Write-Verbose "$(Get-Date): `t`tHDX 3D"
-		WriteWordLine 0 1 "HDX 3D"
-	}
-	Else
-	{
-		Write-Verbose "$(Get-Date): `t`tSpeedScreen"
-		WriteWordLine 0 1 "SpeedScreen"
-	}
-	If($Farm.BrowserAccelerationEnabled)
-	{
-		If($FarmOS -eq "2003")
-		{
-			WriteWordLine 0 2 "HDX 3D Browser Acceleration is enabled"
-		}
-		Else
-		{
-			WriteWordLine 0 2 "SpeedScreen Browser Acceleration is enabled"
-		}
-		If($Farm.BrowserAccelerationCompressionEnabled)
-		{
-			WriteWordLine 0 3 "Compress JPEG images to improve bandwidth"
-			WriteWordLine 0 4 "Image compression levels: " $Farm.BrowserAccelerationCompressionLevel
-			If($Farm.BrowserAccelerationVariableImageCompression)
+			If($Farm.ConfigLogDatabaseAuthenticationMode -eq "Native")
 			{
-				WriteWordLine 0 4 "Adjust compression level based on available bandwidth"
+				WriteWordLine 0 3 "Use SQL Server authentication"
 			}
 			Else
 			{
-				WriteWordLine 0 4 "Do not adjust compression level based on available bandwidth"
+				WriteWordLine 0 3 "Use Windows integrated security"
+			}
+
+			WriteWordLine 0 3 "Connection String: " -NoNewLine
+
+			$StringMembers = "`n`t`t`t`t`t" + $Farm.ConfigLogDatabaseConnectionString.replace(";","`n`t`t`t`t`t")
+			
+			WriteWordLine 0 3 $StringMembers -NoNewLine
+			WriteWordLine 0 0 "User name=" $Farm.ConfigLogDatabaseUserName
+
+			If($FarmOS -eq "2003")
+			{
+				WriteWordLine 0 3 "Log administrative tasks to logging database: " -nonewline
+			}
+			Else
+			{
+				WriteWordLine 0 3 "Log administrative tasks to Configuration Logging database: " -nonewline
+			}
+			If($Farm.ConfigLogEnabled)
+			{
+				WriteWordLine 0 0 "Yes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
+			}
+			If($FarmOS -eq "2003")
+			{
+				WriteWordLine 0 3 "Allow changes to the farm when database is disconnected: " -nonewline
+			}
+			Else
+			{
+				WriteWordLine 0 3 "Allow changes to the farm when logging database is disconnected: " -nonewline
+			}
+			
+			If($Farm.ConfigLogChangesWhileDisconnectedAllowed)
+			{
+				WriteWordLine 0 0 "Yes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
+			}
+			WriteWordLine 0 3 "Require admins to enter database credentials before clearing the log: " -nonewline
+			If($Farm.ConfigLogCredentialsOnClearLogRequired)
+			{
+				WriteWordLine 0 0 "Yes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
 			}
 		}
 		Else
 		{
-			WriteWordLine 0 3 "Do not compress JPEG images to improve bandwidth"
+			WriteWordLine 0 2 "Configuration logging is not enabled"
 		}
-	}
-	Else
-	{
-		If($FarmOS -eq "2003")
+		
+		Write-Verbose "$(Get-Date): `t`tMemory/CPU"	
+		WriteWordLine 0 1 "Memory/CPU"
+
+		WriteWordLine 0 2 "Applications that memory optimization ignores: "
+		If($Farm.MemoryOptimizationExcludedApplications)
 		{
-			WriteWordLine 0 2 "HDX 3D Browser Acceleration is disabled"
-		}
-		Else
-		{
-			WriteWordLine 0 2 "SpeedScreen Browser Acceleration is disabled"
-		}
-	}
-	
-	If($FarmOS -eq "2003")
-	{
-		Write-Verbose "$(Get-Date): `t`tHDX Mediastream"
-		WriteWordLine 0 1 "HDX Mediastream"
-	}
-	If($Farm.FlashAccelerationEnabled)
-	{
-		If($FarmOS -eq "2003")
-		{
-			WriteWordLine 0 2 "Enable Flash for XenApp sessions"
-			WriteWordLine 0 3 "Server-side acceleration: " -nonewline
-			Switch ($Farm.FlashAccelerationOption)
+			ForEach($App in $Farm.MemoryOptimizationExcludedApplications)
 			{
-				"AllConnections" {WriteWordLine 0 0 "Accelerate for restricted bandwidth connections"}
-				"Unknown"        {WriteWordLine 0 0 "Do not accelerate"}
-				"NoOptimization" {WriteWordLine 0 0 "Accelerate for all connections"}
-				Default {WriteWordLine 0 0 "Server-side acceleration could not be determined: $($Farm.FlashAccelerationOption)"}
+				WriteWordLine 0 3 $App
 			}
 		}
 		Else
 		{
-			WriteWordLine 0 2 "Enable Adobe Flash Player"
-			Switch ($Farm.FlashAccelerationOption)
+			WriteWordLine 0 3 "No applications are listed"
+		}
+
+		WriteWordLine 0 2 "Optimization interval: " $Farm.MemoryOptimizationScheduleType
+
+		If($Farm.MemoryOptimizationScheduleType -eq "Weekly")
+		{
+			WriteWordLine 0 2 "Day of week: " $Farm.MemoryOptimizationScheduleDayOfWeek
+		}
+		If($Farm.MemoryOptimizationScheduleType -eq "Monthly")
+		{
+			WriteWordLine 0 2 "Day of month: " $Farm.MemoryOptimizationScheduleDayOfMonth
+		}
+
+		WriteWordLine 0 2 "Optimization time: " $Farm.MemoryOptimizationScheduleTime
+		WriteWordLine 0 2 "Memory optimization user: " -nonewline
+		If($Farm.MemoryOptimizationLocalSystemAccountUsed)
+		{
+			WriteWordLine 0 0 "Use local system account"
+		}
+		Else
+		{
+			WriteWordLine 0 0 $Farm.MemoryOptimizationUser
+		}
+		
+		Write-Verbose "$(Get-Date): `t`tXenApp"
+		WriteWordLine 0 1 "XenApp"
+		WriteWordLine 0 2 "General"
+		WriteWordLine 0 3 "Respond to client broadcast messages"
+		WriteWordLine 0 4 "Data collectors: " -nonewline
+		If($Farm.RespondDataCollectors)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+		WriteWordLine 0 4 "RAS servers: " -nonewline
+		If($Farm.RespondRasServers)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+		WriteWordLine 0 3 "Client time zones"
+		WriteWordLine 0 4 "Use client's local time: " -nonewline
+		If($Farm.ClientLocalTimeEnabled)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+		WriteWordLine 0 4 "Estimate local time for clients: " -nonewline
+		If($Farm.ClientLocalTimeEstimationEnabled)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+		WriteWordLine 0 3 "XML Service DNS address resolution: " -nonewline
+		If($Farm.DNSAddressResolution)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+		WriteWordLine 0 3 "Novell Directory Services"
+		WriteWordLine 0 4 "NDS preferred tree: " -NoNewLine
+		If($Farm.NdsPreferredTree)
+		{
+			WriteWordLine 0 0 $Farm.NdsPreferredTree
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No NDS Tree entered"
+		}
+		If($FarmOS -eq "2003")
+		{
+			WriteWordLine 0 3 "Enable 32 bit icon color depth: " -nonewline
+		}
+		Else
+		{
+			WriteWordLine 0 3 "Enhanced icon support: " -nonewline
+		}
+		If($Farm.EnhancedIconEnabled)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+
+		WriteWordLine 0 2 "Shadow Policies"
+		WriteWordLine 0 3 "Merge shadowers in multiple policies: " -nonewline
+		If($Farm.ShadowPoliciesMerge)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+
+		If($FarmOS -eq "2003")
+		{
+			Write-Verbose "$(Get-Date): `t`tHDX Broadcast"
+			WriteWordLine 0 1 "HDX Broadcast"
+			WriteWordLine 0 2 "Session Reliability"
+		}
+		Else
+		{
+			Write-Verbose "$(Get-Date): `t`tSession Reliability"
+			WriteWordLine 0 1 "Session Reliability"
+		}
+		
+		If($FarmOS -eq "2003")
+		{
+			WriteWordLine 0 3 "Allow users to view sessions during broken connection: " -nonewline
+		}
+		Else
+		{
+			WriteWordLine 0 2 "Keep sessions open during loss of network connectivity: " -nonewline
+		}
+		If($Farm.SessionReliabilityEnabled)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+		If($FarmOS -eq "2003")
+		{
+			WriteWordLine 0 3 "Port number (Default 2598): " $Farm.SessionReliabilityPort
+		}
+		Else
+		{
+			WriteWordLine 0 2 "Port number (Default 2598): " $Farm.SessionReliabilityPort
+		}
+		
+		If($FarmOS -eq "2003")
+		{
+			WriteWordLine 0 3 "Seconds to keep sessions active: " $Farm.SessionReliabilityTimeout
+		}
+		Else
+		{
+			WriteWordLine 0 2 "Seconds to keep sessions open: " $Farm.SessionReliabilityTimeout
+		}
+
+		Write-Verbose "$(Get-Date): `t`tCitrix Streaming Server"
+		WriteWordLine 0 1 "Citrix Streaming Server"
+		If($FarmOS -eq "2003")
+		{
+			WriteWordLine 0 2 "Log application events to event log: " -nonewline
+		}
+		Else
+		{
+			WriteWordLine 0 2 "Log application streaming events to event log: " -nonewline
+		}
+		If($Farm.StreamingLogEvents)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+		If($FarmOS -eq "2003")
+		{
+			WriteWordLine 0 2 "Trust Citrix Delivery Clients: " -nonewline
+		}
+		Else
+		{
+			WriteWordLine 0 2 "Trust XenApp Plugin for Streamed Apps: " -nonewline
+		}
+		If($Farm.StreamingTrustCLient)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+
+		If($FarmOS -eq "2008")
+		{
+			Write-Verbose "$(Get-Date): `t`tRestart Options"
+			WriteWordLine 0 1 "Restart Options"
+			WriteWordLine 0 2 "Message Options"
+			WriteWordLine 0 3 "Send message to logged-on users before server restart: " -nonewline
+			If($Farm.RestartSendMessage)
 			{
-				"AllConnections" {WriteWordLine 0 3 "Accelerate for restricted bandwidth connections"}
-				"Unknown"        {WriteWordLine 0 3 "Do not accelerate"}
-				"NoOptimization" {WriteWordLine 0 3 "Accelerate for all connections"}
-				Default {WriteWordLine 0 0 "Server-side acceleration could not be determined: $($Farm.FlashAccelerationOption)"}
+				WriteWordLine 0 0 "Yes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
+			}
+			WriteWordLine 0 3 "Send first message before restart: $($Farm.RestartMessageWait) minutes"
+			WriteWordLine 0 3 "Send reminder message every: $($Farm.RestartMessageInterval) minutes"
+			If($Farm.RestartCustomMessageEnabled)
+			{
+				WriteWordLine 0 3 "Additional text for restart message:"
+				WriteWordLine 0 3 $Farm.RestartCustomMessage
+			}
+			If($Farm.RestartDisabledLogOnsInterval -gt 0)
+			{
+				WriteWordLine 0 3 "Disable logons before restart: " -nonewline
+				WriteWordLine 0 0 "Yes"
+				WriteWordLine 0 3 "Before restart, logons disabled by: $($Farm.RestartDisabledLogOnsInterval) minutes"
+			}
+			Else
+			{
+				WriteWordLine 0 3 "Disable logons before restart: No"
 			}
 		}
 		
-	}
-	Else
-	{
-		If($FarmOS -eq "2003")
-		{
-			WriteWordLine 0 2 "Flash is not enabled for XenApp sessions"
-		}
-		Else
-		{
-			WriteWordLine 0 2 "Adobe Flash is not enabled"
-		}
-	}
-	If($Farm.MultimediaAccelerationEnabled)
-	{
-		If($FarmOS -eq "2003")
-		{
-			WriteWordLine 0 2 "Multimedia Acceleration is enabled"
-			WriteWordLine 0 3 "Multimedia Acceleration (Network buffering)"
-		}
-		Else
-		{
-			WriteWordLine 0 2 "SpeedScreen Multimedia Acceleration is enabled"
-		}
-		If($Farm.MultimediaAccelerationDefaultBuffer)
-		{
-			WriteWordLine 0 3 "Use the Default buffer of 5 seconds"
-		}
-		Else
-		{
-			WriteWordLine 0 3 "Custom buffer in seconds: " $Farm.MultimediaAccelerationCustomBuffer
-		}
-	}
-	Else
-	{
-		If($FarmOS -eq "2003")
-		{
-			WriteWordLine 0 2 "Multimedia Acceleration is disabled"
-		}
-		Else
-		{
-			WriteWordLine 0 2 "SpeedScreen Multimedia Acceleration is disabled"
-		}
-	}
-	
-	WriteWordLine 0 0 "Offline Access"
-	Write-Verbose "$(Get-Date): `t`tUsers"
-	WriteWordLine 0 1 "Users"
-	If($Farm.OfflineAccounts)
-	{
-		WriteWordLine 0 2 "Configured users:"
-		ForEach($User in $Farm.OfflineAccounts)
-		{
-			WriteWordLine 0 3 $User
-		}
-	}
-	Else
-	{
-		WriteWordLine 0 2 "No users configured"
-	}
+		Write-Verbose "$(Get-Date): `t`tVirtual IP"
+		WriteWordLine 0 1 "Virtual IP"
+		WriteWordLine 0 2 "Address Configuration"
+		WriteWordLine 0 3 "Virtual IP address ranges:"
 
-	Write-Verbose "$(Get-Date): `t`tOffline License Settings"
-	WriteWordLine 0 1 "Offline License Settings"
-	WriteWordLine 0 2 "License period days: " $Farm.OfflineLicensePeriod
+		$VirtualIPs = Get-XAVirtualIPRange -EA 0
+		If($? -and $VirtualIPs)
+		{
+			ForEach($VirtualIP in $VirtualIPs)
+			{
+				WriteWordLine 0 4 "IP Range: " $VirtualIP
+			}
+		}
+		Else
+		{
+			WriteWordLine 0 4 "No virtual IP address range defined"
+		}
+		$VirtualIPs = $Null
 
-} 
-Else 
-{
-	Write-Warning "Farm information could not be retrieved"
+		WriteWordLine 0 3 "Enable logging of IP address assignment and release: " -nonewline
+		If($Farm.VirtualIPLoggingEnabled)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+		WriteWordLine 0 2 "Process Configuration"
+		WriteWordLine 0 3 "Virtual IP Processes"
+		If($Farm.VirtualIPProcesses)
+		{
+			WriteWordLine 0 4 "Monitor the following processes:"
+			ForEach($Process in $Farm.VirtualIPProcesses)
+			{
+				WriteWordLine 0 5 "Process: " $Process
+			}
+		}
+		Else
+		{
+			WriteWordLine 0 4 "No virtual IP processes defined"
+		}
+		WriteWordLine 0 3 "Virtual Loopback Processes"
+		If($Farm.VirtualIPLoopbackProcesses)
+		{
+			WriteWordLine 0 4 "Monitor the following processes:"
+			ForEach($Process in $Farm.VirtualIPLoopbackProcesses)
+			{
+				WriteWordLine 0 5 "Process: " $Process
+			}
+		}
+		Else
+		{
+			WriteWordLine 0 4 "No virtual IP Loopback processes defined"
+		}
+			
+		$selection.InsertNewPage()
+		Write-Verbose "$(Get-Date): `tServer Default"
+		WriteWordLine 2 0 "Server Default"
+		If($FarmOS -eq "2003")
+		{
+			Write-Verbose "$(Get-Date): `t`tHDX Broadcast"
+			WriteWordLine 0 1 "HDX Broadcast"
+		}
+		Else
+		{
+			Write-Verbose "$(Get-Date): `t`tICA"
+			WriteWordLine 0 1 "ICA"
+		}
+		WriteWordLine 0 2 "Auto Client Reconnect"
+		If($Farm.AcrEnabled)
+		{
+			WriteWordLine 0 3 "Reconnect automatically"
+			WriteWordLine 0 3 "Log automatic reconnection attempts: " -NoNewLine
+
+			If($Farm.AcrLogReconnections)
+			{
+				WriteWordLine 0 0 "Yes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
+			}
+		}
+		Else
+		{
+			WriteWordLine 0 4 "Require user authentication"
+		}
+		
+		WriteWordLine 0 2 "Display"
+		WriteWordLine 0 3 "Discard queued image that is replaced by another image: " -nonewline
+		If($Farm.DisplayDiscardQueuedImages)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+		WriteWordLine 0 3 "Cache image to make scrolling smoother: " -nonewline
+		If($Farm.DisplayCacheImageForSmoothScrolling)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+		WriteWordLine 0 3 "Maximum memory to use for each session's graphics (KB): " $Farm.DisplayMaximumGraphicsMemory
+		WriteWordLine 0 3 "Degradation bias"
+		If($Farm.DisplayDegradationBias -eq "Resolution")
+		{
+			WriteWordLine 0 4 "Degrade resolution first"
+		}
+		Else
+		{
+			WriteWordLine 0 4 "Degrade color depth first"
+		}
+		WriteWordLine 0 3 "Notify user of session degradation: " -nonewline
+		If($Farm.DisplayNotifyUser)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+
+		WriteWordLine 0 2 "Keep-Alive"
+		If($Farm.KeepAliveEnabled)
+		{
+			If($FarmOS -eq "2003")
+			{
+				WriteWordLine 0 3 "HDX Broadcast Keep-Alive time-out value (seconds): " $Farm.KeepAliveTimeout
+			}
+			Else
+			{
+				WriteWordLine 0 3 "ICA Keep-Alive time-out value (seconds): " $Farm.KeepAliveTimeout
+			}
+		}
+		Else
+		{
+			If($FarmOS -eq "2003")
+			{
+				WriteWordLine 0 3 "HDX Broadcast Keep-Alive is not enabled"
+			}
+			Else
+			{
+				WriteWordLine 0 3 "ICA Keep-Alive is not enabled"
+			}
+		}
+		
+		If($FarmOS -eq "2003")
+		{
+			WriteWordLine 0 2 "Remote Console Connections"
+			WriteWordLine 0 3 "Remote connections to the console: " -nonewline
+			If($Farm.RemoteConsoleEnabled)
+			{
+				WriteWordLine 0 0 "Yes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
+			}
+		}
+		
+		#For server 2003, Isolation Environment data is not available
+		
+		Write-Verbose "$(Get-Date): `t`tLicense Server"
+		WriteWordLine 0 1 "License Server"
+		WriteWordLine 0 2 "Name: " $Farm.LicenseServerName
+		WriteWordLine 0 2 "Port number (Default 27000): " $Farm.LicenseServerPortNumber
+		
+		Write-Verbose "$(Get-Date): `t`tMemory/CPU"
+		WriteWordLine 0 1 "Memory/CPU"
+		WriteWordLine 0 2 "CPU Utilization Management: " -NoNewLine
+		If($Farm.CpuManagementLevel.ToString() -eq "255")
+		{
+			WriteWordLine 0 0 "Cannot be determined for XenApp 5 on Server 2003"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "" -nonewline
+			Switch ($Farm.CpuManagementLevel)
+			{
+				"NoManagement"  {WriteWordLine 0 0 "No CPU utilization management"}
+				"Fair"          {WriteWordLine 0 0 "Fair sharing of CPU between sessions"}
+				"ResourceBased" {WriteWordLine 0 0 "CPU Sharing based on Resource Allotments"}
+				Default {WriteWordLine 0 0 "CPU Utilization Management could not be determined: $($Farm.CpuManagementLevel)"}
+			}
+		}
+		WriteWordLine 0 2 "Memory Optimization: " -nonewline
+		If($Farm.MemoryOptimizationEnabled)
+		{
+			WriteWordLine 0 0 "Enabled"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "Not Enabled"
+		}
+		
+		Write-Verbose "$(Get-Date): `t`tHealth Monitoring & Recovery"
+		WriteWordLine 0 1 "Health Monitoring & Recovery"
+		If($Farm.HmrEnabled)
+		{
+			$HmrTests = Get-XAHmrTest -EA 0 | Sort-Object TestName
+			If($?)
+			{
+				ForEach($HmrTest in $HmrTests)
+				{
+					Write-Verbose "$(Get-Date): `t`t`tCreate Table for HMR Test $($HmrTest.TestName)"
+					$TableRange = $doc.Application.Selection.Range
+					[int]$Columns = 2
+					If(![String]::IsNullOrEmpty($Hmrtest.Arguments))
+					{
+						[int]$Rows = 9
+					}
+					Else
+					{
+						[int]$Rows = 8
+					}
+					$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+					$table.Style = $myHash.Word_TableGrid
+					$table.Borders.InsideLineStyle = 0
+					$table.Borders.OutsideLineStyle = 0
+					[int]$xRow = 1
+					$Table.Cell($xRow,1).Range.Text = "Test Name"
+					$Table.Cell($xRow,2).Range.Text = $Hmrtest.TestName
+					$xRow++
+					$Table.Cell($xRow,1).Range.Text = "Interval"
+					$Table.Cell($xRow,2).Range.Text = $Hmrtest.Interval
+					$xRow++
+					$Table.Cell($xRow,1).Range.Text = "Threshold"
+					$Table.Cell($xRow,2).Range.Text = $Hmrtest.Threshold
+					$xRow++
+					$Table.Cell($xRow,1).Range.Text = "Time-out"
+					$Table.Cell($xRow,2).Range.Text = $Hmrtest.Timeout
+					$xRow++
+					$Table.Cell($xRow,1).Range.Text = "Test File Name"
+					$Table.Cell($xRow,2).Range.Text = $Hmrtest.FilePath
+					If(![String]::IsNullOrEmpty($Hmrtest.Arguments))
+					{
+						$xRow++
+						$Table.Cell($xRow,1).Range.Text = "Arguments"
+						$Table.Cell($xRow,2).Range.Text = $Hmrtest.Arguments
+					}
+					$xRow++
+					$Table.Cell($xRow,1).Range.Text = "Recovery Action"
+					Switch ($Hmrtest.RecoveryAction)
+					{
+						"AlertOnly"                     {$Table.Cell($xRow,2).Range.Text = "Alert Only"}
+						"RemoveServerFromLoadBalancing" {$Table.Cell($xRow,2).Range.Text = "Remove Server from load balancing"}
+						"RestartIma"                    {$Table.Cell($xRow,2).Range.Text = "Restart IMA"}
+						"ShutdownIma"                   {$Table.Cell($xRow,2).Range.Text = "Shutdown IMA"}
+						"RebootServer"                  {$Table.Cell($xRow,2).Range.Text = "Reboot Server"}
+						Default {$Table.Cell($xRow,2).Range.Text = "Recovery Action could not be determined: $($Hmrtest.RecoveryAction)"}
+					}
+					If(![String]::IsNullOrEmpty($Hmrtest.Description))
+					{
+						$xRow++
+						$Table.Cell($xRow,1).Range.Text = "Test Description"
+						$Table.Cell($xRow,2).Range.Text = $Hmrtest.Description
+					}
+
+					$Table.Rows.SetLeftIndent(108,1)
+					$table.AutoFitBehavior(1)
+
+					#return focus back to document
+					Write-Verbose "$(Get-Date): `t`t`t`t`tReturn focus back to document"
+					$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
+
+					#move to the end of the current document
+					Write-Verbose "$(Get-Date): `t`t`t`t`tMove to the end of the current document"
+					$selection.EndKey($wdStory,$wdMove) | Out-Null
+				}
+			}
+			Else
+			{
+				WriteWordLine 0 2 "Health Monitoring & Recovery Tests could not be retrieved"
+			}
+		}
+		Else
+		{
+			WriteWordLine 0 2 "Health Monitoring & Recovery is not enabled"
+		}
+
+		If($FarmOS -eq "2003")
+		{
+			Write-Verbose "$(Get-Date): `t`tHDX Plug and Play"
+			WriteWordLine 0 1 "HDX Plug and Play"
+		}
+		Else
+		{
+			Write-Verbose "$(Get-Date): `t`tXenApp"
+			WriteWordLine 0 1 "XenApp"
+		}
+		WriteWordLine 0 2 "Content redirection from server to client: " -nonewline
+		If($Farm.ContentRedirectionEnabled)
+		{
+			WriteWordLine 0 0 "Yes"
+		}
+		Else
+		{
+			WriteWordLine 0 0 "No"
+		}
+
+		If($FarmOS -eq "2008")
+		{
+			WriteWordLine 0 2 "Remote Console Connections"
+			WriteWordLine 0 3 "Remote connections to the console: " -nonewline
+			If($Farm.RemoteConsoleEnabled)
+			{
+				WriteWordLine 0 0 "Yes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
+			}
+		}
+
+		Write-Verbose "$(Get-Date): `t`tSNMP"
+		WriteWordLine 0 1 "SNMP"
+		If($Farm.SnmpEnabled)
+		{
+			WriteWordLine 0 2 "Send session traps to selected SNMP agent on all farm servers"
+			WriteWordLine 0 3 "SNMP agent session traps"
+			WriteWordLine 0 4 "Logon`t`t`t: " -nonewline
+			If($Farm.SnmpLogonEnabled)
+			{
+				WriteWordLine 0 0 "Yes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
+			}
+			WriteWordLine 0 4 "Logoff`t`t`t: " -nonewline
+			If($Farm.SnmpLogoffEnabled)
+			{
+				WriteWordLine 0 0 "Yes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
+			}
+			WriteWordLine 0 4 "Disconnect`t`t: " -nonewline
+			If($Farm.SnmpDisconnectEnabled)
+			{
+				WriteWordLine 0 0 "Yes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
+			}
+			WriteWordLine 0 4 "Session limit per server`t: " -nonewline
+			If($Farm.SnmpLimitEnabled)
+			{
+				WriteWordLine 0 0 " " $Farm.SnmpLimitPerServer
+			}
+			Else
+			{
+				WriteWordLine 0 0 "No"
+			}
+		}
+		Else
+		{
+			WriteWordLine 0 2 "SNMP is not enabled"
+		}
+
+		If($FarmOS -eq "2003")
+		{
+			Write-Verbose "$(Get-Date): `t`tHDX 3D"
+			WriteWordLine 0 1 "HDX 3D"
+		}
+		Else
+		{
+			Write-Verbose "$(Get-Date): `t`tSpeedScreen"
+			WriteWordLine 0 1 "SpeedScreen"
+		}
+		If($Farm.BrowserAccelerationEnabled)
+		{
+			If($FarmOS -eq "2003")
+			{
+				WriteWordLine 0 2 "HDX 3D Browser Acceleration is enabled"
+			}
+			Else
+			{
+				WriteWordLine 0 2 "SpeedScreen Browser Acceleration is enabled"
+			}
+			If($Farm.BrowserAccelerationCompressionEnabled)
+			{
+				WriteWordLine 0 3 "Compress JPEG images to improve bandwidth"
+				WriteWordLine 0 4 "Image compression levels: " $Farm.BrowserAccelerationCompressionLevel
+				If($Farm.BrowserAccelerationVariableImageCompression)
+				{
+					WriteWordLine 0 4 "Adjust compression level based on available bandwidth"
+				}
+				Else
+				{
+					WriteWordLine 0 4 "Do not adjust compression level based on available bandwidth"
+				}
+			}
+			Else
+			{
+				WriteWordLine 0 3 "Do not compress JPEG images to improve bandwidth"
+			}
+		}
+		Else
+		{
+			If($FarmOS -eq "2003")
+			{
+				WriteWordLine 0 2 "HDX 3D Browser Acceleration is disabled"
+			}
+			Else
+			{
+				WriteWordLine 0 2 "SpeedScreen Browser Acceleration is disabled"
+			}
+		}
+		
+		If($FarmOS -eq "2003")
+		{
+			Write-Verbose "$(Get-Date): `t`tHDX Mediastream"
+			WriteWordLine 0 1 "HDX Mediastream"
+		}
+		If($Farm.FlashAccelerationEnabled)
+		{
+			If($FarmOS -eq "2003")
+			{
+				WriteWordLine 0 2 "Enable Flash for XenApp sessions"
+				WriteWordLine 0 3 "Server-side acceleration: " -nonewline
+				Switch ($Farm.FlashAccelerationOption)
+				{
+					"AllConnections" {WriteWordLine 0 0 "Accelerate for restricted bandwidth connections"}
+					"Unknown"        {WriteWordLine 0 0 "Do not accelerate"}
+					"NoOptimization" {WriteWordLine 0 0 "Accelerate for all connections"}
+					Default {WriteWordLine 0 0 "Server-side acceleration could not be determined: $($Farm.FlashAccelerationOption)"}
+				}
+			}
+			Else
+			{
+				WriteWordLine 0 2 "Enable Adobe Flash Player"
+				Switch ($Farm.FlashAccelerationOption)
+				{
+					"AllConnections" {WriteWordLine 0 3 "Accelerate for restricted bandwidth connections"}
+					"Unknown"        {WriteWordLine 0 3 "Do not accelerate"}
+					"NoOptimization" {WriteWordLine 0 3 "Accelerate for all connections"}
+					Default {WriteWordLine 0 0 "Server-side acceleration could not be determined: $($Farm.FlashAccelerationOption)"}
+				}
+			}
+			
+		}
+		Else
+		{
+			If($FarmOS -eq "2003")
+			{
+				WriteWordLine 0 2 "Flash is not enabled for XenApp sessions"
+			}
+			Else
+			{
+				WriteWordLine 0 2 "Adobe Flash is not enabled"
+			}
+		}
+		If($Farm.MultimediaAccelerationEnabled)
+		{
+			If($FarmOS -eq "2003")
+			{
+				WriteWordLine 0 2 "Multimedia Acceleration is enabled"
+				WriteWordLine 0 3 "Multimedia Acceleration (Network buffering)"
+			}
+			Else
+			{
+				WriteWordLine 0 2 "SpeedScreen Multimedia Acceleration is enabled"
+			}
+			If($Farm.MultimediaAccelerationDefaultBuffer)
+			{
+				WriteWordLine 0 3 "Use the Default buffer of 5 seconds"
+			}
+			Else
+			{
+				WriteWordLine 0 3 "Custom buffer in seconds: " $Farm.MultimediaAccelerationCustomBuffer
+			}
+		}
+		Else
+		{
+			If($FarmOS -eq "2003")
+			{
+				WriteWordLine 0 2 "Multimedia Acceleration is disabled"
+			}
+			Else
+			{
+				WriteWordLine 0 2 "SpeedScreen Multimedia Acceleration is disabled"
+			}
+		}
+		
+		WriteWordLine 0 0 "Offline Access"
+		Write-Verbose "$(Get-Date): `t`tUsers"
+		WriteWordLine 0 1 "Users"
+		If($Farm.OfflineAccounts)
+		{
+			WriteWordLine 0 2 "Configured users:"
+			ForEach($User in $Farm.OfflineAccounts)
+			{
+				WriteWordLine 0 3 $User
+			}
+		}
+		Else
+		{
+			WriteWordLine 0 2 "No users configured"
+		}
+
+		Write-Verbose "$(Get-Date): `t`tOffline License Settings"
+		WriteWordLine 0 1 "Offline License Settings"
+		WriteWordLine 0 2 "License period days: " $Farm.OfflineLicensePeriod
+
+	} 
+	Else 
+	{
+		Write-Warning "Farm information could not be retrieved"
+	}
+	$farm = $Null
+	Write-Verbose "$(Get-Date): Finished getting Farm Configuration data"
+	Write-Verbose "$(Get-Date): "
 }
-$farm = $Null
-Write-Verbose "$(Get-Date): Finished getting Farm Configuration data"
-Write-Verbose "$(Get-Date): "
 
 Write-Verbose "$(Get-Date): Processing Administrators"
 Write-Verbose "$(Get-Date): `tSetting summary variables"
 [int]$TotalFullAdmins = 0
 [int]$TotalViewAdmins = 0
 [int]$TotalCustomAdmins = 0
+[int]$TotalAdmins = 0
 
 Write-Verbose "$(Get-Date): `tRetrieving Administrators"
 $Administrators = Get-XAAdministrator -EA 0 | Sort-Object AdministratorName
@@ -4034,102 +4275,110 @@ If($?)
 	ForEach($Administrator in $Administrators)
 	{
 		Write-Verbose "$(Get-Date): `t`tProcessing administrator $($Administrator.AdministratorName)"
-		WriteWordLine 2 0 $Administrator.AdministratorName
-		WriteWordLine 0 1 "Administrator type: " -nonewline
-		Switch ($Administrator.AdministratorType)
+		If(!$Summary)
 		{
-			"Unknown"  {WriteWordLine 0 0 "Unknown"}
-			"Full"     {WriteWordLine 0 0 "Full Administration"; $TotalFullAdmins++}
-			"ViewOnly" {WriteWordLine 0 0 "View Only"; $TotalViewAdmins++}
-			"Custom"   {WriteWordLine 0 0 "Custom"; $TotalCustomAdmins++}
-			Default    {WriteWordLine 0 0 "Administrator type could not be determined: $($Administrator.AdministratorType)"}
-		}
-		WriteWordLine 0 0 " Administrator"
-		WriteWordLine 0 1 "Administrator account is " -NoNewLine
-		If($Administrator.Enabled)
-		{
-			WriteWordLine 0 0 "Enabled" 
-		} 
-		Else
-		{
-			WriteWordLine 0 0 "Disabled" 
-		}
-		If(!([String]::IsNullOrEmpty($Administrator.EmailAddress) -and [String]::IsNullOrEmpty($Administrator.SmsNumber) -and [String]::IsNullOrEmpty($Administrator.SmsGateway)))
-		{
-			WriteWordLine 0 1 "Alert Contact Details"
-			WriteWordLine 0 2 "E-mail`t`t: " $Administrator.EmailAddress
-			WriteWordLine 0 2 "SMS Number`t: " $Administrator.SmsNumber
-			WriteWordLine 0 2 "SMS Gateway`t: " $Administrator.SmsGateway
-		}
-		If($Administrator.AdministratorType -eq "Custom") 
-		{
-			WriteWordLine 0 1 "Farm Privileges:"
-			ForEach($farmprivilege in $Administrator.FarmPrivileges) 
+			WriteWordLine 2 0 $Administrator.AdministratorName
+			WriteWordLine 0 1 "Administrator type: " -nonewline
+			Switch ($Administrator.AdministratorType)
 			{
-				Write-Verbose "$(Get-Date): `t`t`tProcessing farm privilege $farmprivilege"
-				Switch ($farmprivilege)
-				{
-					"Unknown"                   {WriteWordLine 0 2 "Unknown"}
-					"ViewFarm"                  {WriteWordLine 0 2 "View farm management"}
-					"EditZone"                  {WriteWordLine 0 2 "Edit zones"}
-					"EditConfigurationLog"      {WriteWordLine 0 2 "Configure logging for the farm"}
-					"EditFarmOther"             {WriteWordLine 0 2 "Edit all other farm settings"}
-					"ViewAdmins"                {WriteWordLine 0 2 "View Citrix administrators"}
-					"LogOnConsole"              {WriteWordLine 0 2 "Log on to console"}
-					"LogOnWIConsole"            {WriteWordLine 0 2 "Logon on to Web Interface console"}
-					"ViewLoadEvaluators"        {WriteWordLine 0 2 "View load evaluators"}
-					"AssignLoadEvaluators"      {WriteWordLine 0 2 "Assign load evaluators"}
-					"EditLoadEvaluators"        {WriteWordLine 0 2 "Edit load evaluators"}
-					"ViewLoadBalancingPolicies" {WriteWordLine 0 2 "View load balancing policies"}
-					"EditLoadBalancingPolicies" {WriteWordLine 0 2 "Edit load balancing policies"}
-					"ViewPrinterDrivers"        {WriteWordLine 0 2 "View printer drivers"}
-					"ReplicatePrinterDrivers"   {WriteWordLine 0 2 "Replicate printer drivers"}
-					"EditUserPolicies"          {WriteWordLine 0 2 "Edit User Policies"}
-					"ViewUserPolicies"          {WriteWordLine 0 2 "View User Policies"}
-					"EditOtherPrinterSettings"  {WriteWordLine 0 2 "Edit All Other Printer Settings"}
-					"EditPrinterDrivers"        {WriteWordLine 0 2 "Edit Printer Drivers"}
-					"EditPrinters"              {WriteWordLine 0 2 "Edit Printers"}
-					"ViewPrintersAndDrivers"    {WriteWordLine 0 2 "View Printers and Printer Drovers"}
-					Default {WriteWordLine 0 2 "Farm privileges could not be determined: $($farmprivilege)"}
-				}
+				"Unknown"  {WriteWordLine 0 0 "Unknown"}
+				"Full"     {WriteWordLine 0 0 "Full Administration"; $TotalFullAdmins++}
+				"ViewOnly" {WriteWordLine 0 0 "View Only"; $TotalViewAdmins++}
+				"Custom"   {WriteWordLine 0 0 "Custom"; $TotalCustomAdmins++}
+				Default    {WriteWordLine 0 0 "Administrator type could not be determined: $($Administrator.AdministratorType)"}
 			}
-	
-			Write-Verbose "$(Get-Date): `t`t`tProcessing folder privileges"
-			WriteWordLine 0 1 "Folder Privileges:"
-			ForEach($folderprivilege in $Administrator.FolderPrivileges) 
+			WriteWordLine 0 0 " Administrator"
+			WriteWordLine 0 1 "Administrator account is " -NoNewLine
+			If($Administrator.Enabled)
 			{
-				Write-Verbose "$(Get-Date): `t`t`t`tProcessing folder permissions for $($FolderPrivilege.FolderPath)"
-				WriteWordLine 0 2 $FolderPrivilege.FolderPath
-				ForEach($FolderPermission in $FolderPrivilege.FolderPrivileges)
+				WriteWordLine 0 0 "Enabled" 
+			} 
+			Else
+			{
+				WriteWordLine 0 0 "Disabled" 
+			}
+			If(!([String]::IsNullOrEmpty($Administrator.EmailAddress) -and [String]::IsNullOrEmpty($Administrator.SmsNumber) -and [String]::IsNullOrEmpty($Administrator.SmsGateway)))
+			{
+				WriteWordLine 0 1 "Alert Contact Details"
+				WriteWordLine 0 2 "E-mail`t`t: " $Administrator.EmailAddress
+				WriteWordLine 0 2 "SMS Number`t: " $Administrator.SmsNumber
+				WriteWordLine 0 2 "SMS Gateway`t: " $Administrator.SmsGateway
+			}
+			If($Administrator.AdministratorType -eq "Custom") 
+			{
+				WriteWordLine 0 1 "Farm Privileges:"
+				ForEach($farmprivilege in $Administrator.FarmPrivileges) 
 				{
-					Switch ($folderpermission)
+					Write-Verbose "$(Get-Date): `t`t`tProcessing farm privilege $farmprivilege"
+					Switch ($farmprivilege)
 					{
-						"Unknown"                          {WriteWordLine 0 3 "Unknown"}
-						"ViewApplications"                 {WriteWordLine 0 3 "View applications"}
-						"EditApplications"                 {WriteWordLine 0 3 "Edit applications"}
-						"TerminateProcessApplication"      {WriteWordLine 0 3 "Terminate process that is created as a result of launching a published application"}
-						"AssignApplicationsToServers"      {WriteWordLine 0 3 "Assign applications to servers"}
-						"ViewServers"                      {WriteWordLine 0 3 "View servers"}
-						"EditOtherServerSettings"          {WriteWordLine 0 3 "Edit other server settings"}
-						"RemoveServer"                     {WriteWordLine 0 3 "Remove a bad server from farm"}
-						"TerminateProcess"                 {WriteWordLine 0 3 "Terminate processes on a server"}
-						"ViewSessions"                     {WriteWordLine 0 3 "View ICA/RDP sessions"}
-						"ConnectSessions"                  {WriteWordLine 0 3 "Connect sessions"}
-						"DisconnectSessions"               {WriteWordLine 0 3 "Disconnect sessions"}
-						"LogOffSessions"                   {WriteWordLine 0 3 "Log off sessions"}
-						"ResetSessions"                    {WriteWordLine 0 3 "Reset sessions"}
-						"SendMessages"                     {WriteWordLine 0 3 "Send messages to sessions"}
-						"ViewWorkerGroups"                 {WriteWordLine 0 3 "View worker groups"}
-						"AssignApplicationsToWorkerGroups" {WriteWordLine 0 3 "Assign applications to worker groups"}
-						"AssignApplications"               {WriteWordLine 0 3 "Assign Application to Servers"}
-						"EditServerSnmpSettings"           {WriteWordLine 0 3 "Edit SNMP Settings"}
-						"EditLicenseServer"                {WriteWordLine 0 3 "Edit License Server Settings"}
-						Default {WriteWordLine 0 3 "Folder permission could not be determined: $($folderpermission)"}
+						"Unknown"                   {WriteWordLine 0 2 "Unknown"}
+						"ViewFarm"                  {WriteWordLine 0 2 "View farm management"}
+						"EditZone"                  {WriteWordLine 0 2 "Edit zones"}
+						"EditConfigurationLog"      {WriteWordLine 0 2 "Configure logging for the farm"}
+						"EditFarmOther"             {WriteWordLine 0 2 "Edit all other farm settings"}
+						"ViewAdmins"                {WriteWordLine 0 2 "View Citrix administrators"}
+						"LogOnConsole"              {WriteWordLine 0 2 "Log on to console"}
+						"LogOnWIConsole"            {WriteWordLine 0 2 "Logon on to Web Interface console"}
+						"ViewLoadEvaluators"        {WriteWordLine 0 2 "View load evaluators"}
+						"AssignLoadEvaluators"      {WriteWordLine 0 2 "Assign load evaluators"}
+						"EditLoadEvaluators"        {WriteWordLine 0 2 "Edit load evaluators"}
+						"ViewLoadBalancingPolicies" {WriteWordLine 0 2 "View load balancing policies"}
+						"EditLoadBalancingPolicies" {WriteWordLine 0 2 "Edit load balancing policies"}
+						"ViewPrinterDrivers"        {WriteWordLine 0 2 "View printer drivers"}
+						"ReplicatePrinterDrivers"   {WriteWordLine 0 2 "Replicate printer drivers"}
+						"EditUserPolicies"          {WriteWordLine 0 2 "Edit User Policies"}
+						"ViewUserPolicies"          {WriteWordLine 0 2 "View User Policies"}
+						"EditOtherPrinterSettings"  {WriteWordLine 0 2 "Edit All Other Printer Settings"}
+						"EditPrinterDrivers"        {WriteWordLine 0 2 "Edit Printer Drivers"}
+						"EditPrinters"              {WriteWordLine 0 2 "Edit Printers"}
+						"ViewPrintersAndDrivers"    {WriteWordLine 0 2 "View Printers and Printer Drovers"}
+						Default {WriteWordLine 0 2 "Farm privileges could not be determined: $($farmprivilege)"}
 					}
 				}
-			}
-		}		
-		WriteWordLine 0 0 " "
+		
+				Write-Verbose "$(Get-Date): `t`t`tProcessing folder privileges"
+				WriteWordLine 0 1 "Folder Privileges:"
+				ForEach($folderprivilege in $Administrator.FolderPrivileges) 
+				{
+					Write-Verbose "$(Get-Date): `t`t`t`tProcessing folder permissions for $($FolderPrivilege.FolderPath)"
+					WriteWordLine 0 2 $FolderPrivilege.FolderPath
+					ForEach($FolderPermission in $FolderPrivilege.FolderPrivileges)
+					{
+						Switch ($folderpermission)
+						{
+							"Unknown"                          {WriteWordLine 0 3 "Unknown"}
+							"ViewApplications"                 {WriteWordLine 0 3 "View applications"}
+							"EditApplications"                 {WriteWordLine 0 3 "Edit applications"}
+							"TerminateProcessApplication"      {WriteWordLine 0 3 "Terminate process that is created as a result of launching a published application"}
+							"AssignApplicationsToServers"      {WriteWordLine 0 3 "Assign applications to servers"}
+							"ViewServers"                      {WriteWordLine 0 3 "View servers"}
+							"EditOtherServerSettings"          {WriteWordLine 0 3 "Edit other server settings"}
+							"RemoveServer"                     {WriteWordLine 0 3 "Remove a bad server from farm"}
+							"TerminateProcess"                 {WriteWordLine 0 3 "Terminate processes on a server"}
+							"ViewSessions"                     {WriteWordLine 0 3 "View ICA/RDP sessions"}
+							"ConnectSessions"                  {WriteWordLine 0 3 "Connect sessions"}
+							"DisconnectSessions"               {WriteWordLine 0 3 "Disconnect sessions"}
+							"LogOffSessions"                   {WriteWordLine 0 3 "Log off sessions"}
+							"ResetSessions"                    {WriteWordLine 0 3 "Reset sessions"}
+							"SendMessages"                     {WriteWordLine 0 3 "Send messages to sessions"}
+							"ViewWorkerGroups"                 {WriteWordLine 0 3 "View worker groups"}
+							"AssignApplicationsToWorkerGroups" {WriteWordLine 0 3 "Assign applications to worker groups"}
+							"AssignApplications"               {WriteWordLine 0 3 "Assign Application to Servers"}
+							"EditServerSnmpSettings"           {WriteWordLine 0 3 "Edit SNMP Settings"}
+							"EditLicenseServer"                {WriteWordLine 0 3 "Edit License Server Settings"}
+							Default {WriteWordLine 0 3 "Folder permission could not be determined: $($folderpermission)"}
+						}
+					}
+				}
+			}		
+			#WriteWordLine 0 0 " "
+		}
+		Else
+		{
+			WriteWordLine 0 0 $Administrator.AdministratorName
+			$TotalAdmins++
+		}
 	}
 }
 Else 
@@ -4147,10 +4396,18 @@ Write-Verbose "$(Get-Date): `tSetting summary variables"
 [int]$TotalPublishedContent = 0
 [int]$TotalPublishedDesktops = 0
 [int]$TotalStreamedApps = 0
+[int]$TotalApps = 0
 $SessionSharingItems = @()
 
 Write-Verbose "$(Get-Date): `tRetrieving Applications"
-$Applications = Get-XAApplication -EA 0 | Sort-Object FolderPath, DisplayName
+If($Summary)
+{
+	$Applications = Get-XAApplication -EA 0 | Sort-Object DisplayName
+}
+Else
+{
+	$Applications = Get-XAApplication -EA 0 | Sort-Object FolderPath, DisplayName
+}
 
 If($? -and $Applications -ne $Null)
 {
@@ -4159,123 +4416,79 @@ If($? -and $Applications -ne $Null)
 	ForEach($Application in $Applications)
 	{
 		Write-Verbose "$(Get-Date): `t`tProcessing application $($Application.BrowserName)"
-		If($Application.ApplicationType -ne "ServerDesktop" -and $Application.ApplicationType -ne "Content")
+		If(!$Summary)
 		{
-			#create array for appendix A
-			#these items are taken from http://support.citrix.com/article/CTX159159
-			#Some properties that must match on both Applications for Session Sharing to Function are:
-			#
-			#Color depth
-			#Screen Size
-			#Access Control Filters (for SmartAccess)
-			#Sound (unexplained in article)
-			#Drive Mapping (unexplained in article)
-			#Printer Mapping (unexplained in article)
-			#Encryption
-
-			Write-Verbose "$(Get-Date): `t`t`tGather session sharing info for Appendix A"
-			$obj = New-Object -TypeName PSObject
-			$obj | Add-Member -MemberType NoteProperty -Name ApplicationName      -Value $Application.BrowserName
-			$obj | Add-Member -MemberType NoteProperty -Name MaximumColorQuality  -Value $Application.ColorDepth
-			$obj | Add-Member -MemberType NoteProperty -Name SessionWindowSize    -Value $Application.WindowType
-
-			If($Application.AccessSessionConditionsEnabled)
+			If($Application.ApplicationType -ne "ServerDesktop" -and $Application.ApplicationType -ne "Content")
 			{
-				$tmp = @()
-				ForEach($filter in $Application.AccessSessionConditions)
+				#create array for appendix A
+				#these items are taken from http://support.citrix.com/article/CTX159159
+				#Some properties that must match on both Applications for Session Sharing to Function are:
+				#
+				#Color depth
+				#Screen Size
+				#Access Control Filters (for SmartAccess)
+				#Sound (unexplained in article)
+				#Drive Mapping (unexplained in article)
+				#Printer Mapping (unexplained in article)
+				#Encryption
+
+				Write-Verbose "$(Get-Date): `t`t`tGather session sharing info for Appendix A"
+				$obj = New-Object -TypeName PSObject
+				$obj | Add-Member -MemberType NoteProperty -Name ApplicationName      -Value $Application.BrowserName
+				$obj | Add-Member -MemberType NoteProperty -Name MaximumColorQuality  -Value $Application.ColorDepth
+				$obj | Add-Member -MemberType NoteProperty -Name SessionWindowSize    -Value $Application.WindowType
+
+				If($Application.AccessSessionConditionsEnabled)
 				{
-					$tmp += $filter
+					$tmp = @()
+					ForEach($filter in $Application.AccessSessionConditions)
+					{
+						$tmp += $filter
+					}
+					$obj | Add-Member -MemberType NoteProperty -Name AccessControlFilters -Value $tmp
 				}
-				$obj | Add-Member -MemberType NoteProperty -Name AccessControlFilters -Value $tmp
-			}
-			Else
-			{
-				$obj | Add-Member -MemberType NoteProperty -Name AccessControlFilters -Value "None"
-			}
+				Else
+				{
+					$obj | Add-Member -MemberType NoteProperty -Name AccessControlFilters -Value "None"
+				}
 
-			$obj | Add-Member -MemberType NoteProperty -Name Encryption           -Value $Application.EncryptionLevel
-			$SessionSharingItems += $obj
+				$obj | Add-Member -MemberType NoteProperty -Name Encryption           -Value $Application.EncryptionLevel
+				$SessionSharingItems += $obj
+			}
+			
+			[bool]$AppServerInfoResults = $False
+			$AppServerInfo = Get-XAApplicationReport -BrowserName $Application.BrowserName -EA 0
+			If($?)
+			{
+				$AppServerInfoResults = $True
+			}
+			[bool]$streamedapp = $False
+			If($Application.ApplicationType -Contains "streamedtoclient" -or $Application.ApplicationType -Contains "streamedtoserver")
+			{
+				$streamedapp = $True
+			}
 		}
-		
-		[bool]$AppServerInfoResults = $False
-		$AppServerInfo = Get-XAApplicationReport -BrowserName $Application.BrowserName -EA 0
-		If($?)
-		{
-			$AppServerInfoResults = $True
-		}
-		[bool]$streamedapp = $False
-		If($Application.ApplicationType -Contains "streamedtoclient" -or $Application.ApplicationType -Contains "streamedtoserver")
-		{
-			$streamedapp = $True
-		}
-		#name properties
-		WriteWordLine 2 0 $Application.DisplayName
-		WriteWordLine 0 1 "Application name`t`t: " $Application.BrowserName
-		WriteWordLine 0 1 "Disable application`t`t: " -NoNewLine
-		#weird, if application is enabled, it is disabled!
-		If($Application.Enabled) 
-		{
-			WriteWordLine 0 0 "No"
-		} 
 		Else
 		{
-			WriteWordLine 0 0 "Yes"
-			WriteWordLine 0 1 "Hide disabled application`t: " -nonewline
-			If($Application.HideWhenDisabled)
-			{
-				WriteWordLine 0 0 "Yes"
-			}
-			Else
-			{
-				WriteWordLine 0 0 "No"
-			}
-		}
-
-		If(![String]::IsNullOrEmpty($Application.Description))
-		{
-			WriteWordLine 0 1 "Application description`t`t: " $Application.Description
+			$TotalApps++
 		}
 		
-		#type properties
-		WriteWordLine 0 1 "Application Type`t`t: " -nonewline
-		Switch ($Application.ApplicationType)
+		#name properties
+		If(!$Summary)
 		{
-			"Unknown"                            {WriteWordLine 0 0 "Unknown"}
-			"ServerInstalled"                    {WriteWordLine 0 0 "Installed application"; $TotalPublishedApps++}
-			"ServerDesktop"                      {WriteWordLine 0 0 "Server desktop"; $TotalPublishedDesktops++}
-			"Content"                            {WriteWordLine 0 0 "Content"; $TotalPublishedContent++}
-			"StreamedToServer"                   {WriteWordLine 0 0 "Streamed to server"; $TotalStreamedApps++}
-			"StreamedToClient"                   {WriteWordLine 0 0 "Streamed to client"; $TotalStreamedApps++}
-			"StreamedToClientOrInstalled"        {WriteWordLine 0 0 "Streamed if possible, otherwise accessed from server as Installed application"; $TotalStreamedApps++}
-			"StreamedToClientOrStreamedToServer" {WriteWordLine 0 0 "Streamed if possible, otherwise Streamed to server"; $TotalStreamedApps++}
-			Default {WriteWordLine 0 0 "Application Type could not be determined: $($Application.ApplicationType)"}
-		}
-		If(![String]::IsNullOrEmpty($Application.FolderPath))
-		{
-			WriteWordLine 0 1 "Folder path`t`t`t: " $Application.FolderPath
-		}
-		If(![String]::IsNullOrEmpty($Application.ContentAddress))
-		{
-			WriteWordLine 0 1 "Content Address`t`t: " $Application.ContentAddress
-		}
-	
-		#if a streamed app
-		If($streamedapp)
-		{
-			WriteWordLine 0 1 "Citrix streaming app profile address`t`t: " 
-			WriteWordLine 0 2 $Application.ProfileLocation
-			WriteWordLine 0 1 "App to launch from Citrix stream app profile`t: " 
-			WriteWordLine 0 2 $Application.ProfileProgramName
-			If(![String]::IsNullOrEmpty($Application.ProfileProgramArguments))
+			WriteWordLine 2 0 $Application.DisplayName
+			WriteWordLine 0 1 "Application name`t`t: " $Application.BrowserName
+			WriteWordLine 0 1 "Disable application`t`t: " -NoNewLine
+			#weird, if application is enabled, it is disabled!
+			If($Application.Enabled) 
 			{
-				WriteWordLine 0 1 "Extra command line parameters`t`t`t: " 
-				WriteWordLine 0 2 $Application.ProfileProgramArguments
-			}
-			#if streamed, Offline access properties
-			If($Application.OfflineAccessAllowed)
+				WriteWordLine 0 0 "No"
+			} 
+			Else
 			{
-				WriteWordLine 0 1 "Enable offline access`t`t`t`t: " -nonewline
-				If($Application.OfflineAccessAllowed)
+				WriteWordLine 0 0 "Yes"
+				WriteWordLine 0 1 "Hide disabled application`t: " -nonewline
+				If($Application.HideWhenDisabled)
 				{
 					WriteWordLine 0 0 "Yes"
 				}
@@ -4284,366 +4497,428 @@ If($? -and $Applications -ne $Null)
 					WriteWordLine 0 0 "No"
 				}
 			}
-			If($Application.CachingOption)
+
+			If(![String]::IsNullOrEmpty($Application.Description))
 			{
-				WriteWordLine 0 1 "Cache preference`t`t`t`t: " -nonewline
-				Switch ($Application.CachingOption)
-				{
-					"Unknown"   {WriteWordLine 0 0 "Unknown"}
-					"PreLaunch" {WriteWordLine 0 0 "Cache application prior to launching"}
-					"AtLaunch"  {WriteWordLine 0 0 "Cache application during launch"}
-					Default {WriteWordLine 0 0 "Could not be determined: $($Application.CachingOption)"}
-				}
-			}
-		}
-		
-		#location properties
-		If(!$streamedapp)
-		{
-			If(![String]::IsNullOrEmpty($Application.CommandLineExecutable))
-			{
-				If($Application.CommandLineExecutable.Length -lt 40)
-				{
-					WriteWordLine 0 1 "Command Line`t`t`t: " $Application.CommandLineExecutable
-				}
-				Else
-				{
-					WriteWordLine 0 1 "Command Line: " 
-					WriteWordLine 0 2 $Application.CommandLineExecutable
-				}
-			}
-			If(![String]::IsNullOrEmpty($Application.WorkingDirectory))
-			{
-				If($Application.WorkingDirectory.Length -lt 40)
-				{
-					WriteWordLine 0 1 "Working directory`t`t: " $Application.WorkingDirectory
-				}
-				Else
-				{
-					WriteWordLine 0 1 "Working directory: " 
-					WriteWordLine 0 2 $Application.WorkingDirectory
-				}
+				WriteWordLine 0 1 "Application description`t`t: " $Application.Description
 			}
 			
-			#servers properties
-			If($AppServerInfoResults)
+			#type properties
+			WriteWordLine 0 1 "Application Type`t`t: " -nonewline
+			Switch ($Application.ApplicationType)
 			{
-				If(![String]::IsNullOrEmpty($AppServerInfo.ServerNames))
+				"Unknown"                            {WriteWordLine 0 0 "Unknown"}
+				"ServerInstalled"                    {WriteWordLine 0 0 "Installed application"; $TotalPublishedApps++}
+				"ServerDesktop"                      {WriteWordLine 0 0 "Server desktop"; $TotalPublishedDesktops++}
+				"Content"                            {WriteWordLine 0 0 "Content"; $TotalPublishedContent++}
+				"StreamedToServer"                   {WriteWordLine 0 0 "Streamed to server"; $TotalStreamedApps++}
+				"StreamedToClient"                   {WriteWordLine 0 0 "Streamed to client"; $TotalStreamedApps++}
+				"StreamedToClientOrInstalled"        {WriteWordLine 0 0 "Streamed if possible, otherwise accessed from server as Installed application"; $TotalStreamedApps++}
+				"StreamedToClientOrStreamedToServer" {WriteWordLine 0 0 "Streamed if possible, otherwise Streamed to server"; $TotalStreamedApps++}
+				Default {WriteWordLine 0 0 "Application Type could not be determined: $($Application.ApplicationType)"}
+			}
+			If(![String]::IsNullOrEmpty($Application.FolderPath))
+			{
+				WriteWordLine 0 1 "Folder path`t`t`t: " $Application.FolderPath
+			}
+			If(![String]::IsNullOrEmpty($Application.ContentAddress))
+			{
+				WriteWordLine 0 1 "Content Address`t`t: " $Application.ContentAddress
+			}
+		
+			#if a streamed app
+			If($streamedapp)
+			{
+				WriteWordLine 0 1 "Citrix streaming app profile address`t`t: " 
+				WriteWordLine 0 2 $Application.ProfileLocation
+				WriteWordLine 0 1 "App to launch from Citrix stream app profile`t: " 
+				WriteWordLine 0 2 $Application.ProfileProgramName
+				If(![String]::IsNullOrEmpty($Application.ProfileProgramArguments))
 				{
-					WriteWordLine 0 1 "Servers:"
-					ForEach($servername in $AppServerInfo.ServerNames)
+					WriteWordLine 0 1 "Extra command line parameters`t`t`t: " 
+					WriteWordLine 0 2 $Application.ProfileProgramArguments
+				}
+				#if streamed, Offline access properties
+				If($Application.OfflineAccessAllowed)
+				{
+					WriteWordLine 0 1 "Enable offline access`t`t`t`t: " -nonewline
+					If($Application.OfflineAccessAllowed)
 					{
-						WriteWordLine 0 2 $servername
+						WriteWordLine 0 0 "Yes"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+				}
+				If($Application.CachingOption)
+				{
+					WriteWordLine 0 1 "Cache preference`t`t`t`t: " -nonewline
+					Switch ($Application.CachingOption)
+					{
+						"Unknown"   {WriteWordLine 0 0 "Unknown"}
+						"PreLaunch" {WriteWordLine 0 0 "Cache application prior to launching"}
+						"AtLaunch"  {WriteWordLine 0 0 "Cache application during launch"}
+						Default {WriteWordLine 0 0 "Could not be determined: $($Application.CachingOption)"}
 					}
 				}
 			}
-			Else
+			
+			#location properties
+			If(!$streamedapp)
 			{
-				WriteWordLine 0 2 "Unable to retrieve a list of Servers for this application"
-			}
-		}
-	
-		#users properties
-		If($Application.AnonymousConnectionsAllowed)
-		{
-			WriteWordLine 0 1 "Allow anonymous users: " $Application.AnonymousConnectionsAllowed
-		}
-		Else
-		{
-			If($AppServerInfoResults)
-			{
-				WriteWordLine 0 1 "Users:"
-				ForEach($user in $AppServerInfo.Accounts)
+				If(![String]::IsNullOrEmpty($Application.CommandLineExecutable))
 				{
-					WriteWordLine 0 2 $user
+					If($Application.CommandLineExecutable.Length -lt 40)
+					{
+						WriteWordLine 0 1 "Command Line`t`t`t: " $Application.CommandLineExecutable
+					}
+					Else
+					{
+						WriteWordLine 0 1 "Command Line: " 
+						WriteWordLine 0 2 $Application.CommandLineExecutable
+					}
+				}
+				If(![String]::IsNullOrEmpty($Application.WorkingDirectory))
+				{
+					If($Application.WorkingDirectory.Length -lt 40)
+					{
+						WriteWordLine 0 1 "Working directory`t`t: " $Application.WorkingDirectory
+					}
+					Else
+					{
+						WriteWordLine 0 1 "Working directory: " 
+						WriteWordLine 0 2 $Application.WorkingDirectory
+					}
+				}
+				
+				#servers properties
+				If($AppServerInfoResults)
+				{
+					If(![String]::IsNullOrEmpty($AppServerInfo.ServerNames))
+					{
+						If(![String]::IsNullOrEmpty($AppServerInfo.ServerNames))
+						{
+							WriteWordLine 0 1 "Servers:"
+							$TempArray = $AppServerInfo.ServerNames | Sort-Object
+							BuildTableForServer $TempArray
+							$TempArray = $Null
+						}
+					}
+				}
+				Else
+				{
+					WriteWordLine 0 2 "Unable to retrieve a list of Servers for this application"
 				}
 			}
-			Else
+		
+			#users properties
+			If($Application.AnonymousConnectionsAllowed)
 			{
-				WriteWordLine 0 2 "Unable to retrieve a list of Users for this application"
-			}
-		}
-	
-		#shortcut presentation properties
-		#application icon is ignored
-		If(![String]::IsNullOrEmpty($Application.ClientFolder))
-		{
-			If($Application.ClientFolder.Length -lt 30)
-			{
-				WriteWordLine 0 1 "Client application folder`t`t`t`t: " $Application.ClientFolder
+				WriteWordLine 0 1 "Allow anonymous users: " $Application.AnonymousConnectionsAllowed
 			}
 			Else
 			{
-				WriteWordLine 0 1 "Client application folder`t`t`t`t: " 
-				WriteWordLine 0 2 $Application.ClientFolder
+				If($AppServerInfoResults)
+				{
+					WriteWordLine 0 1 "Users:"
+					ForEach($user in $AppServerInfo.Accounts)
+					{
+						WriteWordLine 0 2 $user
+					}
+				}
+				Else
+				{
+					WriteWordLine 0 2 "Unable to retrieve a list of Users for this application"
+				}
 			}
-		}
-		If($Application.AddToClientStartMenu)
-		{
-			WriteWordLine 0 1 "Add to client's start menu"
-			If($Application.StartMenuFolder)
+		
+			#shortcut presentation properties
+			#application icon is ignored
+			If(![String]::IsNullOrEmpty($Application.ClientFolder))
 			{
-				WriteWordLine 0 2 "Start menu folder`t`t`t: " $Application.StartMenuFolder
+				If($Application.ClientFolder.Length -lt 30)
+				{
+					WriteWordLine 0 1 "Client application folder`t`t`t`t: " $Application.ClientFolder
+				}
+				Else
+				{
+					WriteWordLine 0 1 "Client application folder`t`t`t`t: " 
+					WriteWordLine 0 2 $Application.ClientFolder
+				}
 			}
-		}
-		If($Application.AddToClientDesktop)
-		{
-			WriteWordLine 0 1 "Add shortcut to the client's desktop"
-		}
-	
-		#access control properties
-		If($Application.ConnectionsThroughAccessGatewayAllowed)
-		{
-			WriteWordLine 0 1 "Allow connections made through AGAE`t`t: " -nonewline
+			If($Application.AddToClientStartMenu)
+			{
+				WriteWordLine 0 1 "Add to client's start menu"
+				If($Application.StartMenuFolder)
+				{
+					WriteWordLine 0 2 "Start menu folder`t`t`t: " $Application.StartMenuFolder
+				}
+			}
+			If($Application.AddToClientDesktop)
+			{
+				WriteWordLine 0 1 "Add shortcut to the client's desktop"
+			}
+		
+			#access control properties
 			If($Application.ConnectionsThroughAccessGatewayAllowed)
 			{
-				WriteWordLine 0 0 "Yes"
-			} 
-			Else
-			{
-				WriteWordLine 0 0 "No"
+				WriteWordLine 0 1 "Allow connections made through AGAE`t`t: " -nonewline
+				If($Application.ConnectionsThroughAccessGatewayAllowed)
+				{
+					WriteWordLine 0 0 "Yes"
+				} 
+				Else
+				{
+					WriteWordLine 0 0 "No"
+				}
 			}
-		}
-		If($Application.OtherConnectionsAllowed)
-		{
-			WriteWordLine 0 1 "Any connection`t`t`t`t`t: " -nonewline
 			If($Application.OtherConnectionsAllowed)
 			{
-				WriteWordLine 0 0 "Yes"
-			} 
-			Else
-			{
-				WriteWordLine 0 0 "No"
-			}
-		}
-		If($Application.AccessSessionConditionsEnabled)
-		{
-			WriteWordLine 0 1 "Any connection that meets any of the following filters: " $Application.AccessSessionConditionsEnabled
-			WriteWordLine 0 1 "Access Gateway Filters:"
-			$TableRange = $doc.Application.Selection.Range
-			[int]$Columns = 2
-			[int]$Rows = $Application.AccessSessionConditions.count + 1
-			$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
-			$table.Style = $myHash.Word_TableGrid
-			$table.Borders.InsideLineStyle = 1
-			$table.Borders.OutsideLineStyle = 1
-			[int]$xRow = 1
-			Write-Verbose "$(Get-Date): `t`t`t`tFormat first row with column headings"
-			$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
-			$Table.Cell($xRow,1).Range.Font.Bold = $True
-			$Table.Cell($xRow,1).Range.Text = "Farm Name"
-			$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
-			$Table.Cell($xRow,2).Range.Font.Bold = $True
-			$Table.Cell($xRow,2).Range.Text = "Filter"
-			ForEach($AccessCondition in $Application.AccessSessionConditions)
-			{
-				[string]$Tmp = $AccessCondition
-				[string]$AGFarm = $Tmp.substring(0, $Tmp.indexof(":"))
-				[string]$AGFilter = $Tmp.substring($Tmp.indexof(":")+1)
-				$xRow++
-				Write-Verbose "$(Get-Date): `t`t`t`t`tProcessing row for Access Condition $($Tmp)"
-				$Table.Cell($xRow,1).Range.Text = $AGFarm
-				$Table.Cell($xRow,2).Range.Text = $AGFilter
-			}
-
-			Write-Verbose "$(Get-Date): `t`t`t`tMove table to the right"
-			$Table.Rows.SetLeftIndent(72,1)
-			$table.AutoFitBehavior(1)
-
-			#return focus back to document
-			Write-Verbose "$(Get-Date): `t`t`t`tReturn focus back to document"
-			$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
-
-			#move to the end of the current document
-			Write-Verbose "$(Get-Date): `t`t`t`tMove to the end of the current document"
-			$selection.EndKey($wdStory,$wdMove) | Out-Null
-			$tmp = $Null
-			$AGFarm = $Null
-			$AGFilter = $Null
-		}
-	
-		#content redirection properties
-		If($AppServerInfoResults)
-		{
-			If($AppServerInfo.FileTypes)
-			{
-				WriteWordLine 0 1 "File type associations:"
-				ForEach($filetype in $AppServerInfo.FileTypes)
+				WriteWordLine 0 1 "Any connection`t`t`t`t`t: " -nonewline
+				If($Application.OtherConnectionsAllowed)
 				{
-					WriteWordLine 0 3 $filetype
+					WriteWordLine 0 0 "Yes"
+				} 
+				Else
+				{
+					WriteWordLine 0 0 "No"
+				}
+			}
+			If($Application.AccessSessionConditionsEnabled)
+			{
+				WriteWordLine 0 1 "Any connection that meets any of the following filters: " $Application.AccessSessionConditionsEnabled
+				WriteWordLine 0 1 "Access Gateway Filters:"
+				$TableRange = $doc.Application.Selection.Range
+				[int]$Columns = 2
+				[int]$Rows = $Application.AccessSessionConditions.count + 1
+				$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+				$table.Style = $myHash.Word_TableGrid
+				$table.Borders.InsideLineStyle = 1
+				$table.Borders.OutsideLineStyle = 1
+				[int]$xRow = 1
+				Write-Verbose "$(Get-Date): `t`t`t`tFormat first row with column headings"
+				$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell($xRow,1).Range.Font.Bold = $True
+				$Table.Cell($xRow,1).Range.Text = "Farm Name"
+				$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell($xRow,2).Range.Font.Bold = $True
+				$Table.Cell($xRow,2).Range.Text = "Filter"
+				ForEach($AccessCondition in $Application.AccessSessionConditions)
+				{
+					[string]$Tmp = $AccessCondition
+					[string]$AGFarm = $Tmp.substring(0, $Tmp.indexof(":"))
+					[string]$AGFilter = $Tmp.substring($Tmp.indexof(":")+1)
+					$xRow++
+					Write-Verbose "$(Get-Date): `t`t`t`t`tProcessing row for Access Condition $($Tmp)"
+					$Table.Cell($xRow,1).Range.Text = $AGFarm
+					$Table.Cell($xRow,2).Range.Text = $AGFilter
+				}
+
+				Write-Verbose "$(Get-Date): `t`t`t`tMove table to the right"
+				$Table.Rows.SetLeftIndent(72,1)
+				$table.AutoFitBehavior(1)
+
+				#return focus back to document
+				Write-Verbose "$(Get-Date): `t`t`t`tReturn focus back to document"
+				$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
+
+				#move to the end of the current document
+				Write-Verbose "$(Get-Date): `t`t`t`tMove to the end of the current document"
+				$selection.EndKey($wdStory,$wdMove) | Out-Null
+				$tmp = $Null
+				$AGFarm = $Null
+				$AGFilter = $Null
+			}
+		
+			#content redirection properties
+			If($AppServerInfoResults)
+			{
+				If($AppServerInfo.FileTypes)
+				{
+					WriteWordLine 0 1 "File type associations:"
+					ForEach($filetype in $AppServerInfo.FileTypes)
+					{
+						WriteWordLine 0 3 $filetype
+					}
+				}
+				Else
+				{
+					WriteWordLine 0 1 "File Type Associations for this application`t: None"
 				}
 			}
 			Else
 			{
-				WriteWordLine 0 1 "File Type Associations for this application`t: None"
-			}
-		}
-		Else
-		{
-			WriteWordLine 0 1 "Unable to retrieve the list of FTAs for this application"
-		}
-	
-		#if streamed app, Alternate profiles
-		If($streamedapp)
-		{
-			If($Application.AlternateProfiles)
-			{
-				WriteWordLine 0 1 "Primary application profile location`t`t: " $Application.AlternateProfiles
+				WriteWordLine 0 1 "Unable to retrieve the list of FTAs for this application"
 			}
 		
-			#if streamed app, User privileges properties
-			If($Application.RunAsLeastPrivilegedUser)
+			#if streamed app, Alternate profiles
+			If($streamedapp)
 			{
-				WriteWordLine 0 1 "Run application as a least-privileged user account`t: " $Application.RunAsLeastPrivilegedUser
+				If($Application.AlternateProfiles)
+				{
+					WriteWordLine 0 1 "Primary application profile location`t`t: " $Application.AlternateProfiles
+				}
+			
+				#if streamed app, User privileges properties
+				If($Application.RunAsLeastPrivilegedUser)
+				{
+					WriteWordLine 0 1 "Run application as a least-privileged user account`t: " $Application.RunAsLeastPrivilegedUser
+				}
 			}
-		}
-	
-		#limits properties
-		WriteWordLine 0 1 "Limit instances allowed to run in server farm`t: " -NoNewLine
+		
+			#limits properties
+			WriteWordLine 0 1 "Limit instances allowed to run in server farm`t: " -NoNewLine
 
-		If($Application.InstanceLimit -eq -1)
-		{
-			WriteWordLine 0 0 "No limit set"
-		}
-		Else
-		{
-			WriteWordLine 0 0 $Application.InstanceLimit
-		}
-	
-		WriteWordLine 0 1 "Allow only 1 instance of app for each user`t: " -NoNewLine
-	
-		If($Application.MultipleInstancesPerUserAllowed) 
-		{
-			WriteWordLine 0 0 "No"
-		} 
-		Else
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-	
-		If($Application.CpuPriorityLevel)
-		{
-			WriteWordLine 0 1 "Application importance`t`t`t`t: " -nonewline
-			Switch ($Application.CpuPriorityLevel)
+			If($Application.InstanceLimit -eq -1)
 			{
-				"Unknown"     {WriteWordLine 0 0 "Unknown"}
-				"BelowNormal" {WriteWordLine 0 0 "Below Normal"}
-				"Low"         {WriteWordLine 0 0 "Low"}
-				"Normal"      {WriteWordLine 0 0 "Normal"}
-				"AboveNormal" {WriteWordLine 0 0 "Above Normal"}
-				"High"        {WriteWordLine 0 0 "High"}
-				Default {WriteWordLine 0 0 "Application importance could not be determined: $($Application.CpuPriorityLevel)"}
-			}
-		}
-		
-		#client options properties
-		WriteWordLine 0 1 "Enable legacy audio`t`t`t`t: " -nonewline
-		Switch ($Application.AudioType)
-		{
-			"Unknown" {WriteWordLine 0 0 "Unknown"}
-			"None"    {WriteWordLine 0 0 "Not Enabled"}
-			"Basic"   {WriteWordLine 0 0 "Enabled"}
-			Default {WriteWordLine 0 0 "Enable legacy audio could not be determined: $($Application.AudioType)"}
-		}
-		WriteWordLine 0 1 "Minimum requirement`t`t`t`t: " -nonewline
-		If($Application.AudioRequired)
-		{
-			WriteWordLine 0 0 "Enabled"
-		}
-		Else
-		{
-			WriteWordLine 0 0 "Disabled"
-		}
-		If($Application.SslConnectionEnabled)
-		{
-			WriteWordLine 0 1 "Enable SSL and TLS protocols`t`t`t: " -nonewline
-			If($Application.SslConnectionEnabled)
-			{
-				WriteWordLine 0 0 "Enabled"
+				WriteWordLine 0 0 "No limit set"
 			}
 			Else
 			{
-				WriteWordLine 0 0 "Disabled"
+				WriteWordLine 0 0 $Application.InstanceLimit
 			}
-		}
-		If($Application.EncryptionLevel)
-		{
-			WriteWordLine 0 1 "Encryption`t`t`t`t`t: " -nonewline
-			Switch ($Application.EncryptionLevel)
+		
+			WriteWordLine 0 1 "Allow only 1 instance of app for each user`t: " -NoNewLine
+		
+			If($Application.MultipleInstancesPerUserAllowed) 
+			{
+				WriteWordLine 0 0 "No"
+			} 
+			Else
+			{
+				WriteWordLine 0 0 "Yes"
+			}
+		
+			If($Application.CpuPriorityLevel)
+			{
+				WriteWordLine 0 1 "Application importance`t`t`t`t: " -nonewline
+				Switch ($Application.CpuPriorityLevel)
+				{
+					"Unknown"     {WriteWordLine 0 0 "Unknown"}
+					"BelowNormal" {WriteWordLine 0 0 "Below Normal"}
+					"Low"         {WriteWordLine 0 0 "Low"}
+					"Normal"      {WriteWordLine 0 0 "Normal"}
+					"AboveNormal" {WriteWordLine 0 0 "Above Normal"}
+					"High"        {WriteWordLine 0 0 "High"}
+					Default {WriteWordLine 0 0 "Application importance could not be determined: $($Application.CpuPriorityLevel)"}
+				}
+			}
+			
+			#client options properties
+			WriteWordLine 0 1 "Enable legacy audio`t`t`t`t: " -nonewline
+			Switch ($Application.AudioType)
 			{
 				"Unknown" {WriteWordLine 0 0 "Unknown"}
-				"Basic"   {WriteWordLine 0 0 "Basic"}
-				"LogOn"   {WriteWordLine 0 0 "128-Bit Login Only (RC-5)"}
-				"Bits40"  {WriteWordLine 0 0 "40-Bit (RC-5)"}
-				"Bits56"  {WriteWordLine 0 0 "56-Bit (RC-5)"}
-				"Bits128" {WriteWordLine 0 0 "128-Bit (RC-5)"}
-				Default {WriteWordLine 0 0 "Encryption could not be determined: $($Application.EncryptionLevel)"}
+				"None"    {WriteWordLine 0 0 "Not Enabled"}
+				"Basic"   {WriteWordLine 0 0 "Enabled"}
+				Default {WriteWordLine 0 0 "Enable legacy audio could not be determined: $($Application.AudioType)"}
 			}
-		}
-		If($Application.EncryptionRequired)
-		{
 			WriteWordLine 0 1 "Minimum requirement`t`t`t`t: " -nonewline
+			If($Application.AudioRequired)
+			{
+				WriteWordLine 0 0 "Enabled"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "Disabled"
+			}
+			If($Application.SslConnectionEnabled)
+			{
+				WriteWordLine 0 1 "Enable SSL and TLS protocols`t`t`t: " -nonewline
+				If($Application.SslConnectionEnabled)
+				{
+					WriteWordLine 0 0 "Enabled"
+				}
+				Else
+				{
+					WriteWordLine 0 0 "Disabled"
+				}
+			}
+			If($Application.EncryptionLevel)
+			{
+				WriteWordLine 0 1 "Encryption`t`t`t`t`t: " -nonewline
+				Switch ($Application.EncryptionLevel)
+				{
+					"Unknown" {WriteWordLine 0 0 "Unknown"}
+					"Basic"   {WriteWordLine 0 0 "Basic"}
+					"LogOn"   {WriteWordLine 0 0 "128-Bit Login Only (RC-5)"}
+					"Bits40"  {WriteWordLine 0 0 "40-Bit (RC-5)"}
+					"Bits56"  {WriteWordLine 0 0 "56-Bit (RC-5)"}
+					"Bits128" {WriteWordLine 0 0 "128-Bit (RC-5)"}
+					Default {WriteWordLine 0 0 "Encryption could not be determined: $($Application.EncryptionLevel)"}
+				}
+			}
 			If($Application.EncryptionRequired)
 			{
-				WriteWordLine 0 0 "Enabled"
+				WriteWordLine 0 1 "Minimum requirement`t`t`t`t: " -nonewline
+				If($Application.EncryptionRequired)
+				{
+					WriteWordLine 0 0 "Enabled"
+				}
+				Else
+				{
+					WriteWordLine 0 0 "Disabled"
+				}
 			}
+		
+			WriteWordLine 0 1 "Start app w/o waiting for printer creation`t: " -NoNewLine
+			#another weird one, if True then this is Disabled
+			If($Application.WaitOnPrinterCreation) 
+			{
+				WriteWordLine 0 0 "No"
+			} 
 			Else
 			{
-				WriteWordLine 0 0 "Disabled"
+				WriteWordLine 0 0 "Yes"
 			}
-		}
-	
-		WriteWordLine 0 1 "Start app w/o waiting for printer creation`t: " -NoNewLine
-		#another weird one, if True then this is Disabled
-		If($Application.WaitOnPrinterCreation) 
-		{
-			WriteWordLine 0 0 "No"
-		} 
-		Else
-		{
-			WriteWordLine 0 0 "Yes"
-		}
-		
-		#appearance properties
-		If($Application.WindowType)
-		{
-			WriteWordLine 0 1 "Session window size`t`t`t`t: " $Application.WindowType
-		}
-		If($Application.ColorDepth)
-		{
-			WriteWordLine 0 1 "Maximum color quality`t`t`t`t: " -nonewline
-			Switch ($Application.ColorDepth)
+			
+			#appearance properties
+			If($Application.WindowType)
 			{
-				"Colors16"  {WriteWordLine 0 0 "16 colors"}
-				"Colors256" {WriteWordLine 0 0 "256 colors"}
-				"HighColor" {WriteWordLine 0 0 "High Color (16-bit)"}
-				"TrueColor" {WriteWordLine 0 0 "True Color (24-bit)"}
-				Default {WriteWordLine 0 0 "Maximum color quality could not be determined: $($Application.ColorDepth)"}
+				WriteWordLine 0 1 "Session window size`t`t`t`t: " $Application.WindowType
 			}
-		}
-		If($Application.TitleBarHidden)
-		{
-			WriteWordLine 0 1 "Hide application title bar`t`t`t: " -nonewline
+			If($Application.ColorDepth)
+			{
+				WriteWordLine 0 1 "Maximum color quality`t`t`t`t: " -nonewline
+				Switch ($Application.ColorDepth)
+				{
+					"Colors16"  {WriteWordLine 0 0 "16 colors"}
+					"Colors256" {WriteWordLine 0 0 "256 colors"}
+					"HighColor" {WriteWordLine 0 0 "High Color (16-bit)"}
+					"TrueColor" {WriteWordLine 0 0 "True Color (24-bit)"}
+					Default {WriteWordLine 0 0 "Maximum color quality could not be determined: $($Application.ColorDepth)"}
+				}
+			}
 			If($Application.TitleBarHidden)
 			{
-				WriteWordLine 0 0 "Enabled"
+				WriteWordLine 0 1 "Hide application title bar`t`t`t: " -nonewline
+				If($Application.TitleBarHidden)
+				{
+					WriteWordLine 0 0 "Enabled"
+				}
+				Else
+				{
+					WriteWordLine 0 0 "Disabled"
+				}
 			}
-			Else
-			{
-				WriteWordLine 0 0 "Disabled"
-			}
-		}
-		If($Application.MaximizedOnStartup)
-		{
-			WriteWordLine 0 1 "Maximize application at startup`t`t`t: " -nonewline
 			If($Application.MaximizedOnStartup)
 			{
-				WriteWordLine 0 0 "Enabled"
+				WriteWordLine 0 1 "Maximize application at startup`t`t`t: " -nonewline
+				If($Application.MaximizedOnStartup)
+				{
+					WriteWordLine 0 0 "Enabled"
+				}
+				Else
+				{
+					WriteWordLine 0 0 "Disabled"
+				}
 			}
-			Else
-			{
-				WriteWordLine 0 0 "Disabled"
-			}
+			$AppServerInfo = $Null
+		}
+		Else
+		{
+			WriteWordLine 0 0 $Application.DisplayName
 		}
 	}
 }
@@ -4666,7 +4941,14 @@ Write-Verbose "$(Get-Date): `tSetting summary variables"
 $ServerItems = @()
 
 Write-Verbose "$(Get-Date): `tRetrieving Servers"
-$servers = Get-XAServer -EA 0 | Sort-Object FolderPath, ServerName
+If($Summary)
+{
+	$servers = Get-XAServer -EA 0 | Sort-Object ServerName
+}
+Else
+{
+	$servers = Get-XAServer -EA 0 | Sort-Object FolderPath, ServerName
+}
 
 If($?)
 {
@@ -4676,361 +4958,125 @@ If($?)
 	{
 		$TotalServers++
 		Write-Verbose "$(Get-Date): `t`tProcessing server $($server.ServerName)"
-
-
-		[bool]$SvrOnline = $False
-		Write-Verbose "$(Get-Date): `t`t`tTesting to see if $($server.ServerName) is online and reachable"
-		If(Test-Connection -ComputerName $server.servername -quiet -EA 0)
-		{
-			$SvrOnline = $True
-			If($Hardware -and $Software)
-			{
-				Write-Verbose "$(Get-Date): `t`t`t`t$($server.ServerName) is online.  Hardware inventory, Software Inventory, Citrix Services and Hotfix areas will be processed."
-			}
-			ElseIf($Hardware -and !($Software))
-			{
-				Write-Verbose "$(Get-Date): `t`t`t`t$($server.ServerName) is online.  Hardware inventory, Citrix Services and Hotfix areas will be processed."
-			}
-			ElseIf(!($Hardware) -and $Software)
-			{
-				Write-Verbose "$(Get-Date): `t`t`t`t$($server.ServerName) is online.  Software Inventory, Citrix Services and Hotfix areas will be processed."
-			}
-			Else
-			{
-				Write-Verbose "$(Get-Date): `t`t`t`t$($server.ServerName) is online.  Citrix Services and Hotfix areas will be processed."
-			}
-		}
-
-		WriteWordLine 2 0 $server.ServerName
-		WriteWordLine 0 1 "Product`t`t`t`t: " $server.CitrixProductName
-		WriteWordLine 0 1 "Edition`t`t`t`t: " $server.CitrixEdition
-		WriteWordLine 0 1 "Version`t`t`t`t: " $server.CitrixVersion
-		WriteWordLine 0 1 "Service Pack`t`t`t: " $server.CitrixServicePack
-		WriteWordLine 0 1 "Operating System Type`t`t: " -NoNewLine
-		If($server.Is64Bit)
-		{
-			WriteWordLine 0 0 "64 bit"
-		} 
-		Else 
-		{
-			WriteWordLine 0 0 "32 bit"
-		}
-		WriteWordLine 0 1 "IP Address`t`t`t: " $server.IPAddresses
-		WriteWordLine 0 1 "Logons`t`t`t`t: " -NoNewLine
-		If($server.LogOnsEnabled)
-		{
-			WriteWordLine 0 0 "Enabled"
-		} 
-		Else 
-		{
-			WriteWordLine 0 0 "Disabled"
-		}
-		WriteWordLine 0 1 "Product Installation Date`t: " $server.CitrixInstallDate
-		WriteWordLine 0 1 "Operating System Version`t: " $server.OSVersion -NoNewLine
 		
-		#is the server running server 2008?
-		If($server.OSVersion.ToString().SubString(0,1) -eq "6")
+		If(!$Summary)
 		{
-			$Server2008 = $True
-		}
+			[bool]$SvrOnline = $False
+			Write-Verbose "$(Get-Date): `t`t`tTesting to see if $($server.ServerName) is online and reachable"
+			If(Test-Connection -ComputerName $server.servername -quiet -EA 0)
+			{
+				$SvrOnline = $True
+				If($Hardware -and $Software)
+				{
+					Write-Verbose "$(Get-Date): `t`t`t`t$($server.ServerName) is online.  Hardware inventory, Software Inventory, Citrix Services and Hotfix areas will be processed."
+				}
+				ElseIf($Hardware -and !($Software))
+				{
+					Write-Verbose "$(Get-Date): `t`t`t`t$($server.ServerName) is online.  Hardware inventory, Citrix Services and Hotfix areas will be processed."
+				}
+				ElseIf(!($Hardware) -and $Software)
+				{
+					Write-Verbose "$(Get-Date): `t`t`t`t$($server.ServerName) is online.  Software Inventory, Citrix Services and Hotfix areas will be processed."
+				}
+				Else
+				{
+					Write-Verbose "$(Get-Date): `t`t`t`t$($server.ServerName) is online.  Citrix Services and Hotfix areas will be processed."
+				}
+			}
 
-		WriteWordLine 0 0 " " $server.OSServicePack
-		WriteWordLine 0 1 "Zone`t`t`t`t: " $server.ZoneName
-		WriteWordLine 0 1 "Election Preference`t`t: " -nonewline
-		Switch ($server.ElectionPreference)
-		{
-			"Unknown"           {WriteWordLine 0 0 "Unknown"}
-			"MostPreferred"     {WriteWordLine 0 0 "Most Preferred"}
-			"Preferred"         {WriteWordLine 0 0 "Preferred"}
-			"DefaultPreference" {WriteWordLine 0 0 "Default Preference"}
-			"NotPreferred"      {WriteWordLine 0 0 "Not Preferred"}
-			"WorkerMode"        {WriteWordLine 0 0 "Worker Mode"}
-			Default {WriteWordLine 0 0 "Server election preference could not be determined: $($server.ElectionPreference)"}
-		}
-		WriteWordLine 0 1 "Folder`t`t`t`t: " $server.FolderPath
-		WriteWordLine 0 1 "Product Installation Path`t: " $server.CitrixInstallPath
-		If($server.ICAPortNumber -gt 0)
-		{
-			WriteWordLine 0 1 "ICA Port Number`t`t: " $server.ICAPortNumber
-		}
-		$ServerConfig = Get-XAServerConfiguration -ServerName $Server.ServerName -EA 0
-		If($?)
-		{
-			WriteWordLine 0 1 "Server Configuration Data:"
+			WriteWordLine 2 0 $server.ServerName
+			WriteWordLine 0 1 "Product`t`t`t`t: " $server.CitrixProductName
+			WriteWordLine 0 1 "Edition`t`t`t`t: " $server.CitrixEdition
+			WriteWordLine 0 1 "Version`t`t`t`t: " $server.CitrixVersion
+			WriteWordLine 0 1 "Service Pack`t`t`t: " $server.CitrixServicePack
+			WriteWordLine 0 1 "Operating System Type`t`t: " -NoNewLine
+			If($server.Is64Bit)
+			{
+				WriteWordLine 0 0 "64 bit"
+			} 
+			Else 
+			{
+				WriteWordLine 0 0 "32 bit"
+			}
+			WriteWordLine 0 1 "IP Address`t`t`t: " $server.IPAddresses
+			WriteWordLine 0 1 "Logons`t`t`t`t: " -NoNewLine
+			If($server.LogOnsEnabled)
+			{
+				WriteWordLine 0 0 "Enabled"
+			} 
+			Else 
+			{
+				WriteWordLine 0 0 "Disabled"
+			}
+			WriteWordLine 0 1 "Product Installation Date`t: " $server.CitrixInstallDate
+			WriteWordLine 0 1 "Operating System Version`t: " $server.OSVersion -NoNewLine
 			
-			If($FarmOS -eq "2003")
+			#is the server running server 2008?
+			If($server.OSVersion.ToString().SubString(0,1) -eq "6")
 			{
-				$Text = "HDX Broadcast"
+				$Server2008 = $True
 			}
-			Else
+
+			WriteWordLine 0 0 " " $server.OSServicePack
+			WriteWordLine 0 1 "Zone`t`t`t`t: " $server.ZoneName
+			WriteWordLine 0 1 "Election Preference`t`t: " -nonewline
+			Switch ($server.ElectionPreference)
 			{
-				$Text = "ICA"
+				"Unknown"           {WriteWordLine 0 0 "Unknown"}
+				"MostPreferred"     {WriteWordLine 0 0 "Most Preferred"}
+				"Preferred"         {WriteWordLine 0 0 "Preferred"}
+				"DefaultPreference" {WriteWordLine 0 0 "Default Preference"}
+				"NotPreferred"      {WriteWordLine 0 0 "Not Preferred"}
+				"WorkerMode"        {WriteWordLine 0 0 "Worker Mode"}
+				Default {WriteWordLine 0 0 "Server election preference could not be determined: $($server.ElectionPreference)"}
 			}
-			
-			If($ServerConfig.AcrUseFarmSettings)
+			WriteWordLine 0 1 "Folder`t`t`t`t: " $server.FolderPath
+			WriteWordLine 0 1 "Product Installation Path`t: " $server.CitrixInstallPath
+			If($server.ICAPortNumber -gt 0)
 			{
-				WriteWordLine 0 2 "$($Text)\Auto Client Reconnect: Server is using farm settings"
+				WriteWordLine 0 1 "ICA Port Number`t`t: " $server.ICAPortNumber
 			}
-			Else
+			$ServerConfig = Get-XAServerConfiguration -ServerName $Server.ServerName -EA 0
+			If($?)
 			{
-				WriteWordLine 0 2 "$($Text)\Auto Client Reconnect: Server is not using farm settings"
-				If($ServerConfig.AcrEnabled)
-				{
-					WriteWordLine 0 3 "Reconnect automatically"
-					WriteWordLine 0 4 "Log automatic reconnection attempts: " -nonewline
-					If($ServerConfig.AcrLogReconnections)
-					{
-						WriteWordLine 0 0 "Yes"
-					}
-					Else
-					{
-						WriteWordLine 0 0 "No"
-					}
-				}
-				Else
-				{
-					WriteWordLine 0 3 "Require user authentication"
-				}
-			}
-			WriteWordLine 0 2 "$($Text)\Browser\Create browser listener on UDP network: " -nonewline
-			If($ServerConfig.BrowserUdpListener)
-			{
-				WriteWordLine 0 0 "Yes"
-			}
-			Else
-			{
-				WriteWordLine 0 0 "No"
-			}
-			WriteWordLine 0 2 "$($Text)\Browser\Server responds to client broadcast messages: " -nonewline
-			If($ServerConfig.BrowserRespondToClientBroadcasts)
-			{
-				WriteWordLine 0 0 "Yes"
-			}
-			Else
-			{
-				WriteWordLine 0 0 "No"
-			}
-			If($ServerConfig.DisplayUseFarmSettings)
-			{
-				WriteWordLine 0 2 "$($Text)\Display: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "$($Text)\Display: Server is not using farm settings"
-				WriteWordLine 0 3 "Discard queued image that is replaced by another image: " -nonewline
-				If($ServerConfig.DisplayDiscardQueuedImages)
-				{
-					WriteWordLine 0 0 "Yes"
-				}
-				Else
-				{
-					WriteWordLine 0 0 "No"
-				}
-				WriteWordLine 0 3 "Cache image to make scrolling smoother: " -nonewline
-				If($ServerConfig.DisplayCacheImageForSmoothScrolling)
-				{
-					WriteWordLine 0 0 "Yes"
-				}
-				Else
-				{
-					WriteWordLine 0 0 "No"
-				}
-				WriteWordLine 0 3 "Maximum memory to use for each session's graphics (KB): " $ServerConfig.DisplayMaximumGraphicsMemory
-				WriteWordLine 0 3 "Degradation bias: " 
-				If($ServerConfig.DisplayDegradationBias -eq "Resolution")
-				{
-					WriteWordLine 0 4 "Degrade resolution first"
-				}
-				Else
-				{
-					WriteWordLine 0 4 "Degrade color depth first"
-				}
-				WriteWordLine 0 3 "Notify user of session degradation: " -nonewline
-				If($ServerConfig.DisplayNotifyUser)
-				{
-					WriteWordLine 0 0 "Yes"
-				}
-				Else
-				{
-					WriteWordLine 0 0 "No"
-				}
-			}
-			If($ServerConfig.KeepAliveUseFarmSettings)
-			{
-				WriteWordLine 0 2 "$($Text)\Keep-Alive: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "$($Text)\Keep-Alive: Server is not using farm settings"
+				WriteWordLine 0 1 "Server Configuration Data:"
+				
 				If($FarmOS -eq "2003")
 				{
-					WriteWordLine 0 3 "HDX Broadcast Keep-Alive time-out value seconds: " -NoNewLine
+					$Text = "HDX Broadcast"
 				}
 				Else
 				{
-					WriteWordLine 0 3 "ICA Keep-Alive time-out value seconds: " -NoNewLine
+					$Text = "ICA"
 				}
-				If($ServerConfig.KeepAliveEnabled)
+				
+				If($ServerConfig.AcrUseFarmSettings)
 				{
-					WriteWordLine 0 0 $ServerConfig.KeepAliveTimeout
-				}
-				Else
-				{
-					WriteWordLine 0 0 "Disabled"
-				}
-			}
-			If($ServerConfig.PrinterBandwidth -eq -1)
-			{
-				If($FarmOS -eq "2003")
-				{
-					WriteWordLine 0 2 "$($Text)\Printer Bandwidth\Unlimited bandwidth"
+					WriteWordLine 0 2 "$($Text)\Auto Client Reconnect: Server is using farm settings"
 				}
 				Else
 				{
-					WriteWordLine 0 2 "$($Text)\Printer Bandwidth\Unlimited client printer bandwidth"
-				}
-			}
-			Else
-			{
-				WriteWordLine 0 2 "$($Text)\Printer Bandwidth\Limit bandwidth to use (kbps): " $ServerConfig.PrinterBandwidth
-			}
-			If($FarmOS -eq "2003")
-			{
-				If($ServerConfig.RemoteConsoleUseFarmSettings)
-				{
-					WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is using farm settings"
-				}
-				Else
-				{
-					WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is not using farm settings"
-					WriteWordLine 0 3 "Remote connections to the console: " -nonewline
-					If($ServerConfig.RemoteConsoleEnabled)
+					WriteWordLine 0 2 "$($Text)\Auto Client Reconnect: Server is not using farm settings"
+					If($ServerConfig.AcrEnabled)
 					{
-						WriteWordLine 0 0 "Yes"
-					}
-					Else
-					{
-						WriteWordLine 0 0 "No"
-					}
-				}
-			}
-			
-			#For server 2003, Isolation Environment data is not available
-
-			If($ServerConfig.LicenseServerUseFarmSettings)
-			{
-				WriteWordLine 0 2 "License Server: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "License Server: Server is not using farm settings"
-				WriteWordLine 0 3 "License server name: " $ServerConfig.LicenseServerName
-				WriteWordLine 0 3 "License server port: " $ServerConfig.LicenseServerPortNumber
-			}
-			If($ServerConfig.HmrUseFarmSettings)
-			{
-				WriteWordLine 0 2 "Health Monitoring & Recovery: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "Health Monitoring & Recovery: Server is not using farm settings"
-				WriteWordLine 0 3 "Run health monitoring tests on this server: " -nonewline
-				If($ServerConfig.HmrEnabled)
-				{
-					WriteWordLine 0 0 "Yes"
-				}
-				Else
-				{
-					WriteWordLine 0 0 "No"
-				}
-				If($ServerConfig.HmrEnabled)
-				{
-					$HMRTests = Get-XAHmrTest -ServerName $Server.ServerName -EA 0
-					If($?)
-					{
-						WriteWordLine 0 3 "Health Monitoring Tests:"
-						ForEach($HMRTest in $HMRTests)
+						WriteWordLine 0 3 "Reconnect automatically"
+						WriteWordLine 0 4 "Log automatic reconnection attempts: " -nonewline
+						If($ServerConfig.AcrLogReconnections)
 						{
-							WriteWordLine 0 4 "Test Name`t: " $Hmrtest.TestName
-							WriteWordLine 0 4 "Interval`t`t: " $Hmrtest.Interval
-							WriteWordLine 0 4 "Threshold`t: " $Hmrtest.Threshold
-							WriteWordLine 0 4 "Time-out`t: " $Hmrtest.Timeout
-							WriteWordLine 0 4 "Test File Name`t: " $Hmrtest.FilePath
-							If(![String]::IsNullOrEmpty($Hmrtest.Arguments))
-							{
-								WriteWordLine 0 4 "Arguments`t: " $Hmrtest.Arguments
-							}
-							WriteWordLine 0 4 "Recovery Action : " -nonewline
-							Switch ($Hmrtest.RecoveryAction)
-							{
-								"AlertOnly"                     {WriteWordLine 0 0 "Alert Only"}
-								"RemoveServerFromLoadBalancing" {WriteWordLine 0 0 "Remove Server from load balancing"}
-								"RestartIma"                    {WriteWordLine 0 0 "Restart IMA"}
-								"ShutdownIma"                   {WriteWordLine 0 0 "Shutdown IMA"}
-								"RebootServer"                  {WriteWordLine 0 0 "Reboot Server"}
-								Default {WriteWordLine 0 0 "Recovery Action could not be determined: $($Hmrtest.RecoveryAction)"}
-							}
-							WriteWordLine 0 0 ""
+							WriteWordLine 0 0 "Yes"
+						}
+						Else
+						{
+							WriteWordLine 0 0 "No"
 						}
 					}
 					Else
 					{
-						WriteWordLine 0 0 "Health Monitoring & Reporting data could not be retrieved for server " $Server.ServerName
+						WriteWordLine 0 3 "Require user authentication"
 					}
 				}
-			}
-			If($ServerConfig.CpuUseFarmSettings)
-			{
-				WriteWordLine 0 2 "CPU Utilization Management: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "CPU Utilization Management: Server is not using farm settings"
-				WriteWordLine 0 3 "CPU Utilization Management: " -nonewline
-				Switch ($ServerConfig.CpuManagementLevel)
-				{
-					"NoManagement"  {WriteWordLine 0 0 "No CPU utilization management"}
-					"Fair"          {WriteWordLine 0 0 "Fair sharing of CPU between sessions"}
-					"ResourceBased" {WriteWordLine 0 0 "CPU Sharing based on Resource Allotments"}
-					Default {WriteWordLine 0 0 "CPU Utilization Management could not be determined: $($Farm.CpuManagementLevel)"}
-				}
-			}
-			If($ServerConfig.MemoryUseFarmSettings)
-			{
-				WriteWordLine 0 2 "Memory Optimization: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "Memory Optimization: Server is not using farm settings"
-				WriteWordLine 0 3 "Memory Optimization: " -nonewline
-				If($ServerConfig.MemoryOptimizationEnabled)
-				{
-					WriteWordLine 0 0 "Enabled"
-				}
-				Else
-				{
-					WriteWordLine 0 0 "Not Enabled"
-				}
-			}
-			
-			If($FarmOS -eq "2003")
-			{
-				$Text = "HDX Plug and Play"
-			}
-			Else
-			{
-				$Text = "XenApp"
-			}
-			
-			If($ServerConfig.ContentRedirectionUseFarmSettings)
-			{
-				WriteWordLine 0 2 "$($Text)/Content Redirection: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "$($Text)/Content Redirection: Server is not using farm settings"
-				WriteWordLine 0 3 "Content redirection from server to client: " -nonewline
-				If($ServerConfig.ContentRedirectionEnabled)
+				WriteWordLine 0 2 "$($Text)\Browser\Create browser listener on UDP network: " -nonewline
+				If($ServerConfig.BrowserUdpListener)
 				{
 					WriteWordLine 0 0 "Yes"
 				}
@@ -5038,21 +5084,52 @@ If($?)
 				{
 					WriteWordLine 0 0 "No"
 				}
-			}
-			#ShadowLoggingEnabled is not stored by Citrix
-			#WriteWordLine 0 3 "HDX Plug and Play/Shadow Logging/Log shadowing sessions: " $ServerConfig.ShadowLoggingEnabled
-			
-			If($FarmOS -eq "2008")
-			{
-				If($ServerConfig.RemoteConsoleUseFarmSettings)
+				WriteWordLine 0 2 "$($Text)\Browser\Server responds to client broadcast messages: " -nonewline
+				If($ServerConfig.BrowserRespondToClientBroadcasts)
 				{
-					WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is using farm settings"
+					WriteWordLine 0 0 "Yes"
 				}
 				Else
 				{
-					WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is not using farm settings"
-					WriteWordLine 0 3 "Remote connections to the console: " -nonewline
-					If($ServerConfig.RemoteConsoleEnabled)
+					WriteWordLine 0 0 "No"
+				}
+				If($ServerConfig.DisplayUseFarmSettings)
+				{
+					WriteWordLine 0 2 "$($Text)\Display: Server is using farm settings"
+				}
+				Else
+				{
+					WriteWordLine 0 2 "$($Text)\Display: Server is not using farm settings"
+					WriteWordLine 0 3 "Discard queued image that is replaced by another image: " -nonewline
+					If($ServerConfig.DisplayDiscardQueuedImages)
+					{
+						WriteWordLine 0 0 "Yes"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+					WriteWordLine 0 3 "Cache image to make scrolling smoother: " -nonewline
+					If($ServerConfig.DisplayCacheImageForSmoothScrolling)
+					{
+						WriteWordLine 0 0 "Yes"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+					WriteWordLine 0 3 "Maximum memory to use for each session's graphics (KB): " $ServerConfig.DisplayMaximumGraphicsMemory
+					WriteWordLine 0 3 "Degradation bias: " 
+					If($ServerConfig.DisplayDegradationBias -eq "Resolution")
+					{
+						WriteWordLine 0 4 "Degrade resolution first"
+					}
+					Else
+					{
+						WriteWordLine 0 4 "Degrade color depth first"
+					}
+					WriteWordLine 0 3 "Notify user of session degradation: " -nonewline
+					If($ServerConfig.DisplayNotifyUser)
 					{
 						WriteWordLine 0 0 "Yes"
 					}
@@ -5061,97 +5138,56 @@ If($?)
 						WriteWordLine 0 0 "No"
 					}
 				}
-			}
-
-			If($ServerConfig.SnmpUseFarmSettings)
-			{
-				WriteWordLine 0 2 "SNMP: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "SNMP: Server is not using farm settings"
-				# SnmpEnabled is not working
-				WriteWordLine 0 3 "Send session traps to selected SNMP agent on all farm servers"
-				WriteWordLine 0 4 "SNMP agent session traps:"
-				WriteWordLine 0 5 "Logon`t`t`t: " -nonewline
-				If($ServerConfig.SnmpLogOnEnabled)
+				If($ServerConfig.KeepAliveUseFarmSettings)
 				{
-					WriteWordLine 0 0 "Yes"
+					WriteWordLine 0 2 "$($Text)\Keep-Alive: Server is using farm settings"
 				}
 				Else
 				{
-					WriteWordLine 0 0 "No"
-				}
-				WriteWordLine 0 5 "Logoff`t`t`t: " -nonewline
-				If($ServerConfig.SnmpLogOffEnabled)
-				{
-					WriteWordLine 0 0 "Yes"
-				}
-				Else
-				{
-					WriteWordLine 0 0 "No"
-				}
-				WriteWordLine 0 5 "Disconnect`t`t: " -nonewline
-				If($ServerConfig.SnmpDisconnectEnabled)
-				{
-					WriteWordLine 0 0 "Yes"
-				}
-				Else
-				{
-					WriteWordLine 0 0 "No"
-				}
-				WriteWordLine 0 5 "Session limit per server`t: " -nonewline
-				If($ServerConfig.SnmpLimitEnabled)
-				{
-					WriteWordLine 0 0 " " $ServerConfig.SnmpLimitPerServer
-				}
-				Else
-				{
-					WriteWordLine 0 0 "No"
-				}
-			}
-			
-			If($FarmOS -eq "2003")
-			{
-				$Text = "HDX 3D"
-			}
-			Else
-			{
-				$Text = "SpeedScreen"
-			}
-			
-			If($ServerConfig.BrowserAccelerationUseFarmSettings)
-			{
-				WriteWordLine 0 2 "$($Text)/Browser Acceleration: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "$($Text)/Browser Acceleration: Server is not using farm settings"
-				WriteWordLine 0 3 "$($Text)/$($Text)Browser Acceleration: " -nonewline
-				If($ServerConfig.BrowserAccelerationEnabled)
-				{
-					WriteWordLine 0 0 "Yes"
-				}
-				Else
-				{
-					WriteWordLine 0 0 "No"
-				}
-				If($ServerConfig.BrowserAccelerationEnabled)
-				{
-					WriteWordLine 0 4 "Compress JPEG images to improve bandwidth: " -nonewline
-					If($ServerConfig.BrowserAccelerationCompressionEnabled)
+					WriteWordLine 0 2 "$($Text)\Keep-Alive: Server is not using farm settings"
+					If($FarmOS -eq "2003")
 					{
-						WriteWordLine 0 0 "Yes"
+						WriteWordLine 0 3 "HDX Broadcast Keep-Alive time-out value seconds: " -NoNewLine
 					}
 					Else
 					{
-						WriteWordLine 0 0 "No"
+						WriteWordLine 0 3 "ICA Keep-Alive time-out value seconds: " -NoNewLine
 					}
-					If($ServerConfig.BrowserAccelerationCompressionEnabled)
+					If($ServerConfig.KeepAliveEnabled)
 					{
-						WriteWordLine 0 4 "Image compression level: " $ServerConfig.BrowserAccelerationCompressionLevel
-						WriteWordLine 0 4 "Adjust compression level based on available bandwidth: " -nonewline
-						If($ServerConfig.BrowserAccelerationVariableImageCompression)
+						WriteWordLine 0 0 $ServerConfig.KeepAliveTimeout
+					}
+					Else
+					{
+						WriteWordLine 0 0 "Disabled"
+					}
+				}
+				If($ServerConfig.PrinterBandwidth -eq -1)
+				{
+					If($FarmOS -eq "2003")
+					{
+						WriteWordLine 0 2 "$($Text)\Printer Bandwidth\Unlimited bandwidth"
+					}
+					Else
+					{
+						WriteWordLine 0 2 "$($Text)\Printer Bandwidth\Unlimited client printer bandwidth"
+					}
+				}
+				Else
+				{
+					WriteWordLine 0 2 "$($Text)\Printer Bandwidth\Limit bandwidth to use (kbps): " $ServerConfig.PrinterBandwidth
+				}
+				If($FarmOS -eq "2003")
+				{
+					If($ServerConfig.RemoteConsoleUseFarmSettings)
+					{
+						WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is using farm settings"
+					}
+					Else
+					{
+						WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is not using farm settings"
+						WriteWordLine 0 3 "Remote connections to the console: " -nonewline
+						If($ServerConfig.RemoteConsoleEnabled)
 						{
 							WriteWordLine 0 0 "Yes"
 						}
@@ -5161,464 +5197,477 @@ If($?)
 						}
 					}
 				}
-			}
-			
-			If($FarmOS -eq "2003")
-			{
-				$Text = "HDX MediaStream"
-			}
-			Else
-			{
-				$Text = "SpeedScreen"
-			}
-			
-			If($ServerConfig.FlashAccelerationUseFarmSettings)
-			{
-				WriteWordLine 0 2 "$($Text)/Flash: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "$($Text)/Flash: Server is not using farm settings"
-				If($FarmOS -eq "2003")
+				
+				#For server 2003, Isolation Environment data is not available
+
+				If($ServerConfig.LicenseServerUseFarmSettings)
 				{
-					WriteWordLine 0 3 "Enable Flash for XenApp sessions: " -nonewline
+					WriteWordLine 0 2 "License Server: Server is using farm settings"
 				}
 				Else
 				{
-					WriteWordLine 0 3 "Enable Adobe Flash Player: " -nonewline
+					WriteWordLine 0 2 "License Server: Server is not using farm settings"
+					WriteWordLine 0 3 "License server name: " $ServerConfig.LicenseServerName
+					WriteWordLine 0 3 "License server port: " $ServerConfig.LicenseServerPortNumber
 				}
-				If($ServerConfig.FlashAccelerationEnabled)
+				If($ServerConfig.HmrUseFarmSettings)
 				{
-					WriteWordLine 0 0 "Yes"
+					WriteWordLine 0 2 "Health Monitoring & Recovery: Server is using farm settings"
 				}
 				Else
 				{
-					WriteWordLine 0 0 "No"
-				}
-				If($ServerConfig.FlashAccelerationEnabled)
-				{
-					Switch ($ServerConfig.FlashAccelerationOption)
+					WriteWordLine 0 2 "Health Monitoring & Recovery: Server is not using farm settings"
+					WriteWordLine 0 3 "Run health monitoring tests on this server: " -nonewline
+					If($ServerConfig.HmrEnabled)
 					{
-						"RestrictedBandwidth" {WriteWordLine 0 3 "Restricted bandwidth connections"}
-						"NoOptimization"      {WriteWordLine 0 3 "Do not optimize"}
-						"AllConnections"      {WriteWordLine 0 3 "All connections"}
-						Default {WriteWordLine 0 0 "Server-side acceleration could not be determined: $($ServerConfig.FlashAccelerationOption)"}
-					}
-				}
-			}
-			If($ServerConfig.MultimediaAccelerationUseFarmSettings)
-			{
-				WriteWordLine 0 2 "$($Text)/Multimedia Acceleration: Server is using farm settings"
-			}
-			Else
-			{
-				WriteWordLine 0 2 "$($Text)/Multimedia Acceleration: Server is not using farm settings"
-				WriteWordLine 0 3 "Multimedia acceleration: " -nonewline
-				If($ServerConfig.MultimediaAccelerationEnabled)
-				{
-					WriteWordLine 0 0 "Yes"
-				}
-				Else
-				{
-					WriteWordLine 0 0 "No"
-				}
-				If($ServerConfig.MultimediaAccelerationEnabled)
-				{
-					If($ServerConfig.MultimediaAccelerationDefaultBuffer)
-					{
-						WriteWordLine 0 3 "Use the Default buffer of 5 seconds"
+						WriteWordLine 0 0 "Yes"
 					}
 					Else
 					{
-						WriteWordLine 0 3 "Custom buffer time in seconds: " $ServerConfig.MultimediaAccelerationCustomBuffer
+						WriteWordLine 0 0 "No"
+					}
+					If($ServerConfig.HmrEnabled)
+					{
+						$HMRTests = Get-XAHmrTest -ServerName $Server.ServerName -EA 0
+						If($?)
+						{
+							WriteWordLine 0 3 "Health Monitoring Tests:"
+							ForEach($HMRTest in $HMRTests)
+							{
+								WriteWordLine 0 4 "Test Name`t: " $Hmrtest.TestName
+								WriteWordLine 0 4 "Interval`t`t: " $Hmrtest.Interval
+								WriteWordLine 0 4 "Threshold`t: " $Hmrtest.Threshold
+								WriteWordLine 0 4 "Time-out`t: " $Hmrtest.Timeout
+								WriteWordLine 0 4 "Test File Name`t: " $Hmrtest.FilePath
+								If(![String]::IsNullOrEmpty($Hmrtest.Arguments))
+								{
+									WriteWordLine 0 4 "Arguments`t: " $Hmrtest.Arguments
+								}
+								WriteWordLine 0 4 "Recovery Action : " -nonewline
+								Switch ($Hmrtest.RecoveryAction)
+								{
+									"AlertOnly"                     {WriteWordLine 0 0 "Alert Only"}
+									"RemoveServerFromLoadBalancing" {WriteWordLine 0 0 "Remove Server from load balancing"}
+									"RestartIma"                    {WriteWordLine 0 0 "Restart IMA"}
+									"ShutdownIma"                   {WriteWordLine 0 0 "Shutdown IMA"}
+									"RebootServer"                  {WriteWordLine 0 0 "Reboot Server"}
+									Default {WriteWordLine 0 0 "Recovery Action could not be determined: $($Hmrtest.RecoveryAction)"}
+								}
+								WriteWordLine 0 0 ""
+							}
+						}
+						Else
+						{
+							WriteWordLine 0 0 "Health Monitoring & Reporting data could not be retrieved for server " $Server.ServerName
+						}
 					}
 				}
-			}
-			WriteWordLine 0 2 "Virtual IP/Enable virtual IP for this server: " -nonewline
-			If($ServerConfig.VirtualIPEnabled)
-			{
-				WriteWordLine 0 0 "Yes"
-			}
-			Else
-			{
-				WriteWordLine 0 0 "No"
-			}
-			WriteWordLine 0 2 "Virtual IP/Use farm setting for IP address logging: " -nonewline
-			If($ServerConfig.VirtualIPUseFarmLoggingSettings)
-			{
-				WriteWordLine 0 0 "Yes"
-			}
-			Else
-			{
-				WriteWordLine 0 0 "No"
-			}
-			WriteWordLine 0 2 "Virtual IP/Enable logging of IP address assignment and release: " -nonewline
-			If($ServerConfig.VirtualIPLoggingEnabled)
-			{
-				WriteWordLine 0 0 "Yes"
-			}
-			Else
-			{
-				WriteWordLine 0 0 "No"
-			}
-			WriteWordLine 0 2 "Virtual IP/Enable virtual loopback for this server: " -nonewline
-			If($ServerConfig.VirtualIPLoopbackEnabled)
-			{
-				WriteWordLine 0 0 "Yes"
-			}
-			Else
-			{
-				WriteWordLine 0 0 "No"
-			}
-			WriteWordLine 0 2 "XML Service/Trust requests sent to the XML service: " -nonewline
-			If($ServerConfig.XmlServiceTrustRequests)
-			{
-				WriteWordLine 0 0 "Yes"
-			}
-			Else
-			{
-				WriteWordLine 0 0 "No"
-			}
-			If($Server2008)
-			{
-				If($ServerConfig.RestartsEnabled)
+				If($ServerConfig.CpuUseFarmSettings)
 				{
-					WriteWordLine 0 2 "Automatic restarts are enabled"
-					WriteWordLine 0 3 "Restart server from: " $ServerConfig.RestartFrom
-					WriteWordLine 0 3 "Restart frequency in days: " $ServerConfig.RestartFrequency
+					WriteWordLine 0 2 "CPU Utilization Management: Server is using farm settings"
 				}
 				Else
 				{
-					WriteWordLine 0 2 "Automatic restarts are not enabled"
-				}
-			}
-			WriteWordLine 0 0 ""
-		}
-		Else
-		{
-			WriteWordLine 0 0 "Server configuration data could not be retrieved for server " $Server.ServerName
-		}
-
-		#create array for appendix B
-		#this cannot be at the top of the loop like the other scripts
-		#license server info is retrieved differently than other scripts
-		Write-Verbose "$(Get-Date): `t`tGather server info for Appendix B"
-		$obj = New-Object -TypeName PSObject
-		$obj | Add-Member -MemberType NoteProperty -Name ServerName -Value $server.ServerName
-		$obj | Add-Member -MemberType NoteProperty -Name ZoneName -Value $server.ZoneName
-		$obj | Add-Member -MemberType NoteProperty -Name OSVersion -Value $server.OSVersion
-		$obj | Add-Member -MemberType NoteProperty -Name CitrixVersion -Value $server.CitrixVersion
-		$obj | Add-Member -MemberType NoteProperty -Name ProductEdition -Value $server.CitrixEdition
-		
-		If($ServerConfig.LicenseServerUseFarmSettings)
-		{
-			$obj | Add-Member -MemberType NoteProperty -Name LicenseServer -Value "Farm Setting"
-		}
-		Else
-		{
-			$obj | Add-Member -MemberType NoteProperty -Name LicenseServer -Value $ServerConfig.LicenseServerName
-		}
-
-		If($SvrOnline)
-		{
-			$Reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $server.ServerName)
-			$RegKey= $Reg.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\Citrix\\Wfshell\\TWI")
-			$SSDisabled = $RegKey.GetValue("SeamlessFlags")
-			
-			If($SSDisabled -eq 1)
-			{
-				$obj | Add-Member -MemberType NoteProperty -Name SessionSharing -Value "Disabled"
-			}
-			Else
-			{
-				$obj | Add-Member -MemberType NoteProperty -Name SessionSharing -Value "Enabled"
-			}
-		}
-		Else
-		{
-			$obj | Add-Member -MemberType NoteProperty -Name SessionSharing -Value "Server Offline"
-		}
-		
-		$ServerItems += $obj
-
-		If($SvrOnline -and $Hardware)
-		{
-			GetComputerWMIInfo $server.ServerName
-		}
-		
-		#applications published to server
-		$Applications = Get-XAApplication -ServerName $server.ServerName -EA 0 | Sort-Object FolderPath, DisplayName
-		If($? -and $Applications)
-		{
-			WriteWordLine 0 1 "Published applications:"
-			Write-Verbose "$(Get-Date): `t`tProcessing published applications for server $($server.ServerName)"
-			Write-Verbose "$(Get-Date): `t`tCreate Word Table for server's published applications"
-			$TableRange = $doc.Application.Selection.Range
-			[int]$Columns = 2
-			
-			If($Applications -is [Array])
-			{
-				[int]$Rows = $Applications.count + 1
-			}
-			Else
-			{
-				[int]$Rows = 2
-			}
-
-			$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
-			$table.Style = $myHash.Word_TableGrid
-			$table.Borders.InsideLineStyle = 1
-			$table.Borders.OutsideLineStyle = 1
-			[int]$xRow = 1
-			Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
-			$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
-			$Table.Cell($xRow,1).Range.Font.Bold = $True
-			$Table.Cell($xRow,1).Range.Text = "Display name"
-			$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
-			$Table.Cell($xRow,2).Range.Font.Bold = $True
-			$Table.Cell($xRow,2).Range.Text = "Folder path"
-			ForEach($app in $Applications)
-			{
-				Write-Verbose "$(Get-Date): `t`t`tProcessing published application $($app.DisplayName)"
-				$xRow++
-				$Table.Cell($xRow,1).Range.Text = $app.DisplayName
-				$Table.Cell($xRow,2).Range.Text = $app.FolderPath
-			}
-			Write-Verbose "$(Get-Date): `t`tMove table of published applications to the right"
-			$Table.Rows.SetLeftIndent(36,1)
-			$table.AutoFitBehavior(1)
-
-			#return focus back to document
-			Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
-			$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
-
-			#move to the end of the current document
-			Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
-			$selection.EndKey($wdStory,$wdMove) | Out-Null
-			WriteWordLine 0 0 ""
-		}
-
-		#get list of applications installed on server
-		# original work by Shaun Ritchie
-		# modified by Jeff Wouters
-		# modified by Webster
-		# fixed, as usual, by Michael B. Smith
-		If($SvrOnline -and $Software)
-		{
-			$InstalledApps = @()
-			$JustApps = @()
-
-			#Define the variable to hold the location of Currently Installed Programs
-			$UninstallKey1="SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall" 
-
-			#Create an instance of the Registry Object and open the HKLM base key
-			$reg=[microsoft.win32.registrykey]::OpenRemoteBaseKey('LocalMachine',$Server.ServerName) 
-
-			#Drill down into the Uninstall key using the OpenSubKey Method
-			$regkey1=$reg.OpenSubKey($UninstallKey1) 
-
-			#Retrieve an array of string that contain all the subkey names
-			If($regkey1 -ne $Null)
-			{
-				$subkeys1=$regkey1.GetSubKeyNames() 
-
-				#Open each Subkey and use GetValue Method to return the required values for each
-				ForEach($key in $subkeys1) 
-				{
-					$thisKey=$UninstallKey1+"\\"+$key 
-					$thisSubKey=$reg.OpenSubKey($thisKey) 
-					If(![String]::IsNullOrEmpty($($thisSubKey.GetValue("DisplayName")))) 
+					WriteWordLine 0 2 "CPU Utilization Management: Server is not using farm settings"
+					WriteWordLine 0 3 "CPU Utilization Management: " -nonewline
+					Switch ($ServerConfig.CpuManagementLevel)
 					{
-						$obj = New-Object PSObject
-						$obj | Add-Member -MemberType NoteProperty -Name "DisplayName" -Value $($thisSubKey.GetValue("DisplayName"))
-						$InstalledApps += $obj
+						"NoManagement"  {WriteWordLine 0 0 "No CPU utilization management"}
+						"Fair"          {WriteWordLine 0 0 "Fair sharing of CPU between sessions"}
+						"ResourceBased" {WriteWordLine 0 0 "CPU Sharing based on Resource Allotments"}
+						Default {WriteWordLine 0 0 "CPU Utilization Management could not be determined: $($Farm.CpuManagementLevel)"}
 					}
 				}
-			}			
-
-			$UninstallKey2="SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall" 
-			$regkey2=$reg.OpenSubKey($UninstallKey2)
-			If($regkey2 -ne $Null)
-			{
-				$subkeys2=$regkey2.GetSubKeyNames()
-
-				ForEach($key in $subkeys2) 
+				If($ServerConfig.MemoryUseFarmSettings)
 				{
-					$thisKey=$UninstallKey2+"\\"+$key 
-					$thisSubKey=$reg.OpenSubKey($thisKey) 
-					If(![String]::IsNullOrEmpty($($thisSubKey.GetValue("DisplayName")))) 
+					WriteWordLine 0 2 "Memory Optimization: Server is using farm settings"
+				}
+				Else
+				{
+					WriteWordLine 0 2 "Memory Optimization: Server is not using farm settings"
+					WriteWordLine 0 3 "Memory Optimization: " -nonewline
+					If($ServerConfig.MemoryOptimizationEnabled)
 					{
-						$obj = New-Object PSObject
-						$obj | Add-Member -MemberType NoteProperty -Name "DisplayName" -Value $($thisSubKey.GetValue("DisplayName"))
-						$InstalledApps += $obj
+						WriteWordLine 0 0 "Enabled"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "Not Enabled"
 					}
 				}
-			}
-
-			$InstalledApps = $InstalledApps | Sort DisplayName
-
-			$tmp1 = SWExclusions
-			If($Tmp1 -ne "")
-			{
-				$Func = ConvertTo-ScriptBlock $tmp1
-				$tempapps = Invoke-Command {& $Func}
-			}
-			Else
-			{
-				$tempapps = $InstalledApps
-			}
-			$JustApps = $TempApps | Select DisplayName | Sort DisplayName -unique
-
-			WriteWordLine 0 1 "Installed applications:"
-			Write-Verbose "$(Get-Date): `t`tProcessing installed applications for server $($server.ServerName)"
-			Write-Verbose "$(Get-Date): `t`tCreate Word Table for server's installed applications"
-			$TableRange = $doc.Application.Selection.Range
-			[int]$Columns = 1
-			[int]$Rows = $JustApps.count + 1
-
-			$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
-			$table.Style = $myHash.Word_TableGrid
-			$table.Borders.InsideLineStyle = 1
-			$table.Borders.OutsideLineStyle = 1
-			[int]$xRow = 1
-			Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
-			$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
-			$Table.Cell($xRow,1).Range.Font.Bold = $True
-			$Table.Cell($xRow,1).Range.Text = "Application name"
-			ForEach($app in $JustApps)
-			{
-				Write-Verbose "$(Get-Date): `t`t`tProcessing installed application $($app.DisplayName)"
-				$xRow++
-				$Table.Cell($xRow,1).Range.Text = $app.DisplayName
-			}
-			Write-Verbose "$(Get-Date): `t`tMove table of installed applications to the right"
-			$Table.Rows.SetLeftIndent(36,1)
-			$table.AutoFitBehavior(1)
-
-			#return focus back to document
-			Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
-			$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
-
-			#move to the end of the current document
-			Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
-			$selection.EndKey($wdStory,$wdMove) | Out-Null
-			WriteWordLine 0 0 ""
-		}
-
-		#list citrix services
-		Write-Verbose "$(Get-Date): `t`tTesting to see if $($server.ServerName) is online and reachable"
-		If(Test-Connection -ComputerName $server.servername -quiet -EA 0)
-		{
-			Write-Verbose "$(Get-Date): `t`tProcessing Citrix services for server $($server.ServerName)"
-			$services = get-service -ComputerName $server.ServerName -EA 0 | where-object {$_.DisplayName -like "*Citrix*"} | Sort-Object DisplayName
-			WriteWordLine 0 1 "Citrix Services"
-			Write-Verbose "$(Get-Date): `t`tCreate Word Table for Citrix services"
-			$TableRange = $doc.Application.Selection.Range
-			[int]$Columns = 2
-			[int]$Rows = $services.count + 1
-			Write-Verbose "$(Get-Date): `t`tAdd Citrix Services table to doc"
-			$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
-			$table.Style = $myHash.Word_TableGrid
-			$table.Borders.InsideLineStyle = 1
-			$table.Borders.OutsideLineStyle = 1
-			$xRow = 1
-			Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
-			$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
-			$Table.Cell($xRow,1).Range.Font.Bold = $True
-			$Table.Cell($xRow,1).Range.Text = "Display Name"
-			$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
-			$Table.Cell($xRow,2).Range.Font.Bold = $True
-			$Table.Cell($xRow,2).Range.Text = "Status"
-			ForEach($Service in $Services)
-			{
-				Write-Verbose "$(Get-Date): `t`t`tProcessing Citrix service $($Service.DisplayName)"
-				$xRow++
-				$Table.Cell($xRow,1).Range.Text = $Service.DisplayName
-				If($Service.Status -eq "Stopped")
-				{
-					$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorRed
-					$Table.Cell($xRow,2).Range.Font.Bold  = $True
-					$Table.Cell($xRow,2).Range.Font.Color = $WDColorBlack
-				}
-				$Table.Cell($xRow,2).Range.Text = $Service.Status
-			}
-
-			Write-Verbose "$(Get-Date): `t`tMove table of Citrix services to the right"
-			$Table.Rows.SetLeftIndent(36,1)
-			$table.AutoFitBehavior(1)
-
-			#return focus back to document
-			Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
-			$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
-
-			#move to the end of the current document
-			Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
-			$selection.EndKey($wdStory,$wdMove) | Out-Null
-			
-			#Citrix hotfixes installed
-			Write-Verbose "$(Get-Date): `t`tGet list of Citrix hotfixes installed"
-			$hotfixes = Get-XAServerHotfix -ServerName $server.ServerName -EA 0 | Sort-Object HotfixName
-			If($? -and $hotfixes)
-			{
-				$Rows = 1
-				$Single_Row = (Get-Member -Type Property -Name Length -InputObject $hotfixes -EA 0) -eq $Null
-				If(-not $Single_Row)
-				{
-					$Rows = $Hotfixes.length
-				}
-				$Rows++
 				
-				Write-Verbose "$(Get-Date): `t`tNumber of hotfixes is $($Rows-1)"
+				If($FarmOS -eq "2003")
+				{
+					$Text = "HDX Plug and Play"
+				}
+				Else
+				{
+					$Text = "XenApp"
+				}
+				
+				If($ServerConfig.ContentRedirectionUseFarmSettings)
+				{
+					WriteWordLine 0 2 "$($Text)/Content Redirection: Server is using farm settings"
+				}
+				Else
+				{
+					WriteWordLine 0 2 "$($Text)/Content Redirection: Server is not using farm settings"
+					WriteWordLine 0 3 "Content redirection from server to client: " -nonewline
+					If($ServerConfig.ContentRedirectionEnabled)
+					{
+						WriteWordLine 0 0 "Yes"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+				}
+				#ShadowLoggingEnabled is not stored by Citrix
+				#WriteWordLine 0 3 "HDX Plug and Play/Shadow Logging/Log shadowing sessions: " $ServerConfig.ShadowLoggingEnabled
+				
+				If($FarmOS -eq "2008")
+				{
+					If($ServerConfig.RemoteConsoleUseFarmSettings)
+					{
+						WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is using farm settings"
+					}
+					Else
+					{
+						WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is not using farm settings"
+						WriteWordLine 0 3 "Remote connections to the console: " -nonewline
+						If($ServerConfig.RemoteConsoleEnabled)
+						{
+							WriteWordLine 0 0 "Yes"
+						}
+						Else
+						{
+							WriteWordLine 0 0 "No"
+						}
+					}
+				}
+
+				If($ServerConfig.SnmpUseFarmSettings)
+				{
+					WriteWordLine 0 2 "SNMP: Server is using farm settings"
+				}
+				Else
+				{
+					WriteWordLine 0 2 "SNMP: Server is not using farm settings"
+					# SnmpEnabled is not working
+					WriteWordLine 0 3 "Send session traps to selected SNMP agent on all farm servers"
+					WriteWordLine 0 4 "SNMP agent session traps:"
+					WriteWordLine 0 5 "Logon`t`t`t: " -nonewline
+					If($ServerConfig.SnmpLogOnEnabled)
+					{
+						WriteWordLine 0 0 "Yes"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+					WriteWordLine 0 5 "Logoff`t`t`t: " -nonewline
+					If($ServerConfig.SnmpLogOffEnabled)
+					{
+						WriteWordLine 0 0 "Yes"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+					WriteWordLine 0 5 "Disconnect`t`t: " -nonewline
+					If($ServerConfig.SnmpDisconnectEnabled)
+					{
+						WriteWordLine 0 0 "Yes"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+					WriteWordLine 0 5 "Session limit per server`t: " -nonewline
+					If($ServerConfig.SnmpLimitEnabled)
+					{
+						WriteWordLine 0 0 " " $ServerConfig.SnmpLimitPerServer
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+				}
+				
+				If($FarmOS -eq "2003")
+				{
+					$Text = "HDX 3D"
+				}
+				Else
+				{
+					$Text = "SpeedScreen"
+				}
+				
+				If($ServerConfig.BrowserAccelerationUseFarmSettings)
+				{
+					WriteWordLine 0 2 "$($Text)/Browser Acceleration: Server is using farm settings"
+				}
+				Else
+				{
+					WriteWordLine 0 2 "$($Text)/Browser Acceleration: Server is not using farm settings"
+					WriteWordLine 0 3 "$($Text)/$($Text)Browser Acceleration: " -nonewline
+					If($ServerConfig.BrowserAccelerationEnabled)
+					{
+						WriteWordLine 0 0 "Yes"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+					If($ServerConfig.BrowserAccelerationEnabled)
+					{
+						WriteWordLine 0 4 "Compress JPEG images to improve bandwidth: " -nonewline
+						If($ServerConfig.BrowserAccelerationCompressionEnabled)
+						{
+							WriteWordLine 0 0 "Yes"
+						}
+						Else
+						{
+							WriteWordLine 0 0 "No"
+						}
+						If($ServerConfig.BrowserAccelerationCompressionEnabled)
+						{
+							WriteWordLine 0 4 "Image compression level: " $ServerConfig.BrowserAccelerationCompressionLevel
+							WriteWordLine 0 4 "Adjust compression level based on available bandwidth: " -nonewline
+							If($ServerConfig.BrowserAccelerationVariableImageCompression)
+							{
+								WriteWordLine 0 0 "Yes"
+							}
+							Else
+							{
+								WriteWordLine 0 0 "No"
+							}
+						}
+					}
+				}
+				
+				If($FarmOS -eq "2003")
+				{
+					$Text = "HDX MediaStream"
+				}
+				Else
+				{
+					$Text = "SpeedScreen"
+				}
+				
+				If($ServerConfig.FlashAccelerationUseFarmSettings)
+				{
+					WriteWordLine 0 2 "$($Text)/Flash: Server is using farm settings"
+				}
+				Else
+				{
+					WriteWordLine 0 2 "$($Text)/Flash: Server is not using farm settings"
+					If($FarmOS -eq "2003")
+					{
+						WriteWordLine 0 3 "Enable Flash for XenApp sessions: " -nonewline
+					}
+					Else
+					{
+						WriteWordLine 0 3 "Enable Adobe Flash Player: " -nonewline
+					}
+					If($ServerConfig.FlashAccelerationEnabled)
+					{
+						WriteWordLine 0 0 "Yes"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+					If($ServerConfig.FlashAccelerationEnabled)
+					{
+						Switch ($ServerConfig.FlashAccelerationOption)
+						{
+							"RestrictedBandwidth" {WriteWordLine 0 3 "Restricted bandwidth connections"}
+							"NoOptimization"      {WriteWordLine 0 3 "Do not optimize"}
+							"AllConnections"      {WriteWordLine 0 3 "All connections"}
+							Default {WriteWordLine 0 0 "Server-side acceleration could not be determined: $($ServerConfig.FlashAccelerationOption)"}
+						}
+					}
+				}
+				If($ServerConfig.MultimediaAccelerationUseFarmSettings)
+				{
+					WriteWordLine 0 2 "$($Text)/Multimedia Acceleration: Server is using farm settings"
+				}
+				Else
+				{
+					WriteWordLine 0 2 "$($Text)/Multimedia Acceleration: Server is not using farm settings"
+					WriteWordLine 0 3 "Multimedia acceleration: " -nonewline
+					If($ServerConfig.MultimediaAccelerationEnabled)
+					{
+						WriteWordLine 0 0 "Yes"
+					}
+					Else
+					{
+						WriteWordLine 0 0 "No"
+					}
+					If($ServerConfig.MultimediaAccelerationEnabled)
+					{
+						If($ServerConfig.MultimediaAccelerationDefaultBuffer)
+						{
+							WriteWordLine 0 3 "Use the Default buffer of 5 seconds"
+						}
+						Else
+						{
+							WriteWordLine 0 3 "Custom buffer time in seconds: " $ServerConfig.MultimediaAccelerationCustomBuffer
+						}
+					}
+				}
+				WriteWordLine 0 2 "Virtual IP/Enable virtual IP for this server: " -nonewline
+				If($ServerConfig.VirtualIPEnabled)
+				{
+					WriteWordLine 0 0 "Yes"
+				}
+				Else
+				{
+					WriteWordLine 0 0 "No"
+				}
+				WriteWordLine 0 2 "Virtual IP/Use farm setting for IP address logging: " -nonewline
+				If($ServerConfig.VirtualIPUseFarmLoggingSettings)
+				{
+					WriteWordLine 0 0 "Yes"
+				}
+				Else
+				{
+					WriteWordLine 0 0 "No"
+				}
+				WriteWordLine 0 2 "Virtual IP/Enable logging of IP address assignment and release: " -nonewline
+				If($ServerConfig.VirtualIPLoggingEnabled)
+				{
+					WriteWordLine 0 0 "Yes"
+				}
+				Else
+				{
+					WriteWordLine 0 0 "No"
+				}
+				WriteWordLine 0 2 "Virtual IP/Enable virtual loopback for this server: " -nonewline
+				If($ServerConfig.VirtualIPLoopbackEnabled)
+				{
+					WriteWordLine 0 0 "Yes"
+				}
+				Else
+				{
+					WriteWordLine 0 0 "No"
+				}
+				WriteWordLine 0 2 "XML Service/Trust requests sent to the XML service: " -nonewline
+				If($ServerConfig.XmlServiceTrustRequests)
+				{
+					WriteWordLine 0 0 "Yes"
+				}
+				Else
+				{
+					WriteWordLine 0 0 "No"
+				}
+				If($Server2008)
+				{
+					If($ServerConfig.RestartsEnabled)
+					{
+						WriteWordLine 0 2 "Automatic restarts are enabled"
+						WriteWordLine 0 3 "Restart server from: " $ServerConfig.RestartFrom
+						WriteWordLine 0 3 "Restart frequency in days: " $ServerConfig.RestartFrequency
+					}
+					Else
+					{
+						WriteWordLine 0 2 "Automatic restarts are not enabled"
+					}
+				}
 				WriteWordLine 0 0 ""
-				WriteWordLine 0 1 "Citrix Installed Hotfixes:"
-				Write-Verbose "$(Get-Date): `t`tCreate Word Table for Citrix Hotfixes"
+			}
+			Else
+			{
+				WriteWordLine 0 0 "Server configuration data could not be retrieved for server " $Server.ServerName
+			}
+
+			#create array for appendix B
+			#this cannot be at the top of the loop like the other scripts
+			#license server info is retrieved differently than other scripts
+			Write-Verbose "$(Get-Date): `t`tGather server info for Appendix B"
+			$obj = New-Object -TypeName PSObject
+			$obj | Add-Member -MemberType NoteProperty -Name ServerName -Value $server.ServerName
+			$obj | Add-Member -MemberType NoteProperty -Name ZoneName -Value $server.ZoneName
+			$obj | Add-Member -MemberType NoteProperty -Name OSVersion -Value $server.OSVersion
+			$obj | Add-Member -MemberType NoteProperty -Name CitrixVersion -Value $server.CitrixVersion
+			$obj | Add-Member -MemberType NoteProperty -Name ProductEdition -Value $server.CitrixEdition
+			
+			If($ServerConfig.LicenseServerUseFarmSettings)
+			{
+				$obj | Add-Member -MemberType NoteProperty -Name LicenseServer -Value "Farm Setting"
+			}
+			Else
+			{
+				$obj | Add-Member -MemberType NoteProperty -Name LicenseServer -Value $ServerConfig.LicenseServerName
+			}
+
+			If($SvrOnline)
+			{
+				$Reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $server.ServerName)
+				$RegKey= $Reg.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\Citrix\\Wfshell\\TWI")
+				$SSDisabled = $RegKey.GetValue("SeamlessFlags")
+				
+				If($SSDisabled -eq 1)
+				{
+					$obj | Add-Member -MemberType NoteProperty -Name SessionSharing -Value "Disabled"
+				}
+				Else
+				{
+					$obj | Add-Member -MemberType NoteProperty -Name SessionSharing -Value "Enabled"
+				}
+			}
+			Else
+			{
+				$obj | Add-Member -MemberType NoteProperty -Name SessionSharing -Value "Server Offline"
+			}
+			
+			$ServerItems += $obj
+
+			If($SvrOnline -and $Hardware)
+			{
+				GetComputerWMIInfo $server.ServerName
+			}
+			
+			#applications published to server
+			$Applications = Get-XAApplication -ServerName $server.ServerName -EA 0 | Sort-Object FolderPath, DisplayName
+			If($? -and $Applications)
+			{
+				WriteWordLine 0 1 "Published applications:"
+				Write-Verbose "$(Get-Date): `t`tProcessing published applications for server $($server.ServerName)"
+				Write-Verbose "$(Get-Date): `t`tCreate Word Table for server's published applications"
 				$TableRange = $doc.Application.Selection.Range
-				$Columns = 5
-				Write-Verbose "$(Get-Date): `t`tAdd Citrix installed hotfix table to doc"
+				[int]$Columns = 2
+				
+				If($Applications -is [Array])
+				{
+					[int]$Rows = $Applications.count + 1
+				}
+				Else
+				{
+					[int]$Rows = 2
+				}
+
 				$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
 				$table.Style = $myHash.Word_TableGrid
 				$table.Borders.InsideLineStyle = 1
 				$table.Borders.OutsideLineStyle = 1
-				$xRow = 1
+				[int]$xRow = 1
 				Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
 				$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
 				$Table.Cell($xRow,1).Range.Font.Bold = $True
-				$Table.Cell($xRow,1).Range.Font.Size = "10"
-				$Table.Cell($xRow,1).Range.Text = "Hotfix"
+				$Table.Cell($xRow,1).Range.Text = "Display name"
 				$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
 				$Table.Cell($xRow,2).Range.Font.Bold = $True
-				$Table.Cell($xRow,2).Range.Font.Size = "10"
-				$Table.Cell($xRow,2).Range.Text = "Installed By"
-				$Table.Cell($xRow,3).Shading.BackgroundPatternColor = $wdColorGray15
-				$Table.Cell($xRow,3).Range.Font.Bold = $True
-				$Table.Cell($xRow,3).Range.Font.Size = "10"
-				$Table.Cell($xRow,3).Range.Text = "Install Date"
-				$Table.Cell($xRow,4).Shading.BackgroundPatternColor = $wdColorGray15
-				$Table.Cell($xRow,4).Range.Font.Bold = $True
-				$Table.Cell($xRow,4).Range.Font.Size = "10"
-				$Table.Cell($xRow,4).Range.Text = "Type"
-				$Table.Cell($xRow,5).Shading.BackgroundPatternColor = $wdColorGray15
-				$Table.Cell($xRow,5).Range.Font.Bold = $True
-				$Table.Cell($xRow,5).Range.Font.Size = "10"
-				$Table.Cell($xRow,5).Range.Text = "Valid"
-				ForEach($hotfix in $hotfixes)
+				$Table.Cell($xRow,2).Range.Text = "Folder path"
+				ForEach($app in $Applications)
 				{
-					Write-Verbose "$(Get-Date): `t`t`tProcessing Citrix hotfix $($hotfix.HotfixName)"
+					Write-Verbose "$(Get-Date): `t`t`tProcessing published application $($app.DisplayName)"
 					$xRow++
-					$InstallDate = $hotfix.InstalledOn.ToString()
-					
-					$Table.Cell($xRow,1).Range.Font.Size = "10"
-					$Table.Cell($xRow,1).Range.Text = $hotfix.HotfixName
-					$Table.Cell($xRow,2).Range.Font.Size = "10"
-					$Table.Cell($xRow,2).Range.Text = $hotfix.InstalledBy
-					$Table.Cell($xRow,3).Range.Font.Size = "10"
-					$Table.Cell($xRow,3).Range.Text = $InstallDate.SubString(0,$InstallDate.IndexOf(" "))
-					$Table.Cell($xRow,4).Range.Font.Size = "10"
-					$Table.Cell($xRow,4).Range.Text = $hotfix.HotfixType
-					$Table.Cell($xRow,5).Range.Font.Size = "10"
-					$Table.Cell($xRow,5).Range.Text = $hotfix.Valid
+					$Table.Cell($xRow,1).Range.Text = $app.DisplayName
+					$Table.Cell($xRow,2).Range.Text = $app.FolderPath
 				}
-				Write-Verbose "$(Get-Date): `t`tMove table of Citrix installed hotfixes to the right"
+				Write-Verbose "$(Get-Date): `t`tMove table of published applications to the right"
 				$Table.Rows.SetLeftIndent(36,1)
 				$table.AutoFitBehavior(1)
 
@@ -5631,17 +5680,264 @@ If($?)
 				$selection.EndKey($wdStory,$wdMove) | Out-Null
 				WriteWordLine 0 0 ""
 			}
+
+			#get list of applications installed on server
+			# original work by Shaun Ritchie
+			# modified by Jeff Wouters
+			# modified by Webster
+			# fixed, as usual, by Michael B. Smith
+			If($SvrOnline -and $Software)
+			{
+				#section modified on 3-jan-2014 to add displayversion
+				$InstalledApps = @()
+				$JustApps = @()
+
+				#Define the variable to hold the location of Currently Installed Programs
+				$UninstallKey1="SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall" 
+
+				#Create an instance of the Registry Object and open the HKLM base key
+				$reg=[microsoft.win32.registrykey]::OpenRemoteBaseKey('LocalMachine',$Server.ServerName) 
+
+				#Drill down into the Uninstall key using the OpenSubKey Method
+				$regkey1=$reg.OpenSubKey($UninstallKey1) 
+
+				#Retrieve an array of string that contain all the subkey names
+				If($regkey1 -ne $Null)
+				{
+					$subkeys1=$regkey1.GetSubKeyNames() 
+
+					#Open each Subkey and use GetValue Method to return the required values for each
+					ForEach($key in $subkeys1) 
+					{
+						$thisKey=$UninstallKey1+"\\"+$key 
+						$thisSubKey=$reg.OpenSubKey($thisKey) 
+						If(![String]::IsNullOrEmpty($($thisSubKey.GetValue("DisplayName")))) 
+						{
+							$obj = New-Object PSObject
+							$obj | Add-Member -MemberType NoteProperty -Name "DisplayName" -Value $($thisSubKey.GetValue("DisplayName"))
+							$obj | Add-Member -MemberType NoteProperty -Name "DisplayVersion" -Value $($thisSubKey.GetValue("DisplayVersion"))
+							$InstalledApps += $obj
+						}
+					}
+				}			
+
+				$UninstallKey2="SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall" 
+				$regkey2=$reg.OpenSubKey($UninstallKey2)
+				If($regkey2 -ne $Null)
+				{
+					$subkeys2=$regkey2.GetSubKeyNames()
+
+					ForEach($key in $subkeys2) 
+					{
+						$thisKey=$UninstallKey2+"\\"+$key 
+						$thisSubKey=$reg.OpenSubKey($thisKey) 
+						if(![String]::IsNullOrEmpty($($thisSubKey.GetValue("DisplayName")))) 
+						{
+							$obj = New-Object PSObject
+							$obj | Add-Member -MemberType NoteProperty -Name "DisplayName" -Value $($thisSubKey.GetValue("DisplayName"))
+							$obj | Add-Member -MemberType NoteProperty -Name "DisplayVersion" -Value $($thisSubKey.GetValue("DisplayVersion"))
+							$InstalledApps += $obj
+						}
+					}
+				}
+
+				$InstalledApps = $InstalledApps | Sort DisplayName
+
+				$tmp1 = SWExclusions
+				If($Tmp1 -ne "")
+				{
+					$Func = ConvertTo-ScriptBlock $tmp1
+					$tempapps = Invoke-Command {& $Func}
+				}
+				Else
+				{
+					$tempapps = $InstalledApps
+				}
+				
+				$JustApps = $TempApps | Select DisplayName, DisplayVersion | Sort DisplayName -unique
+
+				WriteWordLine 0 1 "Installed applications:"
+				Write-Verbose "$(Get-Date): `t`tProcessing installed applications for server $($server.ServerName)"
+				Write-Verbose "$(Get-Date): `t`tCreate Word Table for server's installed applications"
+				$TableRange = $doc.Application.Selection.Range
+				[int]$Columns = 2
+				[int]$Rows = $JustApps.count + 1
+
+				$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+				$table.Style = $myHash.Word_TableGrid
+				$table.Borders.InsideLineStyle = 1
+				$table.Borders.OutsideLineStyle = 1
+				[int]$xRow = 1
+				Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
+				$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell($xRow,1).Range.Font.Bold = $True
+				$Table.Cell($xRow,1).Range.Text = "Application name"
+				$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell($xRow,2).Range.Font.Bold = $True
+				$Table.Cell($xRow,2).Range.Text = "Application version"
+				ForEach($app in $JustApps)
+				{
+					Write-Verbose "$(Get-Date): `t`t`tProcessing installed application $($app.DisplayName)"
+					$xRow++
+					$Table.Cell($xRow,1).Range.Text = $app.DisplayName
+					$Table.Cell($xRow,2).Range.Text = $app.DisplayVersion
+				}
+				Write-Verbose "$(Get-Date): `t`tMove table of installed applications to the right"
+				$Table.Rows.SetLeftIndent(36,1)
+				$table.AutoFitBehavior(1)
+
+				#return focus back to document
+				Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
+				$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
+
+				#move to the end of the current document
+				Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
+				$selection.EndKey($wdStory,$wdMove) | Out-Null
+				WriteWordLine 0 0 ""
+			}
+
+			#list citrix services
+			Write-Verbose "$(Get-Date): `t`tTesting to see if $($server.ServerName) is online and reachable"
+			If(Test-Connection -ComputerName $server.servername -quiet -EA 0)
+			{
+				Write-Verbose "$(Get-Date): `t`tProcessing Citrix services for server $($server.ServerName)"
+				$services = get-service -ComputerName $server.ServerName -EA 0 | where-object {$_.DisplayName -like "*Citrix*"} | Sort-Object DisplayName
+				WriteWordLine 0 1 "Citrix Services"
+				Write-Verbose "$(Get-Date): `t`tCreate Word Table for Citrix services"
+				$TableRange = $doc.Application.Selection.Range
+				[int]$Columns = 2
+				[int]$Rows = $services.count + 1
+				Write-Verbose "$(Get-Date): `t`tAdd Citrix Services table to doc"
+				$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+				$table.Style = $myHash.Word_TableGrid
+				$table.Borders.InsideLineStyle = 1
+				$table.Borders.OutsideLineStyle = 1
+				$xRow = 1
+				Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
+				$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell($xRow,1).Range.Font.Bold = $True
+				$Table.Cell($xRow,1).Range.Text = "Display Name"
+				$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell($xRow,2).Range.Font.Bold = $True
+				$Table.Cell($xRow,2).Range.Text = "Status"
+				ForEach($Service in $Services)
+				{
+					Write-Verbose "$(Get-Date): `t`t`tProcessing Citrix service $($Service.DisplayName)"
+					$xRow++
+					$Table.Cell($xRow,1).Range.Text = $Service.DisplayName
+					If($Service.Status -eq "Stopped")
+					{
+						$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorRed
+						$Table.Cell($xRow,2).Range.Font.Bold  = $True
+						$Table.Cell($xRow,2).Range.Font.Color = $WDColorBlack
+					}
+					$Table.Cell($xRow,2).Range.Text = $Service.Status
+				}
+
+				Write-Verbose "$(Get-Date): `t`tMove table of Citrix services to the right"
+				$Table.Rows.SetLeftIndent(36,1)
+				$table.AutoFitBehavior(1)
+
+				#return focus back to document
+				Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
+				$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
+
+				#move to the end of the current document
+				Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
+				$selection.EndKey($wdStory,$wdMove) | Out-Null
+				
+				#Citrix hotfixes installed
+				Write-Verbose "$(Get-Date): `t`tGet list of Citrix hotfixes installed"
+				$hotfixes = Get-XAServerHotfix -ServerName $server.ServerName -EA 0 | Sort-Object HotfixName
+				If($? -and $hotfixes)
+				{
+					$Rows = 1
+					$Single_Row = (Get-Member -Type Property -Name Length -InputObject $hotfixes -EA 0) -eq $Null
+					If(-not $Single_Row)
+					{
+						$Rows = $Hotfixes.length
+					}
+					$Rows++
+					
+					Write-Verbose "$(Get-Date): `t`tNumber of hotfixes is $($Rows-1)"
+					WriteWordLine 0 0 ""
+					WriteWordLine 0 1 "Citrix Installed Hotfixes:"
+					Write-Verbose "$(Get-Date): `t`tCreate Word Table for Citrix Hotfixes"
+					$TableRange = $doc.Application.Selection.Range
+					$Columns = 5
+					Write-Verbose "$(Get-Date): `t`tAdd Citrix installed hotfix table to doc"
+					$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+					$table.Style = $myHash.Word_TableGrid
+					$table.Borders.InsideLineStyle = 1
+					$table.Borders.OutsideLineStyle = 1
+					$xRow = 1
+					Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
+					$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
+					$Table.Cell($xRow,1).Range.Font.Bold = $True
+					$Table.Cell($xRow,1).Range.Font.Size = "10"
+					$Table.Cell($xRow,1).Range.Text = "Hotfix"
+					$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
+					$Table.Cell($xRow,2).Range.Font.Bold = $True
+					$Table.Cell($xRow,2).Range.Font.Size = "10"
+					$Table.Cell($xRow,2).Range.Text = "Installed By"
+					$Table.Cell($xRow,3).Shading.BackgroundPatternColor = $wdColorGray15
+					$Table.Cell($xRow,3).Range.Font.Bold = $True
+					$Table.Cell($xRow,3).Range.Font.Size = "10"
+					$Table.Cell($xRow,3).Range.Text = "Install Date"
+					$Table.Cell($xRow,4).Shading.BackgroundPatternColor = $wdColorGray15
+					$Table.Cell($xRow,4).Range.Font.Bold = $True
+					$Table.Cell($xRow,4).Range.Font.Size = "10"
+					$Table.Cell($xRow,4).Range.Text = "Type"
+					$Table.Cell($xRow,5).Shading.BackgroundPatternColor = $wdColorGray15
+					$Table.Cell($xRow,5).Range.Font.Bold = $True
+					$Table.Cell($xRow,5).Range.Font.Size = "10"
+					$Table.Cell($xRow,5).Range.Text = "Valid"
+					ForEach($hotfix in $hotfixes)
+					{
+						Write-Verbose "$(Get-Date): `t`t`tProcessing Citrix hotfix $($hotfix.HotfixName)"
+						$xRow++
+						$InstallDate = $hotfix.InstalledOn.ToString()
+						
+						$Table.Cell($xRow,1).Range.Font.Size = "10"
+						$Table.Cell($xRow,1).Range.Text = $hotfix.HotfixName
+						$Table.Cell($xRow,2).Range.Font.Size = "10"
+						$Table.Cell($xRow,2).Range.Text = $hotfix.InstalledBy
+						$Table.Cell($xRow,3).Range.Font.Size = "10"
+						$Table.Cell($xRow,3).Range.Text = $InstallDate.SubString(0,$InstallDate.IndexOf(" "))
+						$Table.Cell($xRow,4).Range.Font.Size = "10"
+						$Table.Cell($xRow,4).Range.Text = $hotfix.HotfixType
+						$Table.Cell($xRow,5).Range.Font.Size = "10"
+						$Table.Cell($xRow,5).Range.Text = $hotfix.Valid
+					}
+					Write-Verbose "$(Get-Date): `t`tMove table of Citrix installed hotfixes to the right"
+					$Table.Rows.SetLeftIndent(36,1)
+					$table.AutoFitBehavior(1)
+
+					#return focus back to document
+					Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
+					$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
+
+					#move to the end of the current document
+					Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
+					$selection.EndKey($wdStory,$wdMove) | Out-Null
+					WriteWordLine 0 0 ""
+				}
+			}
+			Else
+			{
+				Write-Verbose "$(Get-Date): `t`t$($server.ServerName) is offline or unreachable.  Citrix Services and Hotfix areas skipped."
+				WriteWordLine 0 0 "Server $($server.ServerName) was offline or unreachable at "$(Get-Date -Format u)
+				WriteWordLine 0 0 "The Citrix Services and Hotfix areas were skipped."
+			}
+
+			WriteWordLine 0 0 "" 
+			Write-Verbose "$(Get-Date): `t`t`tFinished Processing server $($server.ServerName)"
+			Write-Verbose "$(Get-Date): "
 		}
 		Else
 		{
-			Write-Verbose "$(Get-Date): `t`t$($server.ServerName) is offline or unreachable.  Citrix Services and Hotfix areas skipped."
-			WriteWordLine 0 0 "Server $($server.ServerName) was offline or unreachable at "$(Get-Date -Format u)
-			WriteWordLine 0 0 "The Citrix Services and Hotfix areas were skipped."
+			WriteWordLine 0 0 $server.ServerName
 		}
-
-		WriteWordLine 0 0 "" 
-		Write-Verbose "$(Get-Date): `t`t`tFinished Processing server $($server.ServerName)"
-		Write-Verbose "$(Get-Date): "
 	}
 }
 Else 
@@ -5660,58 +5956,70 @@ Write-Verbose "$(Get-Date): `tRetrieving Zone Information"
 $Zones = Get-XAZone -EA 0 | Sort-Object ZoneName
 If($?)
 {
-	Write-Verbose "$(Get-Date): `tRetrieving Global Zone Settings"
 	$ZoneSetting1 = $Null
 	$ZoneSetting2 = $Null
-	$ZoneGlobal = Get-XAFarmConfiguration -EA 0
-	If($?)
+	If(!$Summary)
 	{
-		[bool]$ZoneSetting1 = $ZoneGlobal.ZonesShareLoadInformation
-		[bool]$ZoneSetting2 = $ZoneGlobal.ZonesEnumerationFromDataCollectorsOnly
+		Write-Verbose "$(Get-Date): `tRetrieving Global Zone Settings"
+		$ZoneGlobal = Get-XAFarmConfiguration -EA 0
+		If($?)
+		{
+			[bool]$ZoneSetting1 = $ZoneGlobal.ZonesShareLoadInformation
+			[bool]$ZoneSetting2 = $ZoneGlobal.ZonesEnumerationFromDataCollectorsOnly
+		}
+		ElseIf($ZoneGlobal -eq $Null)
+		{
+			Write-Verbose "$(Get-Date): There are no Global Zone Settings available"
+		}
+		Else 
+		{
+			Write-Warning "Global Zone settings could not be retrieved."
+		}
 	}
-	ElseIf($ZoneGlobal -eq $Null)
-	{
-		Write-Verbose "$(Get-Date): There are no Global Zone Settings available"
-	}
-	Else 
-	{
-		Write-Warning "Global Zone settings could not be retrieved."
-	}
-
+	
 	$selection.InsertNewPage()
 	WriteWordLine 1 0 "Zones:"
 	ForEach($Zone in $Zones)
 	{
 		$TotalZones++
 		Write-Verbose "$(Get-Date): `t`tProcessing zone $($Zone.ZoneName)"
-		WriteWordLine 2 0 $Zone.ZoneName
-		WriteWordLine 0 1 "Current Data Collector: " $Zone.DataCollector
-		$Servers = Get-XAServer -ZoneName $Zone.ZoneName -EA 0 | Sort-Object ElectionPreference, ServerName
-		If($?)
-		{		
-			WriteWordLine 0 1 "Servers in Zone"
-	
-			ForEach($Server in $Servers)
-			{
-				WriteWordLine 0 2 "Server Name and Preference: " $server.ServerName -NoNewLine
-				WriteWordLine 0 0  " - " -nonewline
-				Switch ($server.ElectionPreference)
+		If(!$Summary)
+		{
+			WriteWordLine 2 0 $Zone.ZoneName
+			WriteWordLine 0 1 "Current Data Collector: " $Zone.DataCollector
+			$Servers = Get-XAServer -ZoneName $Zone.ZoneName -EA 0 | Sort-Object ElectionPreference, ServerName
+			If($?)
+			{		
+				WriteWordLine 0 1 "Servers in Zone"
+		
+				ForEach($Server in $Servers)
 				{
-					"Unknown"           {WriteWordLine 0 0 "Unknown"}
-					"MostPreferred"     {WriteWordLine 0 0 "Most Preferred"}
-					"Preferred"         {WriteWordLine 0 0 "Preferred"}
-					"DefaultPreference" {WriteWordLine 0 0 "Default Preference"}
-					"NotPreferred"      {WriteWordLine 0 0 "Not Preferred"}
-					"WorkerMode"        {WriteWordLine 0 0 "Worker Mode"}
-					Default {WriteWordLine 0 0 "Zone preference could not be determined: $($server.ElectionPreference)"}
+					WriteWordLine 0 2 "Server Name and Preference: " $server.ServerName -NoNewLine
+					WriteWordLine 0 0  " - " -nonewline
+					Switch ($server.ElectionPreference)
+					{
+						"Unknown"           {WriteWordLine 0 0 "Unknown"}
+						"MostPreferred"     {WriteWordLine 0 0 "Most Preferred"}
+						"Preferred"         {WriteWordLine 0 0 "Preferred"}
+						"DefaultPreference" {WriteWordLine 0 0 "Default Preference"}
+						"NotPreferred"      {WriteWordLine 0 0 "Not Preferred"}
+						"WorkerMode"        {WriteWordLine 0 0 "Worker Mode"}
+						Default {WriteWordLine 0 0 "Zone preference could not be determined: $($server.ElectionPreference)"}
+					}
 				}
 			}
+			Else
+			{
+				WriteWordLine 0 1 "Unable to enumerate servers in the zone"
+			}
+			$Servers = $Null
 		}
 		Else
 		{
-			WriteWordLine 0 1 "Unable to enumerate servers in the zone"
+			WriteWordLine 0 0 $Zone.ZoneName
 		}
 	}
+	
 	If($ZoneSetting1 -ne $Null)
 	{
 		Write-Verbose "$(Get-Date): `t`tProcessing global zone data"
@@ -5763,127 +6071,134 @@ If($?)
 	{
 		$TotalLoadEvaluators++
 		Write-Verbose "$(Get-Date): `t`tProcessing load evaluator $($LoadEvaluator.LoadEvaluatorName)"
-		WriteWordLine 2 0 $LoadEvaluator.LoadEvaluatorName
-		WriteWordLine 0 1 "Description: " $LoadEvaluator.Description
-		
-		If($LoadEvaluator.IsBuiltIn)
+		If(!$Summary)
 		{
-			WriteWordLine 0 1 "Built-in Load Evaluator"
-		} 
-		Else 
-		{
-			WriteWordLine 0 1 "User created load evaluator"
-		}
-	
-		If($LoadEvaluator.ApplicationUserLoadEnabled)
-		{
-			WriteWordLine 0 1 "Application User Load Settings"
-			WriteWordLine 0 2 "Report full load when the # of users for this application =: " $LoadEvaluator.ApplicationUserLoad
-			WriteWordLine 0 2 "Application: " $LoadEvaluator.ApplicationBrowserName
-		}
-	
-		If($LoadEvaluator.ContextSwitchesEnabled)
-		{
-			WriteWordLine 0 1 "Context Switches Settings"
-			WriteWordLine 0 2 "Report full load when the # of context Switches per second is >= than: " $LoadEvaluator.ContextSwitches[1]
-			WriteWordLine 0 2 "Report no load when the # of context Switches per second is <= to: " $LoadEvaluator.ContextSwitches[0]
-		}
-	
-		If($LoadEvaluator.CpuUtilizationEnabled)
-		{
-			WriteWordLine 0 1 "CPU Utilization Settings"
-			WriteWordLine 0 2 "Report full load when the processor utilization % is > than: " $LoadEvaluator.CpuUtilization[1]
-			WriteWordLine 0 2 "Report no load when the processor utilization % is <= to: " $LoadEvaluator.CpuUtilization[0]
-		}
-	
-		If($LoadEvaluator.DiskDataIOEnabled)
-		{
-			WriteWordLine 0 1 "Disk Data I/O Settings"
-			WriteWordLine 0 2 "Report full load when the total disk I/O in kbps > than: " $LoadEvaluator.DiskDataIO[1]
-			WriteWordLine 0 2 "Report no load when the total disk I/O in kbps <= to: " $LoadEvaluator.DiskDataIO[0]
-		}
-	
-		If($LoadEvaluator.DiskOperationsEnabled)
-		{
-			WriteWordLine 0 1 "Disk Operations Settings"
-			WriteWordLine 0 2 "Report full load when the total # of R/W operations per second is > than: " $LoadEvaluator.DiskOperations[1]
-			WriteWordLine 0 2 "Report no load when the total # of R/W operations per second is <= to: " $LoadEvaluator.DiskOperations[0]
-		}
-	
-		If($LoadEvaluator.IPRangesEnabled)
-		{
-			WriteWordLine 0 1 "IP Range Settings"
-			If($LoadEvaluator.IPRangesAllowed)
+			WriteWordLine 2 0 $LoadEvaluator.LoadEvaluatorName
+			WriteWordLine 0 1 "Description: " $LoadEvaluator.Description
+			
+			If($LoadEvaluator.IsBuiltIn)
 			{
-				WriteWordLine 0 2 "Allow " -NoNewLine
+				WriteWordLine 0 1 "Built-in Load Evaluator"
 			} 
 			Else 
 			{
-				WriteWordLine 0 2 "Deny " -NoNewLine
+				WriteWordLine 0 1 "User created load evaluator"
 			}
-			WriteWordLine 0 2 "client connections from the listed IP Ranges"
-			ForEach($IPRange in $LoadEvaluator.IPRanges)
-			{
-				WriteWordLine 0 4 "IP Address Ranges: " $IPRange
-			}
-		}
-
-		If($LoadEvaluator.LoadThrottlingEnabled)
-		{
-			WriteWordLine 0 1 "Load Throttling Settings"
-			WriteWordLine 0 2 "Impact of logons on load: " -nonewline
-			Switch ($LoadEvaluator.LoadThrottling)
-			{
-				"Unknown"    {WriteWordLine 0 0 "Unknown"}
-				"Extreme"    {WriteWordLine 0 0 "Extreme"}
-				"High"       {WriteWordLine 0 0 "High (Default)"}
-				"MediumHigh" {WriteWordLine 0 0 "Medium High"}
-				"Medium"     {WriteWordLine 0 0 "Medium"}
-				"MediumLow"  {WriteWordLine 0 0 "Medium Low"}
-				Default {WriteWordLine 0 0 "Impact of logons on load could not be determined: $($LoadEvaluator.LoadThrottling)"}
-			}
-		}
 		
-		If($LoadEvaluator.MemoryUsageEnabled)
-		{
-			WriteWordLine 0 1 "Memory Usage Settings"
-			WriteWordLine 0 2 "Report full load when the memory usage is > than: " $LoadEvaluator.MemoryUsage[1]
-			WriteWordLine 0 2 "Report no load when the memory usage is <= to: " $LoadEvaluator.MemoryUsage[0]
-		}
-	
-		If($LoadEvaluator.PageFaultsEnabled)
-		{
-			WriteWordLine 0 1 "Page Faults Settings"
-			WriteWordLine 0 2 "Report full load when the # of page faults per second is > than: " $LoadEvaluator.PageFaults[1]
-			WriteWordLine 0 2 "Report no load when the # of page faults per second is <= to: " $LoadEvaluator.PageFaults[0]
-		}
-	
-		If($LoadEvaluator.PageSwapsEnabled)
-		{
-			WriteWordLine 0 1 "Page Swaps Settings"
-			WriteWordLine 0 2 "Report full load when the # of page swaps per second is > than: " $LoadEvaluator.PageSwaps[1]
-			WriteWordLine 0 2 "Report no load when the # of page swaps per second is <= to: " $LoadEvaluator.PageSwaps[0]
-		}
-	
-		If($LoadEvaluator.ScheduleEnabled)
-		{
-			WriteWordLine 0 1 "Scheduling Settings"
-			WriteWordLine 0 2 "Sunday Schedule`t: " $LoadEvaluator.SundaySchedule
-			WriteWordLine 0 2 "Monday Schedule`t: " $LoadEvaluator.MondaySchedule
-			WriteWordLine 0 2 "Tuesday Schedule`t: " $LoadEvaluator.TuesdaySchedule
-			WriteWordLine 0 2 "Wednesday Schedule`t: " $LoadEvaluator.WednesdaySchedule
-			WriteWordLine 0 2 "Thursday Schedule`t: " $LoadEvaluator.ThursdaySchedule
-			WriteWordLine 0 2 "Friday Schedule`t`t: " $LoadEvaluator.FridaySchedule
-			WriteWordLine 0 2 "Saturday Schedule`t: " $LoadEvaluator.SaturdaySchedule
-		}
+			If($LoadEvaluator.ApplicationUserLoadEnabled)
+			{
+				WriteWordLine 0 1 "Application User Load Settings"
+				WriteWordLine 0 2 "Report full load when the # of users for this application =: " $LoadEvaluator.ApplicationUserLoad
+				WriteWordLine 0 2 "Application: " $LoadEvaluator.ApplicationBrowserName
+			}
+		
+			If($LoadEvaluator.ContextSwitchesEnabled)
+			{
+				WriteWordLine 0 1 "Context Switches Settings"
+				WriteWordLine 0 2 "Report full load when the # of context Switches per second is >= than: " $LoadEvaluator.ContextSwitches[1]
+				WriteWordLine 0 2 "Report no load when the # of context Switches per second is <= to: " $LoadEvaluator.ContextSwitches[0]
+			}
+		
+			If($LoadEvaluator.CpuUtilizationEnabled)
+			{
+				WriteWordLine 0 1 "CPU Utilization Settings"
+				WriteWordLine 0 2 "Report full load when the processor utilization % is > than: " $LoadEvaluator.CpuUtilization[1]
+				WriteWordLine 0 2 "Report no load when the processor utilization % is <= to: " $LoadEvaluator.CpuUtilization[0]
+			}
+		
+			If($LoadEvaluator.DiskDataIOEnabled)
+			{
+				WriteWordLine 0 1 "Disk Data I/O Settings"
+				WriteWordLine 0 2 "Report full load when the total disk I/O in kbps > than: " $LoadEvaluator.DiskDataIO[1]
+				WriteWordLine 0 2 "Report no load when the total disk I/O in kbps <= to: " $LoadEvaluator.DiskDataIO[0]
+			}
+		
+			If($LoadEvaluator.DiskOperationsEnabled)
+			{
+				WriteWordLine 0 1 "Disk Operations Settings"
+				WriteWordLine 0 2 "Report full load when the total # of R/W operations per second is > than: " $LoadEvaluator.DiskOperations[1]
+				WriteWordLine 0 2 "Report no load when the total # of R/W operations per second is <= to: " $LoadEvaluator.DiskOperations[0]
+			}
+		
+			If($LoadEvaluator.IPRangesEnabled)
+			{
+				WriteWordLine 0 1 "IP Range Settings"
+				If($LoadEvaluator.IPRangesAllowed)
+				{
+					WriteWordLine 0 2 "Allow " -NoNewLine
+				} 
+				Else 
+				{
+					WriteWordLine 0 2 "Deny " -NoNewLine
+				}
+				WriteWordLine 0 2 "client connections from the listed IP Ranges"
+				ForEach($IPRange in $LoadEvaluator.IPRanges)
+				{
+					WriteWordLine 0 4 "IP Address Ranges: " $IPRange
+				}
+			}
 
-		If($LoadEvaluator.ServerUserLoadEnabled)
-		{
-			WriteWordLine 0 1 "Server User Load Settings"
-			WriteWordLine 0 2 "Report full load when the # of server users equals: " $LoadEvaluator.ServerUserLoad
+			If($LoadEvaluator.LoadThrottlingEnabled)
+			{
+				WriteWordLine 0 1 "Load Throttling Settings"
+				WriteWordLine 0 2 "Impact of logons on load: " -nonewline
+				Switch ($LoadEvaluator.LoadThrottling)
+				{
+					"Unknown"    {WriteWordLine 0 0 "Unknown"}
+					"Extreme"    {WriteWordLine 0 0 "Extreme"}
+					"High"       {WriteWordLine 0 0 "High (Default)"}
+					"MediumHigh" {WriteWordLine 0 0 "Medium High"}
+					"Medium"     {WriteWordLine 0 0 "Medium"}
+					"MediumLow"  {WriteWordLine 0 0 "Medium Low"}
+					Default {WriteWordLine 0 0 "Impact of logons on load could not be determined: $($LoadEvaluator.LoadThrottling)"}
+				}
+			}
+			
+			If($LoadEvaluator.MemoryUsageEnabled)
+			{
+				WriteWordLine 0 1 "Memory Usage Settings"
+				WriteWordLine 0 2 "Report full load when the memory usage is > than: " $LoadEvaluator.MemoryUsage[1]
+				WriteWordLine 0 2 "Report no load when the memory usage is <= to: " $LoadEvaluator.MemoryUsage[0]
+			}
+		
+			If($LoadEvaluator.PageFaultsEnabled)
+			{
+				WriteWordLine 0 1 "Page Faults Settings"
+				WriteWordLine 0 2 "Report full load when the # of page faults per second is > than: " $LoadEvaluator.PageFaults[1]
+				WriteWordLine 0 2 "Report no load when the # of page faults per second is <= to: " $LoadEvaluator.PageFaults[0]
+			}
+		
+			If($LoadEvaluator.PageSwapsEnabled)
+			{
+				WriteWordLine 0 1 "Page Swaps Settings"
+				WriteWordLine 0 2 "Report full load when the # of page swaps per second is > than: " $LoadEvaluator.PageSwaps[1]
+				WriteWordLine 0 2 "Report no load when the # of page swaps per second is <= to: " $LoadEvaluator.PageSwaps[0]
+			}
+		
+			If($LoadEvaluator.ScheduleEnabled)
+			{
+				WriteWordLine 0 1 "Scheduling Settings"
+				WriteWordLine 0 2 "Sunday Schedule`t: " $LoadEvaluator.SundaySchedule
+				WriteWordLine 0 2 "Monday Schedule`t: " $LoadEvaluator.MondaySchedule
+				WriteWordLine 0 2 "Tuesday Schedule`t: " $LoadEvaluator.TuesdaySchedule
+				WriteWordLine 0 2 "Wednesday Schedule`t: " $LoadEvaluator.WednesdaySchedule
+				WriteWordLine 0 2 "Thursday Schedule`t: " $LoadEvaluator.ThursdaySchedule
+				WriteWordLine 0 2 "Friday Schedule`t`t: " $LoadEvaluator.FridaySchedule
+				WriteWordLine 0 2 "Saturday Schedule`t: " $LoadEvaluator.SaturdaySchedule
+			}
+
+			If($LoadEvaluator.ServerUserLoadEnabled)
+			{
+				WriteWordLine 0 1 "Server User Load Settings"
+				WriteWordLine 0 2 "Report full load when the # of server users equals: " $LoadEvaluator.ServerUserLoad
+			}
+		
+			WriteWordLine 0 0 ""
 		}
-	
-		WriteWordLine 0 0 ""
+		Else
+		{
+			WriteWordLine 0 0 $LoadEvaluator.LoadEvaluatorName
+		}
 	}
 }
 Else 
@@ -5908,75 +6223,94 @@ If($? -and $Policies -ne $Null)
 	{
 		$TotalPolicies++
 		Write-Verbose "$(Get-Date): `tProcessing policy $($Policy.PolicyName)"
-		WriteWordLine 2 0 $Policy.PolicyName
-		WriteWordLine 0 1 "Description: " $Policy.Description
-		WriteWordLine 0 1 "Enabled: " $Policy.Enabled
-		WriteWordLine 0 1 "Priority: " $Policy.Priority
-
-		$filter = Get-XAPolicyFilter -PolicyName $Policy.PolicyName -EA 0
-
-		If($?)
+		If(!$Summary)
 		{
-			If($Filter)
+			WriteWordLine 2 0 $Policy.PolicyName
+			WriteWordLine 0 1 "Description: " $Policy.Description
+			WriteWordLine 0 1 "Enabled: " $Policy.Enabled
+			WriteWordLine 0 1 "Priority: " $Policy.Priority
+
+			$filter = Get-XAPolicyFilter -PolicyName $Policy.PolicyName -EA 0
+
+			If($?)
 			{
-				Write-Verbose "$(Get-Date): `t`tPolicy Filters"
-				WriteWordLine 0 1 "Policy Filters:"
-				
-				If($Filter.AccessControlEnabled)
+				If($Filter)
 				{
-					If($Filter.AllowConnectionsThroughAccessGateway)
+					Write-Verbose "$(Get-Date): `t`tPolicy Filters"
+					WriteWordLine 0 1 "Policy Filters:"
+					
+					If($Filter.AccessControlEnabled)
 					{
-						WriteWordLine 0 2 "Apply to connections made through Access Gateway"
-						If($Filter.AccessSessionConditions)
+						If($Filter.AllowConnectionsThroughAccessGateway)
 						{
-							WriteWordLine 0 3 "Any connection that meets any of the following filters"
-							$TableRange = $doc.Application.Selection.Range
-							[int]$Columns = 2
-							[int]$Rows = $Filter.AccessSessionConditions.count + 1
-							$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
-							$table.Style = $myHash.Word_TableGrid
-							$table.Borders.InsideLineStyle = 1
-							$table.Borders.OutsideLineStyle = 1
-							[int]$xRow = 1
-							Write-Verbose "$(Get-Date): `t`t`t`tFormat first row with column headings"
-							$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
-							$Table.Cell($xRow,1).Range.Font.Bold = $True
-							$Table.Cell($xRow,1).Range.Text = "Farm Name"
-							$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
-							$Table.Cell($xRow,2).Range.Font.Bold = $True
-							$Table.Cell($xRow,2).Range.Text = "Filter"
-							ForEach($AccessCondition in $Filter.AccessSessionConditions)
+							WriteWordLine 0 2 "Apply to connections made through Access Gateway"
+							If($Filter.AccessSessionConditions)
 							{
-								[string]$Tmp = $AccessCondition
-								[string]$AGFarm = $Tmp.substring(0, $Tmp.indexof(":"))
-								[string]$AGFilter = $Tmp.substring($Tmp.indexof(":")+1)
-								$xRow++
-								Write-Verbose "$(Get-Date): `t`t`t`t`tProcessing row for Access Condition $($Tmp)"
-								$Table.Cell($xRow,1).Range.Text = $AGFarm
-								$Table.Cell($xRow,2).Range.Text = $AGFilter
+								WriteWordLine 0 3 "Any connection that meets any of the following filters"
+								$TableRange = $doc.Application.Selection.Range
+								[int]$Columns = 2
+								[int]$Rows = $Filter.AccessSessionConditions.count + 1
+								$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+								$table.Style = $myHash.Word_TableGrid
+								$table.Borders.InsideLineStyle = 1
+								$table.Borders.OutsideLineStyle = 1
+								[int]$xRow = 1
+								Write-Verbose "$(Get-Date): `t`t`t`tFormat first row with column headings"
+								$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
+								$Table.Cell($xRow,1).Range.Font.Bold = $True
+								$Table.Cell($xRow,1).Range.Text = "Farm Name"
+								$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
+								$Table.Cell($xRow,2).Range.Font.Bold = $True
+								$Table.Cell($xRow,2).Range.Text = "Filter"
+								ForEach($AccessCondition in $Filter.AccessSessionConditions)
+								{
+									[string]$Tmp = $AccessCondition
+									[string]$AGFarm = $Tmp.substring(0, $Tmp.indexof(":"))
+									[string]$AGFilter = $Tmp.substring($Tmp.indexof(":")+1)
+									$xRow++
+									Write-Verbose "$(Get-Date): `t`t`t`t`tProcessing row for Access Condition $($Tmp)"
+									$Table.Cell($xRow,1).Range.Text = $AGFarm
+									$Table.Cell($xRow,2).Range.Text = $AGFilter
+								}
+
+								Write-Verbose "$(Get-Date): `t`t`t`tMove table to the right"
+								$Table.Rows.SetLeftIndent(108,1)
+								$table.AutoFitBehavior(1)
+
+								#return focus back to document
+								Write-Verbose "$(Get-Date): `t`t`t`tReturn focus back to document"
+								$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
+
+								#move to the end of the current document
+								Write-Verbose "$(Get-Date): `t`t`t`tMove to the end of the current document"
+								$selection.EndKey($wdStory,$wdMove) | Out-Null
+								$tmp = $Null
+								$AGFarm = $Null
+								$AGFilter = $Null
 							}
-
-							Write-Verbose "$(Get-Date): `t`t`t`tMove table to the right"
-							$Table.Rows.SetLeftIndent(108,1)
-							$table.AutoFitBehavior(1)
-
-							#return focus back to document
-							Write-Verbose "$(Get-Date): `t`t`t`tReturn focus back to document"
-							$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
-
-							#move to the end of the current document
-							Write-Verbose "$(Get-Date): `t`t`t`tMove to the end of the current document"
-							$selection.EndKey($wdStory,$wdMove) | Out-Null
-							$tmp = $Null
-							$AGFarm = $Null
-							$AGFilter = $Null
+							Else
+							{
+								WriteWordLine 0 3 "Any connection"
+							}
+							WriteWordLine 0 3 "Apply to all other connections: " -nonewline
+							If($Filter.AllowOtherConnections)
+							{
+								WriteWordLine 0 0 "Yes"
+							}
+							Else
+							{
+								WriteWordLine 0 0 "No"
+							}
 						}
 						Else
 						{
-							WriteWordLine 0 3 "Any connection"
+							WriteWordLine 0 2 "Do not apply to connections made through Access Gateway"
 						}
-						WriteWordLine 0 3 "Apply to all other connections: " -nonewline
-						If($Filter.AllowOtherConnections)
+					}
+					If($Filter.ClientIPAddressEnabled)
+					{
+						WriteWordLine 0 2 "Apply to all client IP addresses: " -nonewline
+						If($Filter.ApplyToAllClientIPAddresses)
 						{
 							WriteWordLine 0 0 "Yes"
 						}
@@ -5984,178 +6318,166 @@ If($? -and $Policies -ne $Null)
 						{
 							WriteWordLine 0 0 "No"
 						}
+						If($Filter.AllowedIPAddresses)
+						{
+							WriteWordLine 0 2 "Allowed IP Addresses:"
+							ForEach($Allowed in $Filter.AllowedIPAddresses)
+							{
+								WriteWordLine 0 3 $Allowed
+							}
+						}
+						If($Filter.DeniedIPAddresses)
+						{
+							WriteWordLine 0 2 "Denied IP Addresses:"
+							ForEach($Denied in $Filter.DeniedIPAddresses)
+							{
+								WriteWordLine 0 3 $Denied
+							}
+						}
 					}
-					Else
+					If($Filter.ClientNameEnabled)
 					{
-						WriteWordLine 0 2 "Do not apply to connections made through Access Gateway"
+						WriteWordLine 0 2 "Apply to all client names: " -nonewline
+						If($Filter.ApplyToAllClientNames)
+						{
+							WriteWordLine 0 0 "Yes"
+						}
+						Else
+						{
+							WriteWordLine 0 0 "No"
+						}
+						If($Filter.AllowedClientNames)
+						{
+							WriteWordLine 0 2 "Allowed Client Names:"
+							ForEach($Allowed in $Filter.AllowedClientNames)
+							{
+								WriteWordLine 0 3 $Allowed
+							}
+						}
+						If($Filter.DeniedClientNames)
+						{
+							WriteWordLine 0 2 "Denied Client Names:"
+							ForEach($Denied in $Filter.DeniedClientNames)
+							{
+								WriteWordLine 0 3 $Denied
+							}
+						}
+					}
+					If($Filter.ServerEnabled)
+					{
+						If($Filter.AllowedServerNames)
+						{
+							WriteWordLine 0 2 "Allowed Server Names:"
+							ForEach($Allowed in $Filter.AllowedServerNames)
+							{
+								WriteWordLine 0 3 $Allowed
+							}
+						}
+						If($Filter.DeniedServerNames)
+						{
+							WriteWordLine 0 2 "Denied Server Names:"
+							ForEach($Denied in $Filter.DeniedServerNames)
+							{
+								WriteWordLine 0 3 $Denied
+							}
+						}
+						If($Filter.AllowedServerFolders)
+						{
+							WriteWordLine 0 2 "Allowed Server Folders:"
+							ForEach($Allowed in $Filter.AllowedServerFolders)
+							{
+								WriteWordLine 0 3 $Allowed
+							}
+						}
+						If($Filter.DeniedServerFolders)
+						{
+							WriteWordLine 0 2 "Denied Server Folders:"
+							ForEach($Denied in $Filter.DeniedServerFolders)
+							{
+								WriteWordLine 0 3 $Denied
+							}
+						}
+					}
+					If($Filter.AccountEnabled)
+					{
+						WriteWordLine 0 2 "Apply to all explicit (non-anonymous) users: " -nonewline
+						If($Filter.ApplyToAllExplicitAccounts)
+						{
+							WriteWordLine 0 0 "Yes"
+						}
+						Else
+						{
+							WriteWordLine 0 0 "No"
+						}
+						WriteWordLine 0 2 "Apply to anonymous users: " -nonewline
+						If($Filter.ApplyToAnonymousAccounts)
+						{
+							WriteWordLine 0 0 "Yes"
+						}
+						Else
+						{
+							WriteWordLine 0 0 "No"
+						}
+						If($Filter.AllowedAccounts)
+						{
+							WriteWordLine 0 2 "Allowed Accounts:"
+							ForEach($Allowed in $Filter.AllowedAccounts)
+							{
+								WriteWordLine 0 3 $Allowed
+							}
+						}
+						If($Filter.DeniedAccounts)
+						{
+							WriteWordLine 0 2 "Denied Accounts:"
+							ForEach($Denied in $Filter.DeniedAccounts)
+							{
+								WriteWordLine 0 3 $Denied
+							}
+						}
 					}
 				}
-				If($Filter.ClientIPAddressEnabled)
+				Else
 				{
-					WriteWordLine 0 2 "Apply to all client IP addresses: " -nonewline
-					If($Filter.ApplyToAllClientIPAddresses)
-					{
-						WriteWordLine 0 0 "Yes"
-					}
-					Else
-					{
-						WriteWordLine 0 0 "No"
-					}
-					If($Filter.AllowedIPAddresses)
-					{
-						WriteWordLine 0 2 "Allowed IP Addresses:"
-						ForEach($Allowed in $Filter.AllowedIPAddresses)
-						{
-							WriteWordLine 0 3 $Allowed
-						}
-					}
-					If($Filter.DeniedIPAddresses)
-					{
-						WriteWordLine 0 2 "Denied IP Addresses:"
-						ForEach($Denied in $Filter.DeniedIPAddresses)
-						{
-							WriteWordLine 0 3 $Denied
-						}
-					}
+					WriteWordLine 0 1 "No filter information"
 				}
-				If($Filter.ClientNameEnabled)
+			}
+			Else
+			{
+				WriteWordLine 0 1 "Unable to retrieve Filter settings"
+			}
+
+			$Settings = Get-XAPolicyConfiguration -PolicyName $Policy.PolicyName -EA 0
+
+			If($?)
+			{
+				Write-Verbose "$(Get-Date): `t`tPolicy Settings"
+				WriteWordLine 0 1 "Policy Settings:"
+				ForEach($Setting in $Settings)
 				{
-					WriteWordLine 0 2 "Apply to all client names: " -nonewline
-					If($Filter.ApplyToAllClientNames)
+					If($FarmOS -eq "2003")
 					{
-						WriteWordLine 0 0 "Yes"
+						Process2003Policies
 					}
 					Else
 					{
-						WriteWordLine 0 0 "No"
-					}
-					If($Filter.AllowedClientNames)
-					{
-						WriteWordLine 0 2 "Allowed Client Names:"
-						ForEach($Allowed in $Filter.AllowedClientNames)
-						{
-							WriteWordLine 0 3 $Allowed
-						}
-					}
-					If($Filter.DeniedClientNames)
-					{
-						WriteWordLine 0 2 "Denied Client Names:"
-						ForEach($Denied in $Filter.DeniedClientNames)
-						{
-							WriteWordLine 0 3 $Denied
-						}
-					}
-				}
-				If($Filter.ServerEnabled)
-				{
-					If($Filter.AllowedServerNames)
-					{
-						WriteWordLine 0 2 "Allowed Server Names:"
-						ForEach($Allowed in $Filter.AllowedServerNames)
-						{
-							WriteWordLine 0 3 $Allowed
-						}
-					}
-					If($Filter.DeniedServerNames)
-					{
-						WriteWordLine 0 2 "Denied Server Names:"
-						ForEach($Denied in $Filter.DeniedServerNames)
-						{
-							WriteWordLine 0 3 $Denied
-						}
-					}
-					If($Filter.AllowedServerFolders)
-					{
-						WriteWordLine 0 2 "Allowed Server Folders:"
-						ForEach($Allowed in $Filter.AllowedServerFolders)
-						{
-							WriteWordLine 0 3 $Allowed
-						}
-					}
-					If($Filter.DeniedServerFolders)
-					{
-						WriteWordLine 0 2 "Denied Server Folders:"
-						ForEach($Denied in $Filter.DeniedServerFolders)
-						{
-							WriteWordLine 0 3 $Denied
-						}
-					}
-				}
-				If($Filter.AccountEnabled)
-				{
-					WriteWordLine 0 2 "Apply to all explicit (non-anonymous) users: " -nonewline
-					If($Filter.ApplyToAllExplicitAccounts)
-					{
-						WriteWordLine 0 0 "Yes"
-					}
-					Else
-					{
-						WriteWordLine 0 0 "No"
-					}
-					WriteWordLine 0 2 "Apply to anonymous users: " -nonewline
-					If($Filter.ApplyToAnonymousAccounts)
-					{
-						WriteWordLine 0 0 "Yes"
-					}
-					Else
-					{
-						WriteWordLine 0 0 "No"
-					}
-					If($Filter.AllowedAccounts)
-					{
-						WriteWordLine 0 2 "Allowed Accounts:"
-						ForEach($Allowed in $Filter.AllowedAccounts)
-						{
-							WriteWordLine 0 3 $Allowed
-						}
-					}
-					If($Filter.DeniedAccounts)
-					{
-						WriteWordLine 0 2 "Denied Accounts:"
-						ForEach($Denied in $Filter.DeniedAccounts)
-						{
-							WriteWordLine 0 3 $Denied
-						}
+						Process2008Policies
 					}
 				}
 			}
 			Else
 			{
-				WriteWordLine 0 1 "No filter information"
+				WriteWordLine 0 1 "Unable to retrieve settings"
 			}
+		
+			$Settings = $Null
+			$Filter = $Null
+			Write-Verbose "$(Get-Date): `t`tFinished Processing policy $($Policy.PolicyName)"
+			Write-Verbose "$(Get-Date): "
 		}
 		Else
 		{
-			WriteWordLine 0 1 "Unable to retrieve Filter settings"
+			WriteWordLine 0 0 $Policy.PolicyName
 		}
-
-		$Settings = Get-XAPolicyConfiguration -PolicyName $Policy.PolicyName -EA 0
-
-		If($?)
-		{
-			Write-Verbose "$(Get-Date): `t`tPolicy Settings"
-			WriteWordLine 0 1 "Policy Settings:"
-			ForEach($Setting in $Settings)
-			{
-				If($FarmOS -eq "2003")
-				{
-					Process2003Policies
-				}
-				Else
-				{
-					Process2008Policies
-				}
-			}
-		}
-		Else
-		{
-			WriteWordLine 0 1 "Unable to retrieve settings"
-		}
-	
-		$Settings = $Null
-		$Filter = $Null
-		Write-Verbose "$(Get-Date): `t`tFinished Processing policy $($Policy.PolicyName)"
-		Write-Verbose "$(Get-Date): "
 	}
 }
 ElseIf($Policies -eq $Null)
@@ -6298,241 +6620,343 @@ $PrintDriverMappings = $Null
 Write-Verbose "$(Get-Date): Finished Processing Printer Driver Mappings"
 Write-Verbose "$(Get-Date): "
 
-Write-Verbose "$(Get-Date): Setting summary variables"
-[int]$TotalConfigLogItems = 0
-
-If($ConfigLog)
+If(!$Summary)
 {
-	Write-Verbose "$(Get-Date): Processing the Configuration Logging Report"
-	#Configuration Logging report
-	#only process if $ConfigLog = $True and XA5ConfigLog.udl file exists
-	#build connection string for Microsoft SQL Server
-	#User ID is account that has access permission for the configuration logging database
-	#Initial Catalog is the name of the Configuration Logging SQL Database
-	If(Test-Path “$($pwd.path)\XA5ConfigLog.udl”)
+	Write-Verbose "$(Get-Date): Setting summary variables"
+	[int]$TotalConfigLogItems = 0
+	If($ConfigLog)
 	{
-		Write-Verbose "$(Get-Date): `tRetrieving Configuration Logging Data"
-		$ConnectionString = Get-Content “$($pwd.path)\XA5ConfigLog.udl” | select-object -last 1
-		$ConfigLogReport = get-XAConfigurationLog -connectionstring $ConnectionString -EA 0
-
-		If($? -and $ConfigLogReport)
+		Write-Verbose "$(Get-Date): Processing the Configuration Logging Report"
+		#Configuration Logging report
+		#only process if $ConfigLog = $True and XA5ConfigLog.udl file exists
+		#build connection string for Microsoft SQL Server
+		#User ID is account that has access permission for the configuration logging database
+		#Initial Catalog is the name of the Configuration Logging SQL Database
+		If(Test-Path “$($pwd.path)\XA5ConfigLog.udl”)
 		{
-			Write-Verbose "$(Get-Date): `t`tProcessing $($ConfigLogReport.Count) configuration logging items"
-			$selection.InsertNewPage()
-			WriteWordLine 1 0 "Configuration Log Report:"
-			ForEach($ConfigLogItem in $ConfigLogReport)
+			Write-Verbose "$(Get-Date): `tRetrieving Configuration Logging Data"
+			$ConnectionString = Get-Content “$($pwd.path)\XA5ConfigLog.udl” | select-object -last 1
+			$ConfigLogReport = get-XAConfigurationLog -connectionstring $ConnectionString -EA 0
+
+			If($? -and $ConfigLogReport)
 			{
-				$TotalConfigLogItems++
-				WriteWordLine 0 1 "Date`t`t`t: " $ConfigLogItem.Date
-				WriteWordLine 0 1 "Account`t`t: " $ConfigLogItem.Account
-				WriteWordLine 0 1 "Change description`t: " $ConfigLogItem.Description
-				WriteWordLine 0 1 "Type of change`t`t: " $ConfigLogItem.TaskType
-				WriteWordLine 0 1 "Type of item`t`t: " $ConfigLogItem.ItemType
-				WriteWordLine 0 1 "Name of item`t`t: " $ConfigLogItem.ItemName
-				WriteWordLine 0 0 ""
+				Write-Verbose "$(Get-Date): `t`tProcessing $($ConfigLogReport.Count) configuration logging items"
+				$selection.InsertNewPage()
+				WriteWordLine 1 0 "Configuration Log Report:"
+				$TableRange   = $doc.Application.Selection.Range
+				[int]$Columns = 6
+				If($ConfigLogReport -is [array])
+				{
+					[int]$Rows = $ConfigLogReport.Count +1
+				}
+				Else
+				{
+					[int]$Rows = 2
+				}
+				Write-Verbose "$(Get-Date): Add Configuration Logging table to doc"
+				$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+				$table.Style = "Table Grid"
+				$table.Borders.InsideLineStyle = 0
+				$table.Borders.OutsideLineStyle = 1
+				$Table.Cell(1,1).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell(1,1).Range.Font.Bold = $True
+				$Table.Cell(1,1).Range.Text = "Date"
+				$Table.Cell(1,2).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell(1,2).Range.Font.Bold = $True
+				$Table.Cell(1,2).Range.Text = "Account"
+				$Table.Cell(1,3).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell(1,3).Range.Font.Bold = $True
+				$Table.Cell(1,3).Range.Text = "Change description"
+				$Table.Cell(1,4).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell(1,4).Range.Font.Bold = $True
+				$Table.Cell(1,4).Range.Text = "Type of change"
+				$Table.Cell(1,5).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell(1,5).Range.Font.Bold = $True
+				$Table.Cell(1,5).Range.Text = "Type of item"
+				$Table.Cell(1,6).Shading.BackgroundPatternColor = $wdColorGray15
+				$Table.Cell(1,6).Range.Font.Bold = $True
+				$Table.Cell(1,6).Range.Text = "Name of item"
+				$xRow = 1
+				ForEach($Item in $ConfigLogReport)
+				{
+					$xRow++
+					Write-Verbose "$(Get-Date): Adding row for $($Item.Description)"
+					If($xRow % 2 -eq 0)
+					{
+						$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray05
+						$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray05
+						$Table.Cell($xRow,3).Shading.BackgroundPatternColor = $wdColorGray05
+						$Table.Cell($xRow,4).Shading.BackgroundPatternColor = $wdColorGray05
+						$Table.Cell($xRow,5).Shading.BackgroundPatternColor = $wdColorGray05
+						$Table.Cell($xRow,6).Shading.BackgroundPatternColor = $wdColorGray05
+					}
+					$Table.Cell($xRow,1).Range.Font.size = 9
+					$Table.Cell($xRow,1).Range.Text = $Item.Date
+					$Table.Cell($xRow,2).Range.Font.size = 9
+					$Table.Cell($xRow,2).Range.Text = $Item.Account
+					$Table.Cell($xRow,3).Range.Font.size = 9
+					$Table.Cell($xRow,3).Range.Text = $Item.Description
+					$Table.Cell($xRow,4).Range.Font.size = 9
+					$Table.Cell($xRow,4).Range.Text = $Item.TaskType
+					$Table.Cell($xRow,5).Range.Font.size = 9
+					$Table.Cell($xRow,5).Range.Text = $Item.ItemType
+					$Table.Cell($xRow,6).Range.Font.size = 9
+					$Table.Cell($xRow,6).Range.Text = $Item.ItemName
+				}
+				$table.AutoFitBehavior(1)
+
+				#return focus back to document
+				Write-Verbose "$(Get-Date): Return focus back to document"
+				$doc.ActiveWindow.ActivePane.view.SeekView=$wdSeekMainDocument
+
+				#move to the end of the current document
+				Write-Verbose "$(Get-Date): Move to the end of the current document"
+				$selection.EndKey($wdStory,$wdMove) | Out-Null
+			} 
+			Else 
+			{
+				WriteWordLine 0 0 "Configuration log report could not be retrieved"
 			}
-		} 
+			$ConfigLogReport = $Null
+		}
 		Else 
 		{
-			WriteWordLine 0 0 "Configuration log report could not be retrieved"
+			$selection.InsertNewPage()
+			WriteWordLine 1 0 "Configuration Logging is enabled but the XA5ConfigLog.udl file was not found"
 		}
-		$ConfigLogReport = $Null
+		Write-Verbose "$(Get-Date): Finished Processing the Configuration Logging Report"
 	}
-	Else 
+}
+Write-Verbose "$(Get-Date): "
+
+If(!$Summary)
+{
+	Write-Verbose "$(Get-Date): Create Appendix A Session Sharing Items"
+	#	The Session Sharing Key is generated by the XML Broker in XenApp 5.  
+	#	Web Interface or StoreFront send the following information to the XML Broker:"
+	#	Audio Quality (Policy Setting)"
+	#	Client Printer Port Mapping (Policy Setting)"
+	#	Client Printer Spooling (Policy Setting)"
+	#	Color Depth (Application Setting)"
+	#	COM Port Mapping (Policy Setting)"
+	#	Domain Name (Logon)"
+	#	Encryption Level (Application Setting and Policy Setting.  Policy wins.)"
+	#	Special Folder Redirection (Policy Setting)"
+	#	User Name (Logon)"
+	#	Virtual COM Port Emulation (Policy Setting)"
+	#
+	#	This table consists of the above application settings plus
+	#	the application settings from CTX159159
+	#	Color depth
+	#	Screen Size
+	#	Access Control Filters (for SmartAccess)
+	#	Encryption
+	#
+	#	In addition, a XenApp server can have Session Sharing disable in a registry key
+	#	To disable session sharing, the following registry key must be present.
+	#	This information has been added to the Server Appendix B section
+	#
+	#	Add the following value to disable this feature (this value does not exist by default):
+	#	HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Citrix\Wfshell\TWI\:
+	#	Type: REG_DWORD
+	#	Value: SeamlessFlags = 1
+
+	$selection.InsertNewPage()
+	WriteWordLine 1 0 "Appendix A - Session Sharing Items from CTX159159"
+	$TableRange = $doc.Application.Selection.Range
+	[int]$Columns = 5
+	[int]$Rows = $SessionSharingItems.count + 1
+	Write-Verbose "$(Get-Date): `t`tAdd Session Sharing Items table to doc"
+	$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+	$table.Style = $myHash.Word_TableGrid
+	$table.Borders.InsideLineStyle = 1
+	$table.Borders.OutsideLineStyle = 1
+	[int]$xRow = 1
+	Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
+	$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,1).Range.Font.Bold = $True
+	$Table.Cell($xRow,1).Range.Text = "Application Name"
+	$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,2).Range.Font.Bold = $True
+	$Table.Cell($xRow,2).Range.Text = "Maximum color quality"
+	$Table.Cell($xRow,3).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,3).Range.Font.Bold = $True
+	$Table.Cell($xRow,3).Range.Text = "Session window size"
+	$Table.Cell($xRow,4).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,4).Range.Font.Bold = $True
+	$Table.Cell($xRow,4).Range.Text = "Access Control Filters"
+	$Table.Cell($xRow,5).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,5).Range.Font.Bold = $True
+	$Table.Cell($xRow,5).Range.Text = "Encryption"
+	ForEach($Item in $SessionSharingItems)
 	{
-		$selection.InsertNewPage()
-		WriteWordLine 1 0 "Configuration Logging is enabled but the XA5ConfigLog.udl file was not found"
+		$xRow++
+		Write-Verbose "$(Get-Date): `t`t`tProcessing row for application $($Item.ApplicationName)"
+		$Table.Cell($xRow,1).Range.Text = $Item.ApplicationName
+		$Table.Cell($xRow,2).Range.Text = $Item.MaximumColorQuality
+		$Table.Cell($xRow,3).Range.Text = $Item.SessionWindowSize
+		$Table.Cell($xRow,4).Range.Text = $Item.AccessControlFilters
+		$Table.Cell($xRow,5).Range.Text = $Item.Encryption
 	}
-	Write-Verbose "$(Get-Date): Finished Processing the Configuration Logging Report"
+
+	$table.AutoFitBehavior(1)
+
+	#return focus back to document
+	Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
+	$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
+
+	#move to the end of the current document
+	Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
+	$selection.EndKey($wdStory,$wdMove) | Out-Null
+	Write-Verbose "$(Get-Date): `tFinished Create Appendix A - Session Sharing Items"
+	Write-Verbose "$(Get-Date): "
+
+	Write-Verbose "$(Get-Date): Create Appendix B - Server Major Items"
+	$selection.InsertNewPage()
+	WriteWordLine 1 0 "Appendix B - Server Major Items"
+	$TableRange = $doc.Application.Selection.Range
+	[int]$Columns = 7
+	[int]$Rows = $ServerItems.count + 1
+	Write-Verbose "$(Get-Date): `tAdd Major Server Items table to doc"
+	$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
+	$table.Style = $myHash.Word_TableGrid
+	$table.Borders.InsideLineStyle = 1
+	$table.Borders.OutsideLineStyle = 1
+	[int]$xRow = 1
+	Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
+	$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,1).Range.Font.Bold = $True
+	$Table.Cell($xRow,1).Range.Text = "Server Name"
+	$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,2).Range.Font.Bold = $True
+	$Table.Cell($xRow,2).Range.Text = "Zone Name"
+	$Table.Cell($xRow,3).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,3).Range.Font.Bold = $True
+	$Table.Cell($xRow,3).Range.Text = "OS Version"
+	$Table.Cell($xRow,4).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,4).Range.Font.Bold = $True
+	$Table.Cell($xRow,4).Range.Text = "Citrix Version"
+	$Table.Cell($xRow,5).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,5).Range.Font.Bold = $True
+	$Table.Cell($xRow,5).Range.Text = "Product Edition"
+	$Table.Cell($xRow,6).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,6).Range.Font.Bold = $True
+	$Table.Cell($xRow,6).Range.Text = "License Server"
+	$Table.Cell($xRow,7).Shading.BackgroundPatternColor = $wdColorGray15
+	$Table.Cell($xRow,7).Range.Font.Bold = $True
+	$Table.Cell($xRow,7).Range.Text = "Session Sharing"
+	ForEach($ServerItem in $ServerItems)
+	{
+		$xRow++
+		Write-Verbose "$(Get-Date): `t`t`tProcessing row for server $($ServerItem.ServerName)"
+		$Table.Cell($xRow,1).Range.Text = $ServerItem.ServerName
+		$Table.Cell($xRow,2).Range.Text = $ServerItem.ZoneName
+		$Table.Cell($xRow,3).Range.Text = $ServerItem.OSVersion
+		$Table.Cell($xRow,4).Range.Text = $ServerItem.CitrixVersion
+		$Table.Cell($xRow,5).Range.Text = $ServerItem.ProductEdition
+		$Table.Cell($xRow,6).Range.Text = $ServerItem.LicenseServer
+		$Table.Cell($xRow,7).Range.Text = $ServerItem.SessionSharing
+	}
+
+	$table.AutoFitBehavior(1)
+
+	#return focus back to document
+	Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
+	$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
+
+	#move to the end of the current document
+	Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
+	$selection.EndKey($wdStory,$wdMove) | Out-Null
+	Write-Verbose "$(Get-Date): Finished Create Appendix B - Server Major Items"
+	Write-Verbose "$(Get-Date): "
 }
-Write-Verbose "$(Get-Date): "
-
-Write-Verbose "$(Get-Date): Create Appendix A Session Sharing Items"
-#	The Session Sharing Key is generated by the XML Broker in XenApp 5.  
-#	Web Interface or StoreFront send the following information to the XML Broker:"
-#	Audio Quality (Policy Setting)"
-#	Client Printer Port Mapping (Policy Setting)"
-#	Client Printer Spooling (Policy Setting)"
-#	Color Depth (Application Setting)"
-#	COM Port Mapping (Policy Setting)"
-#	Domain Name (Logon)"
-#	Encryption Level (Application Setting and Policy Setting.  Policy wins.)"
-#	Special Folder Redirection (Policy Setting)"
-#	User Name (Logon)"
-#	Virtual COM Port Emulation (Policy Setting)"
-#
-#	This table consists of the above application settings plus
-#	the application settings from CTX159159
-#	Color depth
-#	Screen Size
-#	Access Control Filters (for SmartAccess)
-#	Encryption
-#
-#	In addition, a XenApp server can have Session Sharing disable in a registry key
-#	To disable session sharing, the following registry key must be present.
-#	This information has been added to the Server Appendix B section
-#
-#	Add the following value to disable this feature (this value does not exist by default):
-#	HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Citrix\Wfshell\TWI\:
-#	Type: REG_DWORD
-#	Value: SeamlessFlags = 1
-
-$selection.InsertNewPage()
-WriteWordLine 1 0 "Appendix A - Session Sharing Items from CTX159159"
-$TableRange = $doc.Application.Selection.Range
-[int]$Columns = 5
-[int]$Rows = $SessionSharingItems.count + 1
-Write-Verbose "$(Get-Date): `t`tAdd Session Sharing Items table to doc"
-$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
-$table.Style = $myHash.Word_TableGrid
-$table.Borders.InsideLineStyle = 1
-$table.Borders.OutsideLineStyle = 1
-[int]$xRow = 1
-Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
-$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,1).Range.Font.Bold = $True
-$Table.Cell($xRow,1).Range.Text = "Application Name"
-$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,2).Range.Font.Bold = $True
-$Table.Cell($xRow,2).Range.Text = "Maximum color quality"
-$Table.Cell($xRow,3).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,3).Range.Font.Bold = $True
-$Table.Cell($xRow,3).Range.Text = "Session window size"
-$Table.Cell($xRow,4).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,4).Range.Font.Bold = $True
-$Table.Cell($xRow,4).Range.Text = "Access Control Filters"
-$Table.Cell($xRow,5).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,5).Range.Font.Bold = $True
-$Table.Cell($xRow,5).Range.Text = "Encryption"
-ForEach($Item in $SessionSharingItems)
-{
-	$xRow++
-	Write-Verbose "$(Get-Date): `t`t`tProcessing row for application $($Item.ApplicationName)"
-	$Table.Cell($xRow,1).Range.Text = $Item.ApplicationName
-	$Table.Cell($xRow,2).Range.Text = $Item.MaximumColorQuality
-	$Table.Cell($xRow,3).Range.Text = $Item.SessionWindowSize
-	$Table.Cell($xRow,4).Range.Text = $Item.AccessControlFilters
-	$Table.Cell($xRow,5).Range.Text = $Item.Encryption
-}
-
-$table.AutoFitBehavior(1)
-
-#return focus back to document
-Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
-$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
-
-#move to the end of the current document
-Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
-$selection.EndKey($wdStory,$wdMove) | Out-Null
-Write-Verbose "$(Get-Date): `tFinished Create Appendix A - Session Sharing Items"
-Write-Verbose "$(Get-Date): "
-
-Write-Verbose "$(Get-Date): Create Appendix B - Server Major Items"
-$selection.InsertNewPage()
-WriteWordLine 1 0 "Appendix B - Server Major Items"
-$TableRange = $doc.Application.Selection.Range
-[int]$Columns = 7
-[int]$Rows = $ServerItems.count + 1
-Write-Verbose "$(Get-Date): `tAdd Major Server Items table to doc"
-$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
-$table.Style = $myHash.Word_TableGrid
-$table.Borders.InsideLineStyle = 1
-$table.Borders.OutsideLineStyle = 1
-[int]$xRow = 1
-Write-Verbose "$(Get-Date): `t`tFormat first row with column headings"
-$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,1).Range.Font.Bold = $True
-$Table.Cell($xRow,1).Range.Text = "Server Name"
-$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,2).Range.Font.Bold = $True
-$Table.Cell($xRow,2).Range.Text = "Zone Name"
-$Table.Cell($xRow,3).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,3).Range.Font.Bold = $True
-$Table.Cell($xRow,3).Range.Text = "OS Version"
-$Table.Cell($xRow,4).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,4).Range.Font.Bold = $True
-$Table.Cell($xRow,4).Range.Text = "Citrix Version"
-$Table.Cell($xRow,5).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,5).Range.Font.Bold = $True
-$Table.Cell($xRow,5).Range.Text = "Product Edition"
-$Table.Cell($xRow,6).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,6).Range.Font.Bold = $True
-$Table.Cell($xRow,6).Range.Text = "License Server"
-$Table.Cell($xRow,7).Shading.BackgroundPatternColor = $wdColorGray15
-$Table.Cell($xRow,7).Range.Font.Bold = $True
-$Table.Cell($xRow,7).Range.Text = "Session Sharing"
-ForEach($ServerItem in $ServerItems)
-{
-	$xRow++
-	Write-Verbose "$(Get-Date): `t`t`tProcessing row for server $($ServerItem.ServerName)"
-	$Table.Cell($xRow,1).Range.Text = $ServerItem.ServerName
-	$Table.Cell($xRow,2).Range.Text = $ServerItem.ZoneName
-	$Table.Cell($xRow,3).Range.Text = $ServerItem.OSVersion
-	$Table.Cell($xRow,4).Range.Text = $ServerItem.CitrixVersion
-	$Table.Cell($xRow,5).Range.Text = $ServerItem.ProductEdition
-	$Table.Cell($xRow,6).Range.Text = $ServerItem.LicenseServer
-	$Table.Cell($xRow,7).Range.Text = $ServerItem.SessionSharing
-}
-
-$table.AutoFitBehavior(1)
-
-#return focus back to document
-Write-Verbose "$(Get-Date): `t`tReturn focus back to document"
-$doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekMainDocument
-
-#move to the end of the current document
-Write-Verbose "$(Get-Date): `t`tMove to the end of the current document"
-$selection.EndKey($wdStory,$wdMove) | Out-Null
-Write-Verbose "$(Get-Date): Finished Create Appendix B - Server Major Items"
-Write-Verbose "$(Get-Date): "
 
 #summary page
 Write-Verbose "$(Get-Date): Create Summary Page"
 $selection.InsertNewPage()
 WriteWordLine 1 0 "Summary Page"
-Write-Verbose "$(Get-Date): Add administrator summary info"
-WriteWordLine 0 0 "Administrators"
-WriteWordLine 0 1 "Total Full Administrators`t: " $TotalFullAdmins
-WriteWordLine 0 1 "Total View Administrators`t: " $TotalViewAdmins
-WriteWordLine 0 1 "Total Custom Administrators`t: " $TotalCustomAdmins
-WriteWordLine 0 2 "Total Administrators`t: " ($TotalFullAdmins + $TotalViewAdmins + $TotalCustomAdmins)
-WriteWordLine 0 0 ""
-Write-Verbose "$(Get-Date): Add application summary info"
-WriteWordLine 0 0 "Applications"
-WriteWordLine 0 1 "Total Published Applications`t: " $TotalPublishedApps
-WriteWordLine 0 1 "Total Published Content`t`t: " $TotalPublishedContent
-WriteWordLine 0 1 "Total Published Desktops`t: " $TotalPublishedDesktops
-WriteWordLine 0 1 "Total Streamed Applications`t: " $TotalStreamedApps
-WriteWordLine 0 2 "Total Applications`t: " ($TotalPublishedApps + $TotalPublishedContent + $TotalPublishedDesktops + $TotalStreamedApps)
-WriteWordLine 0 0 ""
-Write-Verbose "$(Get-Date): Add server summary info"
-WriteWordLine 0 0 "Servers"
-WriteWordLine 0 2 "Total Servers`t`t: " $TotalServers
-WriteWordLine 0 0 ""
-Write-Verbose "$(Get-Date): Add zone summary info"
-WriteWordLine 0 0 "Zones"
-WriteWordLine 0 2 "Total Zones`t`t: " $TotalZones
-WriteWordLine 0 0 ""
-Write-Verbose "$(Get-Date): Add load evaluator summary info"
-WriteWordLine 0 0 "Load Evaluators"
-WriteWordLine 0 2 "Total Load Evaluators`t: " $TotalLoadEvaluators
-WriteWordLine 0 0 ""
-Write-Verbose "$(Get-Date): Add policy summary info"
-WriteWordLine 0 0 "Policies"
-WriteWordLine 0 2 "Total Policies`t`t: " $TotalPolicies
-WriteWordLine 0 0 ""
-Write-Verbose "$(Get-Date): Add print driver summary info"
-WriteWordLine 0 0 "Print Drivers"
-WriteWordLine 0 2 "Total Print Drivers`t: " $TotalPrintDrivers
-WriteWordLine 0 0 ""
-Write-Verbose "$(Get-Date): Add print driver mapping summary info"
-WriteWordLine 0 0 "Print Driver Mappingss"
-WriteWordLine 0 2 "Total Prt Drvr Mappings: " $TotalPrintDriverMappings
-WriteWordLine 0 0 ""
-Write-Verbose "$(Get-Date): Add configuration logging summary info"
-WriteWordLine 0 0 "Configuration Logging"
-WriteWordLine 0 2 "Total Config Log Items`t: " $TotalConfigLogItems 
-WriteWordLine 0 0 ""
+If(!$Summary)
+{
+	Write-Verbose "$(Get-Date): Add administrator summary info"
+	WriteWordLine 0 0 "Administrators"
+	WriteWordLine 0 1 "Total Full Administrators`t: " $TotalFullAdmins
+	WriteWordLine 0 1 "Total View Administrators`t: " $TotalViewAdmins
+	WriteWordLine 0 1 "Total Custom Administrators`t: " $TotalCustomAdmins
+	WriteWordLine 0 2 "Total Administrators`t: " ($TotalFullAdmins + $TotalViewAdmins + $TotalCustomAdmins)
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add application summary info"
+	WriteWordLine 0 0 "Applications"
+	WriteWordLine 0 1 "Total Published Applications`t: " $TotalPublishedApps
+	WriteWordLine 0 1 "Total Published Content`t`t: " $TotalPublishedContent
+	WriteWordLine 0 1 "Total Published Desktops`t: " $TotalPublishedDesktops
+	WriteWordLine 0 1 "Total Streamed Applications`t: " $TotalStreamedApps
+	WriteWordLine 0 2 "Total Applications`t: " ($TotalPublishedApps + $TotalPublishedContent + $TotalPublishedDesktops + $TotalStreamedApps)
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add server summary info"
+	WriteWordLine 0 0 "Servers"
+	WriteWordLine 0 2 "Total Servers`t`t: " $TotalServers
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add zone summary info"
+	WriteWordLine 0 0 "Zones"
+	WriteWordLine 0 2 "Total Zones`t`t: " $TotalZones
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add load evaluator summary info"
+	WriteWordLine 0 0 "Load Evaluators"
+	WriteWordLine 0 2 "Total Load Evaluators`t: " $TotalLoadEvaluators
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add policy summary info"
+	WriteWordLine 0 0 "Policies"
+	WriteWordLine 0 2 "Total Policies`t`t: " $TotalPolicies
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add print driver summary info"
+	WriteWordLine 0 0 "Print Drivers"
+	WriteWordLine 0 2 "Total Print Drivers`t: " $TotalPrintDrivers
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add print driver mapping summary info"
+	WriteWordLine 0 0 "Print Driver Mappingss"
+	WriteWordLine 0 2 "Total Prt Drvr Mappings: " $TotalPrintDriverMappings
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add configuration logging summary info"
+	WriteWordLine 0 0 "Configuration Logging"
+	WriteWordLine 0 2 "Total Config Log Items`t: " $TotalConfigLogItems 
+	WriteWordLine 0 0 ""
+}
+Else
+{
+	Write-Verbose "$(Get-Date): Add administrator summary info"
+	WriteWordLine 0 0 "Administrators"
+	WriteWordLine 0 1 "Total Administrators`t: " $TotalAdmins
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add application summary info"
+	WriteWordLine 0 0 "Applications"
+	WriteWordLine 0 1 "Total Applications`t: " $TotalApps
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add server summary info"
+	WriteWordLine 0 0 "Servers"
+	WriteWordLine 0 1 "Total Servers`t`t: " $TotalServers
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add zone summary info"
+	WriteWordLine 0 0 "Zones"
+	WriteWordLine 0 1 "Total Zones`t`t: " $TotalZones
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add load evaluator summary info"
+	WriteWordLine 0 0 "Load Evaluators"
+	WriteWordLine 0 1 "Total Load Evaluators`t: " $TotalLoadEvaluators
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add policy summary info"
+	WriteWordLine 0 0 "Policies"
+	WriteWordLine 0 1 "Total Policies`t`t: " $TotalPolicies
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add print driver summary info"
+	WriteWordLine 0 0 "Print Drivers"
+	WriteWordLine 0 1 "Total Print Drivers`t: " $TotalPrintDrivers
+	WriteWordLine 0 0 ""
+	Write-Verbose "$(Get-Date): Add print driver mapping summary info"
+	WriteWordLine 0 0 "Print Driver Mappingss"
+	WriteWordLine 0 1 "Total Prt Drvr Mappings: " $TotalPrintDriverMappings
+	WriteWordLine 0 0 ""
+}
+
 Write-Verbose "$(Get-Date): `tFinished Create Summary Page"
 Write-Verbose "$(Get-Date): "
 Write-Verbose "$(Get-Date): Finishing up Word document"
@@ -6545,7 +6969,14 @@ If($CoverPagesExist)
 	Write-Verbose "$(Get-Date): Set Cover Page Properties"
 	_SetDocumentProperty $doc.BuiltInDocumentProperties "Company" $CompanyName
 	_SetDocumentProperty $doc.BuiltInDocumentProperties "Title" $title
-	_SetDocumentProperty $doc.BuiltInDocumentProperties "Subject" "XenApp 5 Farm Inventory"
+	If($Summary)
+	{
+		_SetDocumentProperty $doc.BuiltInDocumentProperties "Subject" "XenApp 5 Summary Farm Inventory"
+	}
+	Else
+	{
+		_SetDocumentProperty $doc.BuiltInDocumentProperties "Subject" "XenApp 5 Farm Inventory"
+	}
 	_SetDocumentProperty $doc.BuiltInDocumentProperties "Author" $username
 
 	#Get the Coverpage XML part
