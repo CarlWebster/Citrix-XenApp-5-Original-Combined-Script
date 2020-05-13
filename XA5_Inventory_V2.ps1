@@ -87,9 +87,9 @@
 	http://www.carlwebster.com/documenting-a-citrix-xenapp-5-farm-with-microsoft-powershell-and-word-version-2
 .NOTES
 	NAME: XA5_Inventory_V2.ps1
-	VERSION: 2.01
+	VERSION: 2.02
 	AUTHOR: Carl Webster (with a lot of help from Michael B. Smith and Jeff Wouters)
-	LASTEDIT: April 20, 2013
+	LASTEDIT: June 10, 2013
 #>
 
 
@@ -150,6 +150,10 @@ Set-StrictMode -Version 2
 #Updated April 20, 2013
 #	Fixed five typos dealing with Session Printer policy settings
 #	Fixed a compatibility issue with the way the Word file was saved and Set-StrictMode -Version 2
+#Updated June 7, 2013
+#	Fixed the content of and the detail contained in the Table of Contents
+#	Citrix services that are Stopped will now show in a Red cell with bold, black text
+#	Added a few more Write-Verbose statements
 
 Function CheckWordPrereq
 {
@@ -343,11 +347,11 @@ Function Process2003Policies
 	#HDX 3D
 	If($Setting.ImageAccelerationState -ne "NotConfigured")
 	{
-		WriteWordLine 0 3 "HDX 3D\Progressive Display\"
-		WriteWordLine 0 4 "Progressive Display: " $Setting.ImageAccelerationState
+		WriteWordLine 0 2 "HDX 3D\Progressive Display\"
+		WriteWordLine 0 3 "Progressive Display: " $Setting.ImageAccelerationState
 		If($Setting.ImageAccelerationState -eq "Enabled")
 		{
-			WriteWordLine 0 4 "Compression level: " -nonewline
+			WriteWordLine 0 3 "Compression level: " -nonewline
 			
 			switch ($Setting.ImageAccelerationCompressionLevel)
 			{
@@ -359,26 +363,26 @@ Function Process2003Policies
 			}
 			If($Setting.ImageAccelerationCompressionIsRestricted)
 			{
-				WriteWordLine 0 4 "Restrict compression to connections under this "
-				WriteWordLine 0 5 "bandwidth\Threshold (Kb/sec): " $Setting.ImageAccelerationCompressionLimit	
+				WriteWordLine 0 3 "Restrict compression to connections under this "
+				WriteWordLine 0 4 "bandwidth\Threshold (Kb/sec): " $Setting.ImageAccelerationCompressionLimit	
 			}
-			WriteWordLine 0 4 "SpeedScreen Progressive Display compression level: "
+			WriteWordLine 0 3 "SpeedScreen Progressive Display compression level: "
 			switch ($Setting.ImageAccelerationProgressiveLevel)
 			{
-				"UltrahighCompression" {WriteWordLine 0 5 "Ultra high compression; ultra low quality"}
-				"VeryHighCompression"  {WriteWordLine 0 5 "Very high compression; very low quality"}
-				"HighCompression"      {WriteWordLine 0 5 "High compression; low quality"}
-				"MediumCompression"    {WriteWordLine 0 5 "Medium compression; medium quality"}
-				"LowCompression"       {WriteWordLine 0 5 "Low compression; high quality"}
-				"Disabled"             {WriteWordLine 0 5 "Disabled; no progressive display"}
+				"UltrahighCompression" {WriteWordLine 0 4 "Ultra high compression; ultra low quality"}
+				"VeryHighCompression"  {WriteWordLine 0 4 "Very high compression; very low quality"}
+				"HighCompression"      {WriteWordLine 0 4 "High compression; low quality"}
+				"MediumCompression"    {WriteWordLine 0 4 "Medium compression; medium quality"}
+				"LowCompression"       {WriteWordLine 0 4 "Low compression; high quality"}
+				"Disabled"             {WriteWordLine 0 4 "Disabled; no progressive display"}
 				Default {WriteWordLine 0 0 "SpeedScreen Progressive Display compression level could not be determined: $($Setting.ImageAccelerationProgressiveLevel)"}
 			}
 			If($Setting.ImageAccelerationProgressiveIsRestricted)
 			{
-				WriteWordLine 0 4 "Restrict compression to connections under this "
-				WriteWordLine 0 5 "bandwidth\Threshold (Kb/sec): " $Setting.ImageAccelerationProgressiveLimit	
+				WriteWordLine 0 3 "Restrict compression to connections under this "
+				WriteWordLine 0 4 "bandwidth\Threshold (Kb/sec): " $Setting.ImageAccelerationProgressiveLimit	
 			}
-			WriteWordLine 0 4 "Use Heavyweight compression (extra CPU, retains quality): " -nonewline
+			WriteWordLine 0 3 "Use Heavyweight compression (extra CPU, retains quality): " -nonewline
 			If($Setting.ImageAccelerationIsHeavyweightUsed)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -394,15 +398,15 @@ Function Process2003Policies
 	$xArray = ($Setting.TurnWallpaperOffState, $Setting.TurnWindowContentsOffState )
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "HDX Broadcast\Visual Effects\"
+		WriteWordLine 0 2 "HDX Broadcast\Visual Effects\"
 		If($Setting.TurnWallpaperOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Turn off desktop wallpaper: " $Setting.TurnWallpaperOffState
+			WriteWordLine 0 3 "Turn off desktop wallpaper: " $Setting.TurnWallpaperOffState
 		}
 			
 		If($Setting.TurnWindowContentsOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Turn off window contents while dragging: " $Setting.TurnWindowContentsOffState
+			WriteWordLine 0 3 "Turn off window contents while dragging: " $Setting.TurnWindowContentsOffState
 		}
 	}
 	$xArray = (	$Setting.SessionAudioState, 		$Setting.SessionClipboardState,
@@ -412,77 +416,77 @@ Function Process2003Policies
 			$Setting.SessionTwainRedirectionState )
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "HDX Broadcast\Session Limits\"
+		WriteWordLine 0 2 "HDX Broadcast\Session Limits\"
 		If($Setting.SessionAudioState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Audio: " $Setting.SessionAudioState
+			WriteWordLine 0 3 "Audio: " $Setting.SessionAudioState
 			If($Setting.SessionAudioState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionAudioLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionAudioLimit
 			}
 		}
 		If($Setting.SessionClipboardState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Clipboard: " $Setting.SessionClipboardState
+			WriteWordLine 0 3 "Clipboard: " $Setting.SessionClipboardState
 			If($Setting.SessionClipboardState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionClipboardLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionClipboardLimit
 			}
 		}
 		If($Setting.SessionComportsState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "COM Ports: " $Setting.SessionComportsState
+			WriteWordLine 0 3 "COM Ports: " $Setting.SessionComportsState
 			If($Setting.SessionComportsState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionComportsLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionComportsLimit
 			}
 		}
 		If($Setting.SessionDrivesState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Drives: " $Setting.SessionDrivesState
+			WriteWordLine 0 3 "Drives: " $Setting.SessionDrivesState
 			If($Setting.SessionDrivesState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionDrivesLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionDrivesLimit
 			}
 		}
 		If($Setting.SessionLptPortsState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "LPT Ports: " $Setting.SessionLptPortsState
+			WriteWordLine 0 3 "LPT Ports: " $Setting.SessionLptPortsState
 			If($Setting.SessionLptPortsState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionLptPortsLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionLptPortsLimit
 			}
 		}
 		If($Setting.SessionOemChannelsState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "OEM Virtual Channels: " $Setting.SessionOemChannelsState
+			WriteWordLine 0 3 "OEM Virtual Channels: " $Setting.SessionOemChannelsState
 			If($Setting.SessionOemChannelsState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionOemChannelsLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionOemChannelsLimit
 			}
 		}
 		If($Setting.SessionOverallState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Overall Session: " $Setting.SessionOverallState
+			WriteWordLine 0 3 "Overall Session: " $Setting.SessionOverallState
 			If($Setting.SessionOverallState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionOverallLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionOverallLimit
 			}
 		}
 		If($Setting.SessionPrinterBandwidthState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printer: " $Setting.SessionPrinterBandwidthState
+			WriteWordLine 0 3 "Printer: " $Setting.SessionPrinterBandwidthState
 			If($Setting.SessionPrinterBandwidthState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionPrinterBandwidthLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionPrinterBandwidthLimit
 			}
 		}
 		If($Setting.SessionTwainRedirectionState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "TWAIN Redirection: " $Setting.SessionTwainRedirectionState
+			WriteWordLine 0 3 "TWAIN Redirection: " $Setting.SessionTwainRedirectionState
 			If($Setting.SessionTwainRedirectionState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionTwainRedirectionLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionTwainRedirectionLimit
 			}
 		}
 	}
@@ -498,160 +502,160 @@ Function Process2003Policies
 			$Setting.ContentRedirectionState, 		$Setting.TurnClientLocalTimeEstimationOffState,	$Setting.TurnClientLocalTimeEstimationOffState)
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "HDX Plug-n-Play\Client Resources\"
+		WriteWordLine 0 2 "HDX Plug-n-Play\Client Resources\"
 		If($Setting.ClientMicrophonesState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Audio\Microphones: " $Setting.ClientMicrophonesState
+			WriteWordLine 0 3 "Audio\Microphones: " $Setting.ClientMicrophonesState
 			If($Setting.ClientMicrophonesState -eq "Enabled")
 			{
 				If($Setting.ClientMicrophonesAreUsed)
 				{
-					WriteWordLine 0 5 "Use client microphones for audio input"
+					WriteWordLine 0 4 "Use client microphones for audio input"
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Do not use client microphones for audio input"
+					WriteWordLine 0 4 "Do not use client microphones for audio input"
 				}
 			}
 		}
 		If($Setting.ClientSoundQualityState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Audio\Sound quality: " $Setting.ClientSoundQualityState
+			WriteWordLine 0 3 "Audio\Sound quality: " $Setting.ClientSoundQualityState
 			If($Setting.ClientSoundQualityState)
 			{
-				WriteWordLine 0 5 "Maximum allowable client audio quality: " 
+				WriteWordLine 0 4 "Maximum allowable client audio quality: " 
 				switch ($Setting.ClientSoundQualityLevel)
 				{
-					"Medium" {WriteWordLine 0 6 "Optimized for Speech"}
-					"Low"    {WriteWordLine 0 6 "Low Bandwidth"}
-					"High"   {WriteWordLine 0 6 "High Definition"}
+					"Medium" {WriteWordLine 0 5 "Optimized for Speech"}
+					"Low"    {WriteWordLine 0 5 "Low Bandwidth"}
+					"High"   {WriteWordLine 0 5 "High Definition"}
 					Default {WriteWordLine 0 0 "Maximum allowable client audio quality could not be determined: $($Setting.ClientSoundQualityLevel)"}
 				}
 			}
 		}
 		If($Setting.TurnClientAudioMappingOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Audio\Turn off speakers: " $Setting.TurnClientAudioMappingOffState
+			WriteWordLine 0 3 "Audio\Turn off speakers: " $Setting.TurnClientAudioMappingOffState
 			If($Setting.TurnClientAudioMappingOffState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Turn off audio mapping to client speakers"
+				WriteWordLine 0 4 "Turn off audio mapping to client speakers"
 			}
 		}
 		If($Setting.ClientDrivesState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Drives\Connection: " $Setting.ClientDrivesState
+			WriteWordLine 0 3 "Drives\Connection: " $Setting.ClientDrivesState
 			If($Setting.ClientDrivesState -eq "Enabled")
 			{
 				If($Setting.ClientDrivesAreConnected)
 				{
-					WriteWordLine 0 5 "Connect Client Drives at Logon"
+					WriteWordLine 0 4 "Connect Client Drives at Logon"
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Do Not Connect Client Drives at Logon"
+					WriteWordLine 0 4 "Do Not Connect Client Drives at Logon"
 				}
 			}
 		}
 		If($Setting.ClientDriveMappingState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Drives\Mappings: " $Setting.ClientDriveMappingState
+			WriteWordLine 0 3 "Drives\Mappings: " $Setting.ClientDriveMappingState
 			If($Setting.ClientDriveMappingState -eq "Enabled")
 			{
 				If($Setting.TurnFloppyDriveMappingOff)
 				{
-					WriteWordLine 0 5 "Turn off Floppy disk drives"	
+					WriteWordLine 0 4 "Turn off Floppy disk drives"	
 				}
 				If($Setting.TurnHardDriveMappingOff)
 				{
-					WriteWordLine 0 5 "Turn off Hard drives"	
+					WriteWordLine 0 4 "Turn off Hard drives"	
 				}
 				If($Setting.TurnCDRomDriveMappingOff)
 				{
-					WriteWordLine 0 5 "Turn off CD-ROM drives"	
+					WriteWordLine 0 4 "Turn off CD-ROM drives"	
 				}
 				If($Setting.TurnRemoteDriveMappingOff)
 				{
-					WriteWordLine 0 5 "Turn off Remote drives"	
+					WriteWordLine 0 4 "Turn off Remote drives"	
 				}
 			}
 		}
 		If($Setting.ClientAsynchronousWritesState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Drives\Optimize\Asynchronous writes: " $Settings.ClientAsynchronousWritesState
+			WriteWordLine 0 3 "Drives\Optimize\Asynchronous writes: " $Settings.ClientAsynchronousWritesState
 			If($Setting.ClientAsynchronousWritesState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Turn on asynchronous disk writes to client disks"
+				WriteWordLine 0 4 "Turn on asynchronous disk writes to client disks"
 			}
 		}
 
 		If($Setting.TurnComPortsOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Ports\Turn off COM ports: " $Setting.TurnComPortsOffState
+			WriteWordLine 0 3 "Ports\Turn off COM ports: " $Setting.TurnComPortsOffState
 		}
 		If($Setting.TurnLptPortsOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Ports\Turn off LPT ports: " $Setting.TurnLptPortsOffState
+			WriteWordLine 0 3 "Ports\Turn off LPT ports: " $Setting.TurnLptPortsOffState
 		}
 		If($Setting.TurnVirtualComPortMappingOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "PDA Devices\Turn on automatic virtual COM port mapping: " $Setting.TurnVirtualComPortMappingOffState
+			WriteWordLine 0 3 "PDA Devices\Turn on automatic virtual COM port mapping: " $Setting.TurnVirtualComPortMappingOffState
 		}
 		If($Setting.TwainRedirectionState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Other\Configure TWAIN redirection: " $Setting.TwainRedirectionState
+			WriteWordLine 0 3 "Other\Configure TWAIN redirection: " $Setting.TwainRedirectionState
 			If($Setting.TwainRedirectionState -eq "Enabled")
 			{
 				If($Setting.TwainRedirectionAllowed)
 				{
-					WriteWordLine 0 5 "Allow TWAIN redirection"
+					WriteWordLine 0 4 "Allow TWAIN redirection"
 					If($Setting.TwainRedirectionImageCompression -eq "NoCompression")
 					{
-						WriteWordLine 0 5 "Do not use lossy compression for high color images"
+						WriteWordLine 0 4 "Do not use lossy compression for high color images"
 					}
 					Else
 					{
-						WriteWordLine 0 5 "Use lossy compression for high color images: "
+						WriteWordLine 0 4 "Use lossy compression for high color images: "
 						
 						switch ($Setting.TwainRedirectionImageCompression)
 						{
-							"HighCompression"   {WriteWordLine 0 6 "High compression; lower image quality"}
-							"MediumCompression" {WriteWordLine 0 6 "Medium compression; good image quality"}
-							"LowCompression"    {WriteWordLine 0 6 "Low compression; best image quality"}
+							"HighCompression"   {WriteWordLine 0 5 "High compression; lower image quality"}
+							"MediumCompression" {WriteWordLine 0 5 "Medium compression; good image quality"}
+							"LowCompression"    {WriteWordLine 0 5 "Low compression; best image quality"}
 							Default {WriteWordLine 0 0 "Lossy compression for high color images could not be determined: $($Setting.TwainRedirectionImageCompression)"}
 						}
 					}
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Do not allow TWAIN redirection"
+					WriteWordLine 0 4 "Do not allow TWAIN redirection"
 				}
 			}
 		}
 		If($Setting.TurnClipboardMappingOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Other\Turn off clipboard mapping: " $Setting.TurnClipboardMappingOffState
+			WriteWordLine 0 3 "Other\Turn off clipboard mapping: " $Setting.TurnClipboardMappingOffState
 		}
 		If($Setting.TurnOemVirtualChannelsOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Other\Turn off OEM virtual channels: " $Setting.TurnOemVirtualChannelsOffState
+			WriteWordLine 0 3 "Other\Turn off OEM virtual channels: " $Setting.TurnOemVirtualChannelsOffState
 		}
 	
 		If($Setting.TurnAutoClientUpdateOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Client Maintenance\Turn off auto client update: " $Setting.TurnAutoClientUpdateOffState
+			WriteWordLine 0 3 "Client Maintenance\Turn off auto client update: " $Setting.TurnAutoClientUpdateOffState
 		}
 		If($Setting.ClientPrinterAutoCreationState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printing\Client Printers\Auto-creation: " $Setting.ClientPrinterAutoCreationState
+			WriteWordLine 0 3 "Printing\Client Printers\Auto-creation: " $Setting.ClientPrinterAutoCreationState
 			If($Setting.ClientPrinterAutoCreationState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "When connecting:"
+				WriteWordLine 0 4 "When connecting:"
 				switch ($Setting.ClientPrinterAutoCreationOption)
 				{
-					"LocalPrintersOnly"  {WriteWordLine 0 6 "Auto-create local (non-network) client printers only"}
-					"AllPrinters"        {WriteWordLine 0 6 "Auto-create all client printers"}
-					"DefaultPrinterOnly" {WriteWordLine 0 6 "Auto-create the client's default printer only"}
-					"DoNotAutoCreate"    {WriteWordLine 0 6 "Do not auto-create client printers"}
+					"LocalPrintersOnly"  {WriteWordLine 0 5 "Auto-create local (non-network) client printers only"}
+					"AllPrinters"        {WriteWordLine 0 5 "Auto-create all client printers"}
+					"DefaultPrinterOnly" {WriteWordLine 0 5 "Auto-create the client's default printer only"}
+					"DoNotAutoCreate"    {WriteWordLine 0 5 "Do not auto-create client printers"}
 					Default {WriteWordLine 0 0 "Client Printers\Auto-creation could not be determined: $($Setting.ClientPrinterAutoCreationOption)"}
 				}
 			}
@@ -659,25 +663,25 @@ Function Process2003Policies
 
 		If($Setting.LegacyClientPrintersState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printing\Client Printers\Legacy client printers: " $Setting.LegacyClientPrintersState
+			WriteWordLine 0 3 "Printing\Client Printers\Legacy client printers: " $Setting.LegacyClientPrintersState
 			If($Setting.LegacyClientPrintersState -eq "Enabled")
 			{
 				If($Setting.LegacyClientPrintersDynamic)
 				{
-					WriteWordLine 0 5 "Create dynamic session-private client printers"
+					WriteWordLine 0 4 "Create dynamic session-private client printers"
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Create old-style client printers"
+					WriteWordLine 0 4 "Create old-style client printers"
 				}
 			}
 		}
 		If($Setting.PrinterPropertiesRetentionState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printing\Client Printers\Printer properties retention: " $Setting.PrinterPropertiesRetentionState
+			WriteWordLine 0 3 "Printing\Client Printers\Printer properties retention: " $Setting.PrinterPropertiesRetentionState
 			If($Setting.PrinterPropertiesRetentionState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Printer properties " -nonewline
+				WriteWordLine 0 4 "Printer properties " -nonewline
 				
 				switch ($Setting.PrinterPropertiesRetentionOption)
 				{
@@ -690,66 +694,66 @@ Function Process2003Policies
 		}
 		If($Setting.PrinterJobRoutingState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printing\Client Printers\Print job routing: " $Setting.PrinterJobRoutingState
+			WriteWordLine 0 3 "Printing\Client Printers\Print job routing: " $Setting.PrinterJobRoutingState
 			If($Setting.PrinterJobRoutingState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "For client printers on a network printer server: "
+				WriteWordLine 0 4 "For client printers on a network printer server: "
 				If($Setting.PrinterJobRoutingDirect)
 				{
-					WriteWordLine 0 6 "Connect directly to network print server if possible"
+					WriteWordLine 0 5 "Connect directly to network print server if possible"
 				}
 				Else
 				{
-					WriteWordLine 0 6 "Always connect indirectly as a client printer"
+					WriteWordLine 0 5 "Always connect indirectly as a client printer"
 				}
 			}
 		}
 		If($Setting.TurnClientPrinterMappingOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printing\Client Printers\Turn off client printer mapping: " $Setting.TurnClientPrinterMappingOffState
+			WriteWordLine 0 3 "Printing\Client Printers\Turn off client printer mapping: " $Setting.TurnClientPrinterMappingOffState
 		}
 		If($Setting.DriverAutoInstallState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printing\Drivers\Native printer driver auto-install: " $Setting.DriverAutoInstallState
+			WriteWordLine 0 3 "Printing\Drivers\Native printer driver auto-install: " $Setting.DriverAutoInstallState
 			If($Setting.DriverAutoInstallState -eq "Enabled")
 			{
 				If($Setting.DriverAutoInstallAsNeeded)
 				{
-					WriteWordLine 0 5 "Install Windows native drivers as needed"
+					WriteWordLine 0 4 "Install Windows native drivers as needed"
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Do not automatically install drivers"
+					WriteWordLine 0 4 "Do not automatically install drivers"
 				}
 			}
 		}
 		If($Setting.UniversalDriverState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printing\Drivers\Universal driver: " $Setting.UniversalDriverState
+			WriteWordLine 0 3 "Printing\Drivers\Universal driver: " $Setting.UniversalDriverState
 			If($Setting.UniversalDriverState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "When auto-creating client printers: "
+				WriteWordLine 0 4 "When auto-creating client printers: "
 				
 				switch ($Setting.UniversalDriverOption)
 				{
-					"FallbackOnly"  {WriteWordLine 0 5 "Use universal driver only if requested driver is unavailable"}
-					"SpecificOnly"  {WriteWordLine 0 5 "Use only printer model specific drivers"}
-					"ExclusiveOnly" {WriteWordLine 0 5 "Use universal driver only"}
+					"FallbackOnly"  {WriteWordLine 0 4 "Use universal driver only if requested driver is unavailable"}
+					"SpecificOnly"  {WriteWordLine 0 4 "Use only printer model specific drivers"}
+					"ExclusiveOnly" {WriteWordLine 0 4 "Use universal driver only"}
 					Default {WriteWordLine 0 0 "When auto-creating client printers could not be determined: $($Setting.UniversalDriverOption)"}
 				}
 			}
 		}
 		If($Setting.SessionPrintersState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printing\Session printers\Session printers: " $Setting.SessionPrintersState
+			WriteWordLine 0 3 "Printing\Session printers\Session printers: " $Setting.SessionPrintersState
 			If($Setting.SessionPrintersState -eq "Enabled")
 			{
 				If($Setting.SessionPrinterList)
 				{
-					WriteWordLine 0 5 "Network printers to connect at logon:"
+					WriteWordLine 0 4 "Network printers to connect at logon:"
 					ForEach($Printer in $Setting.SessionPrinterList)
 					{
-						WriteWordLine 0 6 $Printer
+						WriteWordLine 0 5 $Printer
 						$index = $Printer.SubString( 2 ).IndexOf( '\' )
 						if( $index -ge 0 )
 						{
@@ -761,11 +765,11 @@ Function Process2003Policies
 						{
 							If($SessionPrinterSettings.ApplyCustomSettings)
 							{
-								WriteWordLine 0 6 "Shared Name`t: " $SessionPrinterSettings.PrinterName
-								WriteWordLine 0 6 "Server`t`t: " $SessionPrinterSettings.ServerName
-								WriteWordLine 0 6 "Printer Model`t: " $SessionPrinterSettings.DriverName
-								WriteWordLine 0 6 "Location`t: " $SessionPrinterSettings.Location
-								WriteWordLine 0 6 "Paper Size`t: " -nonewline
+								WriteWordLine 0 5 "Shared Name`t: " $SessionPrinterSettings.PrinterName
+								WriteWordLine 0 5 "Server`t`t: " $SessionPrinterSettings.ServerName
+								WriteWordLine 0 5 "Printer Model`t: " $SessionPrinterSettings.DriverName
+								WriteWordLine 0 5 "Location`t: " $SessionPrinterSettings.Location
+								WriteWordLine 0 5 "Paper Size`t: " -nonewline
 								switch ($SessionPrinterSettings.PaperSize)
 								{
 									"A4"          {WriteWordLine 0 0 "A4"}
@@ -783,14 +787,14 @@ Function Process2003Policies
 									Default 
 									{
 										WriteWordLine 0 0 "Custom..."
-										WriteWordLine 0 6 "Width`t`t: $($SessionPrinterSettings.Width) (Millimeters)" 
-										WriteWordLine 0 6 "Height`t`t: $($SessionPrinterSettings.Height) (Millimeters)" 
+										WriteWordLine 0 5 "Width`t`t: $($SessionPrinterSettings.Width) (Millimeters)" 
+										WriteWordLine 0 5 "Height`t`t: $($SessionPrinterSettings.Height) (Millimeters)" 
 									}
 								}
-								WriteWordLine 0 6 "Copy Count`t: " $SessionPrinterSettings.CopyCount
+								WriteWordLine 0 5 "Copy Count`t: " $SessionPrinterSettings.CopyCount
 								If($SessionPrinterSettings.CopyCount -gt 1)
 								{
-									WriteWordLine 0 6 "Collated`t: " -nonewline
+									WriteWordLine 0 5 "Collated`t: " -nonewline
 									If($SessionPrinterSettings.Collated)
 									{
 										WriteWordLine 0 0 "Yes"
@@ -800,7 +804,7 @@ Function Process2003Policies
 										WriteWordLine 0 0 "No"
 									}
 								}
-								WriteWordLine 0 6 "Print Quality`t: " -nonewline
+								WriteWordLine 0 5 "Print Quality`t: " -nonewline
 								switch ($SessionPrinterSettings.PrintQuality)
 								{
 									"Dpi600" {WriteWordLine 0 0 "600 dpi"}
@@ -809,8 +813,8 @@ Function Process2003Policies
 									"Dpi75"  {WriteWordLine 0 0 "75 dpi"}
 									Default {WriteWordLine 0 0 "Print Quality could not be determined: $($SessionPrinterSettings.PrintQuality)"}
 								}
-								WriteWordLine 0 6 "Orientation`t: " $SessionPrinterSettings.PaperOrientation
-								WriteWordLine 0 6 "Apply customized settings at every logon: " -nonewline
+								WriteWordLine 0 5 "Orientation`t: " $SessionPrinterSettings.PaperOrientation
+								WriteWordLine 0 5 "Apply customized settings at every logon: " -nonewline
 								If($SessionPrinterSettings.ApplySettingsOnLogOn)
 								{
 									WriteWordLine 0 0 "Yes"
@@ -823,17 +827,17 @@ Function Process2003Policies
 						}
 					}
 				}
-				WriteWordLine 0 4 "Printing\Session printers\Client's default printer: "
+				WriteWordLine 0 3 "Printing\Session printers\Client's default printer: "
 				If($Setting.SessionPrinterDefaultOption -eq "SetToPrinterIndex")
 				{
-					WriteWordLine 0 5 $Setting.SessionPrinterList[$Setting.SessionPrinterDefaultIndex]
+					WriteWordLine 0 4 $Setting.SessionPrinterList[$Setting.SessionPrinterDefaultIndex]
 				}
 				Else
 				{
 					switch ($Setting.SessionPrinterDefaultOption)
 					{
-						"SetToClientMainPrinter" {WriteWordLine 0 5 "Set default printer to the client's main printer"}
-						"DoNotAdjust"            {WriteWordLine 0 5 "Do not adjust the user's default printer"}
+						"SetToClientMainPrinter" {WriteWordLine 0 4 "Set default printer to the client's main printer"}
+						"DoNotAdjust"            {WriteWordLine 0 4 "Do not adjust the user's default printer"}
 						Default {WriteWordLine 0 0 "Client's default printer could not be determined: $($Setting.SessionPrinterDefaultOption)"}
 					}
 					
@@ -842,26 +846,26 @@ Function Process2003Policies
 		}
 		If($Setting.ContentRedirectionState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Content Redirection\Server to client: " $Setting.ContentRedirectionState
+			WriteWordLine 0 3 "Content Redirection\Server to client: " $Setting.ContentRedirectionState
 			If($Setting.ContentRedirectionState -eq "Enabled")
 			{
 				If($Setting.ContentRedirectionIsUsed)
 				{
-					WriteWordLine 0 5 "Use Content Redirection from server to client"
+					WriteWordLine 0 4 "Use Content Redirection from server to client"
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Do not use Content Redirection from server to client"
+					WriteWordLine 0 4 "Do not use Content Redirection from server to client"
 				}
 			}
 		}
 		If($Setting.TurnClientLocalTimeEstimationOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Time Zones\Do Not Estimate Client Local Time: " $Setting.TurnClientLocalTimeEstimationOffState
+			WriteWordLine 0 3 "Time Zones\Do Not Estimate Client Local Time: " $Setting.TurnClientLocalTimeEstimationOffState
 		}
 		If($Setting.TurnClientLocalTimeEstimationOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Time Zones\Do Not Use Client's Local Time: " $Setting.TurnClientLocalTimeOffState
+			WriteWordLine 0 3 "Time Zones\Do Not Use Client's Local Time: " $Setting.TurnClientLocalTimeOffState
 		}
 	}
 	
@@ -871,97 +875,97 @@ Function Process2003Policies
 			$Setting.StreamingDeliveryProtocolState)
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "User Workspace\"
+		WriteWordLine 0 2 "User Workspace\"
 		If($Setting.ConcurrentSessionsState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Connections\Limit total concurrent sessions: " $Setting.ConcurrentSessionsState
+			WriteWordLine 0 3 "Connections\Limit total concurrent sessions: " $Setting.ConcurrentSessionsState
 			If($Setting.ConcurrentSessionsState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit: " $Setting.ConcurrentSessionsLimit
+				WriteWordLine 0 4 "Limit: " $Setting.ConcurrentSessionsLimit
 			}
 		}
 		If($Setting.ZonePreferenceAndFailoverState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Connections\Zone preference and failover: " $Setting.ZonePreferenceAndFailoverState
+			WriteWordLine 0 3 "Connections\Zone preference and failover: " $Setting.ZonePreferenceAndFailoverState
 			If($Setting.ZonePreferenceAndFailoverState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Zone preference settings:"
+				WriteWordLine 0 4 "Zone preference settings:"
 				ForEach($Pref in $Setting.ZonePreferences)
 				{
-					WriteWordLine 0 6 $Pref
+					WriteWordLine 0 5 $Pref
 				}
 			}
 		}
 		If($Setting.ShadowingState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Shadowing\Configuration: " $Setting.ShadowingState
+			WriteWordLine 0 3 "Shadowing\Configuration: " $Setting.ShadowingState
 			If($Setting.ShadowingState -eq "Enabled")
 			{
 				If($Setting.ShadowingAllowed)
 				{
-					WriteWordLine 0 5 "Allow Shadowing"
-					WriteWordLine 0 5 "Prohibit Being Shadowed Without Notification: " $Setting.ShadowingProhibitedWithoutNotification
-					WriteWordLine 0 5 "Prohibit Remote Input When Being Shadowed: " $Setting.ShadowingRemoteInputProhibited
+					WriteWordLine 0 4 "Allow Shadowing"
+					WriteWordLine 0 4 "Prohibit Being Shadowed Without Notification: " $Setting.ShadowingProhibitedWithoutNotification
+					WriteWordLine 0 4 "Prohibit Remote Input When Being Shadowed: " $Setting.ShadowingRemoteInputProhibited
 				}
 				Else
 				{
-					WriteWordLine 0 3 "Do Not Allow Shadowing"
+					WriteWordLine 0 2 "Do Not Allow Shadowing"
 				}
 			}
 		}
 		If($Setting.ShadowingPermissionsState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Shadowing\Permissions: " $Setting.ShadowingPermissionsState
+			WriteWordLine 0 3 "Shadowing\Permissions: " $Setting.ShadowingPermissionsState
 			If($Setting.ShadowingPermissionsState -eq "Enabled")
 			{
 				If($Setting.ShadowingAccountsAllowed)
 				{
-					WriteWordLine 0 5 "Accounts allowed to shadow:"
+					WriteWordLine 0 4 "Accounts allowed to shadow:"
 					ForEach($Allowed in $Setting.ShadowingAccountsAllowed)
 					{
-						WriteWordLine 0 6 $Allowed
+						WriteWordLine 0 5 $Allowed
 					}
 				}
 				If($Setting.ShadowingAccountsDenied)
 				{
-					WriteWordLine 0 5 "Accounts denied from shadowing:"
+					WriteWordLine 0 4 "Accounts denied from shadowing:"
 					ForEach($Denied in $Setting.ShadowingAccountsDenied)
 					{
-						WriteWordLine 0 6 $Denied
+						WriteWordLine 0 5 $Denied
 					}
 				}
 			}
 		}
 		If($Setting.CentralCredentialStoreState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Single Sign-On\Central Credential Store: " $Setting.CentralCredentialStoreState
+			WriteWordLine 0 3 "Single Sign-On\Central Credential Store: " $Setting.CentralCredentialStoreState
 			If($Setting.CentralCredentialStoreState -eq "Enabled")
 			{
 				If($Setting.CentralCredentialStorePath)
 				{
-					WriteWordLine 0 5 "UNC path of Central Credential Store: " $Setting.CentralCredentialStorePath
+					WriteWordLine 0 4 "UNC path of Central Credential Store: " $Setting.CentralCredentialStorePath
 				}
 				Else
 				{
-					WriteWordLine 0 5 "No UNC path to Central Credential Store entered"
+					WriteWordLine 0 4 "No UNC path to Central Credential Store entered"
 				}
 			}
 		}
 		If($Setting.TurnPasswordManagerOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Single Sign-On\Do not use Citrix Password Manager: " $Setting.TurnPasswordManagerOffState
+			WriteWordLine 0 3 "Single Sign-On\Do not use Citrix Password Manager: " $Setting.TurnPasswordManagerOffState
 		}
 		If($Setting.StreamingDeliveryProtocolState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Streamed Applications\Configure delivery protocol: " $Setting.StreamingDeliveryProtocolState
+			WriteWordLine 0 3 "Streamed Applications\Configure delivery protocol: " $Setting.StreamingDeliveryProtocolState
 			If($Setting.StreamingDeliveryProtocolState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Streaming Delivery Protocol option: " 
+				WriteWordLine 0 4 "Streaming Delivery Protocol option: " 
 				switch ($Setting.StreamingDeliveryOption)
 				{
-					"Unknown"                {WriteWordLine 0 6 "Unknown"}
-					"ForceServerAccess"      {WriteWordLine 0 6 "Do not allow applications to stream to the client"}
-					"ForcedStreamedDelivery" {WriteWordLine 0 6 "Force applications to stream to the client"}
+					"Unknown"                {WriteWordLine 0 5 "Unknown"}
+					"ForceServerAccess"      {WriteWordLine 0 5 "Do not allow applications to stream to the client"}
+					"ForcedStreamedDelivery" {WriteWordLine 0 5 "Force applications to stream to the client"}
 					Default {WriteWordLine 0 0 "Delivery protocol could not be determined: $($LoadBalancingPolicyConfiguration.StreamingDeliveryOption)"}
 				}
 			}
@@ -971,10 +975,10 @@ Function Process2003Policies
 	#Security
 	If($Setting.SecureIcaEncriptionState -ne "NotConfigured")
 	{
-		WriteWordLine 0 3 "Security\Encryption\SecureICA encryption: " $Setting.SecureIcaEncriptionState
+		WriteWordLine 0 2 "Security\Encryption\SecureICA encryption: " $Setting.SecureIcaEncriptionState
 		If($Setting.SecureIcaEncriptionState -eq "Enabled")
 		{
-			WriteWordLine 0 4 "Encryption level: " -nonewline
+			WriteWordLine 0 3 "Encryption level: " -nonewline
 			switch ($Setting.SecureIcaEncriptionLevel)
 			{
 				"Unknown" {WriteWordLine 0 0 "Unknown encryption"}
@@ -995,28 +999,28 @@ Function Process2008Policies
 	$xArray = ($Setting.TurnWallpaperOffState, $Setting.TurnWindowContentsOffState, $Setting.TurnWindowContentsOffState )
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "Bandwidth\Visual Effects\"
+		WriteWordLine 0 2 "Bandwidth\Visual Effects\"
 		If($Setting.TurnWallpaperOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Turn Off Desktop Wallpaper: " $Setting.TurnWallpaperOffState
+			WriteWordLine 0 3 "Turn Off Desktop Wallpaper: " $Setting.TurnWallpaperOffState
 		}
 		If($Setting.TurnMenuAnimationsOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Turn Off Menu and Windows Animations: " $Setting.TurnMenuAnimationsOffState
+			WriteWordLine 0 3 "Turn Off Menu and Windows Animations: " $Setting.TurnMenuAnimationsOffState
 		}
 		If($Setting.TurnWindowContentsOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Turn Off Window Contents While Dragging: " $Setting.TurnWindowContentsOffState
+			WriteWordLine 0 3 "Turn Off Window Contents While Dragging: " $Setting.TurnWindowContentsOffState
 		}
 	}
 	
 	If($Setting.ImageAccelerationState -ne "NotConfigured")
 	{
-		WriteWordLine 0 3 "Bandwidth\SpeedScreen\"
-		WriteWordLine 0 4 "Image acceleration using lossy compression: " $Setting.ImageAccelerationState
+		WriteWordLine 0 2 "Bandwidth\SpeedScreen\"
+		WriteWordLine 0 3 "Image acceleration using lossy compression: " $Setting.ImageAccelerationState
 		If($Setting.ImageAccelerationState -eq "Enabled")
 		{
-			WriteWordLine 0 4 "Compression level: " -nonewline
+			WriteWordLine 0 3 "Compression level: " -nonewline
 			
 			switch ($Setting.ImageAccelerationCompressionLevel)
 			{
@@ -1028,26 +1032,26 @@ Function Process2008Policies
 			}
 			If($Setting.ImageAccelerationCompressionIsRestricted)
 			{
-				WriteWordLine 0 4 "Restrict compression to connections under this "
-				WriteWordLine 0 5 "bandwidth\Threshold (Kb/sec): " $Setting.ImageAccelerationCompressionLimit	
+				WriteWordLine 0 3 "Restrict compression to connections under this "
+				WriteWordLine 0 4 "bandwidth\Threshold (Kb/sec): " $Setting.ImageAccelerationCompressionLimit	
 			}
-			WriteWordLine 0 4 "SpeedScreen Progressive Display compression level: "
+			WriteWordLine 0 3 "SpeedScreen Progressive Display compression level: "
 			switch ($Setting.ImageAccelerationProgressiveLevel)
 			{
-				"UltrahighCompression" {WriteWordLine 0 5 "Ultra high compression; ultra low quality"}
-				"VeryHighCompression"  {WriteWordLine 0 5 "Very high compression; very low quality"}
-				"HighCompression"      {WriteWordLine 0 5 "High compression; low quality"}
-				"MediumCompression"    {WriteWordLine 0 5 "Medium compression; medium quality"}
-				"LowCompression"       {WriteWordLine 0 5 "Low compression; high quality"}
-				"Disabled"             {WriteWordLine 0 5 "Disabled; no progressive display"}
+				"UltrahighCompression" {WriteWordLine 0 4 "Ultra high compression; ultra low quality"}
+				"VeryHighCompression"  {WriteWordLine 0 4 "Very high compression; very low quality"}
+				"HighCompression"      {WriteWordLine 0 4 "High compression; low quality"}
+				"MediumCompression"    {WriteWordLine 0 4 "Medium compression; medium quality"}
+				"LowCompression"       {WriteWordLine 0 4 "Low compression; high quality"}
+				"Disabled"             {WriteWordLine 0 4 "Disabled; no progressive display"}
 				Default {WriteWordLine 0 0 "SpeedScreen Progressive Display compression level could not be determined: $($Setting.ImageAccelerationProgressiveLevel)"}
 			}
 			If($Setting.ImageAccelerationProgressiveIsRestricted)
 			{
-				WriteWordLine 0 4 "Restrict compression to connections under this "
-				WriteWordLine 0 5 "bandwidth\Threshold (Kb/sec): " $Setting.ImageAccelerationProgressiveLimit	
+				WriteWordLine 0 3 "Restrict compression to connections under this "
+				WriteWordLine 0 4 "bandwidth\Threshold (Kb/sec): " $Setting.ImageAccelerationProgressiveLimit	
 			}
-			WriteWordLine 0 4 "Use Heavyweight compression (extra CPU, retains quality): " -nonewline
+			WriteWordLine 0 3 "Use Heavyweight compression (extra CPU, retains quality): " -nonewline
 			If($Setting.ImageAccelerationIsHeavyweightUsed)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -1064,77 +1068,77 @@ Function Process2008Policies
 			$Setting.SessionOverallState,	$Setting.SessionPrinterBandwidthState,	$Setting.SessionTwainRedirectionState )
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "Bandwidth\Session Limits\"
+		WriteWordLine 0 2 "Bandwidth\Session Limits\"
 		If($Setting.SessionAudioState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Audio: " $Setting.SessionAudioState
+			WriteWordLine 0 3 "Audio: " $Setting.SessionAudioState
 			If($Setting.SessionAudioState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionAudioLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionAudioLimit
 			}
 		}
 		If($Setting.SessionClipboardState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Clipboard: " $Setting.SessionClipboardState
+			WriteWordLine 0 3 "Clipboard: " $Setting.SessionClipboardState
 			If($Setting.SessionClipboardState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionClipboardLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionClipboardLimit
 			}
 		}
 		If($Setting.SessionComportsState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "COM Ports: " $Setting.SessionComportsState
+			WriteWordLine 0 3 "COM Ports: " $Setting.SessionComportsState
 			If($Setting.SessionComportsState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionComportsLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionComportsLimit
 			}
 		}
 		If($Setting.SessionDrivesState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Drives: " $Setting.SessionDrivesState
+			WriteWordLine 0 3 "Drives: " $Setting.SessionDrivesState
 			If($Setting.SessionDrivesState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionDrivesLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionDrivesLimit
 			}
 		}
 		If($Setting.SessionLptPortsState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "LPT Ports: " $Setting.SessionLptPortsState
+			WriteWordLine 0 3 "LPT Ports: " $Setting.SessionLptPortsState
 			If($Setting.SessionLptPortsState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionLptPortsLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionLptPortsLimit
 			}
 		}
 		If($Setting.SessionOemChannelsState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "OEM Virtual Channels: " $Setting.SessionOemChannelsState
+			WriteWordLine 0 3 "OEM Virtual Channels: " $Setting.SessionOemChannelsState
 			If($Setting.SessionOemChannelsState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionOemChannelsLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionOemChannelsLimit
 			}
 		}
 		If($Setting.SessionOverallState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Overall Session: " $Setting.SessionOverallState
+			WriteWordLine 0 3 "Overall Session: " $Setting.SessionOverallState
 			If($Setting.SessionOverallState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionOverallLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionOverallLimit
 			}
 		}
 		If($Setting.SessionPrinterBandwidthState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printer: " $Setting.SessionPrinterBandwidthState
+			WriteWordLine 0 3 "Printer: " $Setting.SessionPrinterBandwidthState
 			If($Setting.SessionPrinterBandwidthState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionPrinterBandwidthLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionPrinterBandwidthLimit
 			}
 		}
 		If($Setting.SessionTwainRedirectionState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "TWAIN Redirection: " $Setting.SessionTwainRedirectionState
+			WriteWordLine 0 3 "TWAIN Redirection: " $Setting.SessionTwainRedirectionState
 			If($Setting.SessionTwainRedirectionState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit (Kb/sec): " $Setting.SessionTwainRedirectionLimit
+				WriteWordLine 0 4 "Limit (Kb/sec): " $Setting.SessionTwainRedirectionLimit
 			}
 		}
 	}
@@ -1144,69 +1148,69 @@ Function Process2008Policies
 			$Setting.SessionOverallState,	$Setting.SessionPrinterPercentState,	$Setting.SessionTwainRedirectionPercentState )
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 'Bandwidth\Session Limits (%)\'
+		WriteWordLine 0 2 'Bandwidth\Session Limits (%)\'
 		If($Setting.SessionAudioPercentState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 'Audio: ' $Setting.SessionAudioPercentState
+			WriteWordLine 0 3 'Audio: ' $Setting.SessionAudioPercentState
 			If($Setting.SessionAudioPercentState -eq "Enabled")
 			{
-				WriteWordLine 0 5 'Limit (%): ' $Setting.SessionAudioPercentLimit
+				WriteWordLine 0 4 'Limit (%): ' $Setting.SessionAudioPercentLimit
 			}
 		}
 		If($Setting.SessionClipboardPercentState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Clipboard: " $Setting.SessionClipboardPercentState
+			WriteWordLine 0 3 "Clipboard: " $Setting.SessionClipboardPercentState
 			If($Setting.SessionClipboardPercentState -eq "Enabled")
 			{
-				WriteWordLine 0 5 'Limit (%): ' $Setting.SessionClipboardPercentLimit
+				WriteWordLine 0 4 'Limit (%): ' $Setting.SessionClipboardPercentLimit
 			}
 		}
 		If($Setting.SessionComportsPercentState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "COM Ports: " $Setting.SessionComportsPercentState
+			WriteWordLine 0 3 "COM Ports: " $Setting.SessionComportsPercentState
 			If($Setting.SessionComportsPercentState -eq "Enabled")
 			{
-				WriteWordLine 0 5 'Limit (%): ' $Setting.SessionComportsPercentLimit
+				WriteWordLine 0 4 'Limit (%): ' $Setting.SessionComportsPercentLimit
 			}
 		}
 		If($Setting.SessionDrivesPercentState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Drives: " $Setting.SessionDrivesPercentState
+			WriteWordLine 0 3 "Drives: " $Setting.SessionDrivesPercentState
 			If($Setting.SessionDrivesPercentState -eq "Enabled")
 			{
-				WriteWordLine 0 5 'Limit (%): ' $Setting.SessionDrivesPercentLimit
+				WriteWordLine 0 4 'Limit (%): ' $Setting.SessionDrivesPercentLimit
 			}
 		}
 		If($Setting.SessionLptPortsPercentState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "LPT Ports: " $Setting.SessionLptPortsPercentState
+			WriteWordLine 0 3 "LPT Ports: " $Setting.SessionLptPortsPercentState
 			If($Setting.SessionLptPortsPercentState -eq "Enabled")
 			{
-				WriteWordLine 0 5 'Limit (%): ' $Setting.SessionLptPortsPercentLimit
+				WriteWordLine 0 4 'Limit (%): ' $Setting.SessionLptPortsPercentLimit
 			}
 		}
 		If($Setting.SessionOemChannelsPercentState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "OEM Virtual Channels: " $Setting.SessionOemChannelsPercentState
+			WriteWordLine 0 3 "OEM Virtual Channels: " $Setting.SessionOemChannelsPercentState
 			If($Setting.SessionOemChannelsPercentState -eq "Enabled")
 			{
-				WriteWordLine 0 5 'Limit (%): ' $Setting.SessionOemChannelsPercentLimit
+				WriteWordLine 0 4 'Limit (%): ' $Setting.SessionOemChannelsPercentLimit
 			}
 		}
 		If($Setting.SessionPrinterPercentState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printer: " $Setting.SessionPrinterPercentState
+			WriteWordLine 0 3 "Printer: " $Setting.SessionPrinterPercentState
 			If($Setting.SessionPrinterPercentState -eq "Enabled")
 			{
-				WriteWordLine 0 5 'Limit (%): ' $Setting.SessionPrinterPercentLimit
+				WriteWordLine 0 4 'Limit (%): ' $Setting.SessionPrinterPercentLimit
 			}
 		}
 		If($Setting.SessionTwainRedirectionPercentState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "TWAIN Redirection: " $Setting.SessionTwainRedirectionPercentState
+			WriteWordLine 0 3 "TWAIN Redirection: " $Setting.SessionTwainRedirectionPercentState
 			If($Setting.SessionTwainRedirectionPercentState -eq "Enabled")
 			{
-				WriteWordLine 0 5 'Limit (%): ' $Setting.SessionTwainRedirectionPercentLimit
+				WriteWordLine 0 4 'Limit (%): ' $Setting.SessionTwainRedirectionPercentLimit
 			}
 		}
 	}
@@ -1217,170 +1221,170 @@ Function Process2008Policies
 			$Setting.TurnComPortsOffState,	$Setting.TurnLptPortsOffState,		$Setting.TurnVirtualComPortMappingOffState)
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "Client Devices\Resources"
+		WriteWordLine 0 2 "Client Devices\Resources"
 		If($Setting.ClientMicrophonesState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Audio\Microphones: " $Setting.ClientMicrophonesState
+			WriteWordLine 0 3 "Audio\Microphones: " $Setting.ClientMicrophonesState
 			If($Setting.ClientMicrophonesState -eq "Enabled")
 			{
 				If($Setting.ClientMicrophonesAreUsed)
 				{
-					WriteWordLine 0 5 "Use client microphones for audio input"
+					WriteWordLine 0 4 "Use client microphones for audio input"
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Do not use client microphones for audio input"
+					WriteWordLine 0 4 "Do not use client microphones for audio input"
 				}
 			}
 		}
 		If($Setting.ClientSoundQualityState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Audio\Sound quality: " $Setting.ClientSoundQualityState
+			WriteWordLine 0 3 "Audio\Sound quality: " $Setting.ClientSoundQualityState
 			If($Setting.ClientSoundQualityState)
 			{
-				WriteWordLine 0 5 "Maximum allowable client audio quality: " 
+				WriteWordLine 0 4 "Maximum allowable client audio quality: " 
 				switch ($Setting.ClientSoundQualityLevel)
 				{
-					"Medium" {WriteWordLine 0 6 "Optimized for Speech"}
-					"Low"    {WriteWordLine 0 6 "Low Bandwidth"}
-					"High"   {WriteWordLine 0 6 "High Definition"}
+					"Medium" {WriteWordLine 0 5 "Optimized for Speech"}
+					"Low"    {WriteWordLine 0 5 "Low Bandwidth"}
+					"High"   {WriteWordLine 0 5 "High Definition"}
 					Default {WriteWordLine 0 0 "Maximum allowable client audio quality could not be determined: $($Setting.ClientSoundQualityLevel)"}
 				}
 			}
 		}
 		If($Setting.TurnClientAudioMappingOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Audio\Turn off speakers: " $Setting.TurnClientAudioMappingOffState
+			WriteWordLine 0 3 "Audio\Turn off speakers: " $Setting.TurnClientAudioMappingOffState
 			If($Setting.TurnClientAudioMappingOffState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Turn off audio mapping to client speakers"
+				WriteWordLine 0 4 "Turn off audio mapping to client speakers"
 			}
 		}
 
-		WriteWordLine 0 3 "Client Devices\Resources\Drives"
+		WriteWordLine 0 2 "Client Devices\Resources\Drives"
 		If($Setting.ClientDrivesState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Connection: " $Setting.ClientDrivesState
+			WriteWordLine 0 3 "Connection: " $Setting.ClientDrivesState
 			If($Setting.ClientDrivesState -eq "Enabled")
 			{
 				If($Setting.ClientDrivesAreConnected)
 				{
-					WriteWordLine 0 5 "Connect Client Drives at Logon"
+					WriteWordLine 0 4 "Connect Client Drives at Logon"
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Do Not Connect Client Drives at Logon"
+					WriteWordLine 0 4 "Do Not Connect Client Drives at Logon"
 				}
 			}
 		}
 		If($Setting.ClientDriveMappingState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Mappings: " $Setting.ClientDriveMappingState
+			WriteWordLine 0 3 "Mappings: " $Setting.ClientDriveMappingState
 			If($Setting.ClientDriveMappingState -eq "Enabled")
 			{
 				If($Setting.TurnFloppyDriveMappingOff)
 				{
-					WriteWordLine 0 5 "Turn off Floppy disk drives"	
+					WriteWordLine 0 4 "Turn off Floppy disk drives"	
 				}
 				If($Setting.TurnHardDriveMappingOff)
 				{
-					WriteWordLine 0 5 "Turn off Hard drives"	
+					WriteWordLine 0 4 "Turn off Hard drives"	
 				}
 				If($Setting.TurnCDRomDriveMappingOff)
 				{
-					WriteWordLine 0 5 "Turn off CD-ROM drives"	
+					WriteWordLine 0 4 "Turn off CD-ROM drives"	
 				}
 				If($Setting.TurnRemoteDriveMappingOff)
 				{
-					WriteWordLine 0 5 "Turn off Remote drives"	
+					WriteWordLine 0 4 "Turn off Remote drives"	
 				}
 			}
 		}
 		If($Setting.ClientAsynchronousWritesState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Optimize\Asynchronous writes: " $Setting.ClientAsynchronousWritesState
+			WriteWordLine 0 3 "Optimize\Asynchronous writes: " $Setting.ClientAsynchronousWritesState
 			If($Setting.ClientAsynchronousWritesState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Turn on asynchronous disk writes to client disks"
+				WriteWordLine 0 4 "Turn on asynchronous disk writes to client disks"
 			}
 
-			WriteWordLine 0 4 "Special folder redirection: " $Setting.TurnSpecialFolderRedirectionOffState
+			WriteWordLine 0 3 "Special folder redirection: " $Setting.TurnSpecialFolderRedirectionOffState
 			If($Setting.TurnSpecialFolderRedirectionOffState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Do not allow special folder redirection"
+				WriteWordLine 0 4 "Do not allow special folder redirection"
 			}
 		}
 
 		$xArray = ($Setting.TwainRedirectionState, $Setting.TurnClipboardMappingOffState, $Setting.TurnOemVirtualChannelsOffState)
 		If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 		{
-			WriteWordLine 0 3 "Client Devices\Resources\Other"
+			WriteWordLine 0 2 "Client Devices\Resources\Other"
 			If($Setting.TwainRedirectionState -ne "NotConfigured")
 			{
-				WriteWordLine 0 4 "Configure TWAIN redirection: " $Setting.TwainRedirectionState
+				WriteWordLine 0 3 "Configure TWAIN redirection: " $Setting.TwainRedirectionState
 				If($Setting.TwainRedirectionState -eq "Enabled")
 				{
 					If($Setting.TwainRedirectionAllowed)
 					{
-						WriteWordLine 0 5 "Allow TWAIN redirection"
+						WriteWordLine 0 4 "Allow TWAIN redirection"
 						If($Setting.TwainRedirectionImageCompression -eq "NoCompression")
 						{
-							WriteWordLine 0 5 "Do not use lossy compression for high color images"
+							WriteWordLine 0 4 "Do not use lossy compression for high color images"
 						}
 						Else
 						{
-							WriteWordLine 0 5 "Use lossy compression for high color images: "
+							WriteWordLine 0 4 "Use lossy compression for high color images: "
 							
 							switch ($Setting.TwainRedirectionImageCompression)
 							{
-								"HighCompression"   {WriteWordLine 0 6 "High compression; lower image quality"}
-								"MediumCompression" {WriteWordLine 0 6 "Medium compression; good image quality"}
-								"LowCompression"    {WriteWordLine 0 6 "Low compression; best image quality"}
+								"HighCompression"   {WriteWordLine 0 5 "High compression; lower image quality"}
+								"MediumCompression" {WriteWordLine 0 5 "Medium compression; good image quality"}
+								"LowCompression"    {WriteWordLine 0 5 "Low compression; best image quality"}
 								Default {WriteWordLine 0 0 "Lossy compression for high color images could not be determined: $($Setting.TwainRedirectionImageCompression)"}
 							}
 						}
 					}
 					Else
 					{
-						WriteWordLine 0 5 "Do not allow TWAIN redirection"
+						WriteWordLine 0 4 "Do not allow TWAIN redirection"
 					}
 				}
 			}
 			If($Setting.TurnClipboardMappingOffState -ne "NotConfigured")
 			{
-				WriteWordLine 0 4 "Turn off clipboard mapping: " $Setting.TurnClipboardMappingOffState
+				WriteWordLine 0 3 "Turn off clipboard mapping: " $Setting.TurnClipboardMappingOffState
 			}
 			If($Setting.TurnOemVirtualChannelsOffState -ne "NotConfigured")
 			{
-				WriteWordLine 0 4 "Turn off OEM virtual channels: " $Setting.TurnOemVirtualChannelsOffState
+				WriteWordLine 0 3 "Turn off OEM virtual channels: " $Setting.TurnOemVirtualChannelsOffState
 			}
 		}
 
 		$xArray = ($Setting.TurnComPortsOffState, $Setting.TurnLptPortsOffState)
 		If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 		{
-			WriteWordLine 0 3 "Client Devices\Resources\Ports"
+			WriteWordLine 0 2 "Client Devices\Resources\Ports"
 			If($Setting.TurnComPortsOffState -ne "NotConfigured")
 			{
-				WriteWordLine 0 4 "Turn off COM ports: " $Setting.TurnComPortsOffState
+				WriteWordLine 0 3 "Turn off COM ports: " $Setting.TurnComPortsOffState
 			}
 			If($Setting.TurnLptPortsOffState -ne "NotConfigured")
 			{
-				WriteWordLine 0 4 "Turn off LPT ports: " $Setting.TurnLptPortsOffState
+				WriteWordLine 0 3 "Turn off LPT ports: " $Setting.TurnLptPortsOffState
 			}
 		}
 		
 		If($Setting.TurnVirtualComPortMappingOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 3 "Client Devices\Resources\PDA Devices"
-			WriteWordLine 0 4 "Turn on automatic virtual COM port mapping: " $Setting.TurnVirtualComPortMappingOffState
+			WriteWordLine 0 2 "Client Devices\Resources\PDA Devices"
+			WriteWordLine 0 3 "Turn on automatic virtual COM port mapping: " $Setting.TurnVirtualComPortMappingOffState
 		}
 	}
 	
 	If($Setting.TurnAutoClientUpdateOffState -ne "NotConfigured")
 	{
-		WriteWordLine 0 3 "Client Devices\Maintenance"
-		WriteWordLine 0 4 "Turn off auto client update: " $Setting.TurnAutoClientUpdateOffState
+		WriteWordLine 0 2 "Client Devices\Maintenance"
+		WriteWordLine 0 3 "Turn off auto client update: " $Setting.TurnAutoClientUpdateOffState
 	}
 	
 	$xArray = (	$Setting.ClientPrinterAutoCreationState,	$Setting.LegacyClientPrintersState,
@@ -1388,19 +1392,19 @@ Function Process2008Policies
 			$Setting.TurnClientPrinterMappingOffState)
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "Printing\Client Printers"
+		WriteWordLine 0 2 "Printing\Client Printers"
 		If($Setting.ClientPrinterAutoCreationState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Auto-creation: " $Setting.ClientPrinterAutoCreationState
+			WriteWordLine 0 3 "Auto-creation: " $Setting.ClientPrinterAutoCreationState
 			If($Setting.ClientPrinterAutoCreationState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "When connecting:"
+				WriteWordLine 0 4 "When connecting:"
 				switch ($Setting.ClientPrinterAutoCreationOption)
 				{
-					"LocalPrintersOnly"  {WriteWordLine 0 6 "Auto-create local (non-network) client printers only"}
-					"AllPrinters"        {WriteWordLine 0 6 "Auto-create all client printers"}
-					"DefaultPrinterOnly" {WriteWordLine 0 6 "Auto-create the client's default printer only"}
-					"DoNotAutoCreate"    {WriteWordLine 0 6 "Do not auto-create client printers"}
+					"LocalPrintersOnly"  {WriteWordLine 0 5 "Auto-create local (non-network) client printers only"}
+					"AllPrinters"        {WriteWordLine 0 5 "Auto-create all client printers"}
+					"DefaultPrinterOnly" {WriteWordLine 0 5 "Auto-create the client's default printer only"}
+					"DoNotAutoCreate"    {WriteWordLine 0 5 "Do not auto-create client printers"}
 					Default {WriteWordLine 0 0 "Client Printers\Auto-creation could not be determined: $($Setting.ClientPrinterAutoCreationOption)"}
 				}
 			}
@@ -1408,25 +1412,25 @@ Function Process2008Policies
 
 		If($Setting.LegacyClientPrintersState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Legacy client printers: " $Setting.LegacyClientPrintersState
+			WriteWordLine 0 3 "Legacy client printers: " $Setting.LegacyClientPrintersState
 			If($Setting.LegacyClientPrintersState -eq "Enabled")
 			{
 				If($Setting.LegacyClientPrintersDynamic)
 				{
-					WriteWordLine 0 5 "Create dynamic session-private client printers"
+					WriteWordLine 0 4 "Create dynamic session-private client printers"
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Create old-style client printers"
+					WriteWordLine 0 4 "Create old-style client printers"
 				}
 			}
 		}
 		If($Setting.PrinterPropertiesRetentionState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printer properties retention: " $Setting.PrinterPropertiesRetentionState
+			WriteWordLine 0 3 "Printer properties retention: " $Setting.PrinterPropertiesRetentionState
 			If($Setting.PrinterPropertiesRetentionState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Printer properties " -nonewline
+				WriteWordLine 0 4 "Printer properties " -nonewline
 				
 				switch ($Setting.PrinterPropertiesRetentionOption)
 				{
@@ -1439,57 +1443,57 @@ Function Process2008Policies
 		}
 		If($Setting.PrinterJobRoutingState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Print job routing: " $Setting.PrinterJobRoutingState
+			WriteWordLine 0 3 "Print job routing: " $Setting.PrinterJobRoutingState
 			If($Setting.PrinterJobRoutingState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "For client printers on a network printer server: "
+				WriteWordLine 0 4 "For client printers on a network printer server: "
 				If($Setting.PrinterJobRoutingDirect)
 				{
-					WriteWordLine 0 6 "Connect directly to network print server if possible"
+					WriteWordLine 0 5 "Connect directly to network print server if possible"
 				}
 				Else
 				{
-					WriteWordLine 0 6 "Always connect indirectly as a client printer"
+					WriteWordLine 0 5 "Always connect indirectly as a client printer"
 				}
 			}
 		}
 		If($Setting.TurnClientPrinterMappingOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Turn off client printer mapping: " $Setting.TurnClientPrinterMappingOffState
+			WriteWordLine 0 3 "Turn off client printer mapping: " $Setting.TurnClientPrinterMappingOffState
 		}
 	}
 	
 	$xArray = ($Setting.DriverAutoInstallState, $Setting.UniversalDriverState)
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "Printing\Drivers"
+		WriteWordLine 0 2 "Printing\Drivers"
 		If($Setting.DriverAutoInstallState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Native printer driver auto-install: " $Setting.DriverAutoInstallState
+			WriteWordLine 0 3 "Native printer driver auto-install: " $Setting.DriverAutoInstallState
 			If($Setting.DriverAutoInstallState -eq "Enabled")
 			{
 				If($Setting.DriverAutoInstallAsNeeded)
 				{
-					WriteWordLine 0 5 "Install Windows native drivers as needed"
+					WriteWordLine 0 4 "Install Windows native drivers as needed"
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Do not automatically install drivers"
+					WriteWordLine 0 4 "Do not automatically install drivers"
 				}
 			}
 		}
 		If($Setting.UniversalDriverState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Universal driver: " $Setting.UniversalDriverState
+			WriteWordLine 0 3 "Universal driver: " $Setting.UniversalDriverState
 			If($Setting.UniversalDriverState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "When auto-creating client printers: "
+				WriteWordLine 0 4 "When auto-creating client printers: "
 				
 				switch ($Setting.UniversalDriverOption)
 				{
-					"FallbackOnly"  {WriteWordLine 0 5 "Use universal driver only if requested driver is unavailable"}
-					"SpecificOnly"  {WriteWordLine 0 5 "Use only printer model specific drivers"}
-					"ExclusiveOnly" {WriteWordLine 0 5 "Use universal driver only"}
+					"FallbackOnly"  {WriteWordLine 0 4 "Use universal driver only if requested driver is unavailable"}
+					"SpecificOnly"  {WriteWordLine 0 4 "Use only printer model specific drivers"}
+					"ExclusiveOnly" {WriteWordLine 0 4 "Use universal driver only"}
 					Default {WriteWordLine 0 0 "When auto-creating client printers could not be determined: $($Setting.UniversalDriverOption)"}
 				}
 			}
@@ -1498,16 +1502,16 @@ Function Process2008Policies
 	
 	If($Setting.SessionPrintersState -ne "NotConfigured")
 	{
-		WriteWordLine 0 3 "Printing\Session printers"
-		WriteWordLine 0 4 "Session printers: " $Setting.SessionPrintersState
+		WriteWordLine 0 2 "Printing\Session printers"
+		WriteWordLine 0 3 "Session printers: " $Setting.SessionPrintersState
 		If($Setting.SessionPrintersState -eq "Enabled")
 		{
 			If($Setting.SessionPrinterList)
 			{
-				WriteWordLine 0 5 "Network printers to connect at logon:"
+				WriteWordLine 0 4 "Network printers to connect at logon:"
 				ForEach($Printer in $Setting.SessionPrinterList)
 				{
-					WriteWordLine 0 6 $Printer
+					WriteWordLine 0 5 $Printer
 					$index = $Printer.SubString( 2 ).IndexOf( '\' )
 					if( $index -ge 0 )
 					{
@@ -1519,11 +1523,11 @@ Function Process2008Policies
 					{
 						If($SessionPrinterSettings.ApplyCustomSettings)
 						{
-							WriteWordLine 0 6 "Shared Name`t: " $SessionPrinterSettings.PrinterName
-							WriteWordLine 0 6 "Server`t`t: " $SessionPrinterSettings.ServerName
-							WriteWordLine 0 6 "Printer Model`t: " $SessionPrinterSettings.DriverName
-							WriteWordLine 0 6 "Location`t: " $SessionPrinterSettings.Location
-							WriteWordLine 0 6 "Paper Size`t: " -nonewline
+							WriteWordLine 0 5 "Shared Name`t: " $SessionPrinterSettings.PrinterName
+							WriteWordLine 0 5 "Server`t`t: " $SessionPrinterSettings.ServerName
+							WriteWordLine 0 5 "Printer Model`t: " $SessionPrinterSettings.DriverName
+							WriteWordLine 0 5 "Location`t: " $SessionPrinterSettings.Location
+							WriteWordLine 0 5 "Paper Size`t: " -nonewline
 							switch ($SessionPrinterSettings.PaperSize)
 							{
 								"A4"          {WriteWordLine 0 0 "A4"}
@@ -1541,14 +1545,14 @@ Function Process2008Policies
 								Default 
 								{
 									WriteWordLine 0 0 "Custom..."
-									WriteWordLine 0 6 "Width`t`t: $($SessionPrinterSettings.Width) (Millimeters)" 
-									WriteWordLine 0 6 "Height`t`t: $($SessionPrinterSettings.Height) (Millimeters)" 
+									WriteWordLine 0 5 "Width`t`t: $($SessionPrinterSettings.Width) (Millimeters)" 
+									WriteWordLine 0 5 "Height`t`t: $($SessionPrinterSettings.Height) (Millimeters)" 
 								}
 							}
-							WriteWordLine 0 6 "Copy Count`t: " $SessionPrinterSettings.CopyCount
+							WriteWordLine 0 5 "Copy Count`t: " $SessionPrinterSettings.CopyCount
 							If($SessionPrinterSettings.CopyCount -gt 1)
 							{
-								WriteWordLine 0 6 "Collated`t: " -nonewline
+								WriteWordLine 0 5 "Collated`t: " -nonewline
 								If($SessionPrinterSettings.Collated)
 								{
 									WriteWordLine 0 0 "Yes"
@@ -1558,7 +1562,7 @@ Function Process2008Policies
 									WriteWordLine 0 0 "No"
 								}
 							}
-							WriteWordLine 0 6 "Print Quality`t: " -nonewline
+							WriteWordLine 0 5 "Print Quality`t: " -nonewline
 							switch ($SessionPrinterSettings.PrintQuality)
 							{
 								"Dpi600" {WriteWordLine 0 0 "600 dpi"}
@@ -1567,8 +1571,8 @@ Function Process2008Policies
 								"Dpi75"  {WriteWordLine 0 0 "75 dpi"}
 								Default {WriteWordLine 0 0 "Print Quality could not be determined: $($SessionPrinterSettings.PrintQuality)"}
 							}
-							WriteWordLine 0 6 "Orientation`t: " $SessionPrinterSettings.PaperOrientation
-							WriteWordLine 0 6 "Apply customized settings at every logon: " -nonewline
+							WriteWordLine 0 5 "Orientation`t: " $SessionPrinterSettings.PaperOrientation
+							WriteWordLine 0 5 "Apply customized settings at every logon: " -nonewline
 							If($SessionPrinterSettings.ApplySettingsOnLogOn)
 							{
 								WriteWordLine 0 0 "Yes"
@@ -1581,17 +1585,17 @@ Function Process2008Policies
 					}
 				}
 			}
-			WriteWordLine 0 4 "Client's default printer: "
+			WriteWordLine 0 3 "Client's default printer: "
 			If($Setting.SessionPrinterDefaultOption -eq "SetToPrinterIndex")
 			{
-				WriteWordLine 0 5 $Setting.SessionPrinterList[$Setting.SessionPrinterDefaultIndex]
+				WriteWordLine 0 4 $Setting.SessionPrinterList[$Setting.SessionPrinterDefaultIndex]
 			}
 			Else
 			{
 				switch ($Setting.SessionPrinterDefaultOption)
 				{
-					"SetToClientMainPrinter" {WriteWordLine 0 5 "Set default printer to the client's main printer"}
-					"DoNotAdjust"            {WriteWordLine 0 5 "Do not adjust the user's default printer"}
+					"SetToClientMainPrinter" {WriteWordLine 0 4 "Set default printer to the client's main printer"}
+					"DoNotAdjust"            {WriteWordLine 0 4 "Do not adjust the user's default printer"}
 					Default {WriteWordLine 0 0 "Client's default printer could not be determined: $($Setting.SessionPrinterDefaultOption)"}
 				}
 				
@@ -1603,24 +1607,24 @@ Function Process2008Policies
 	$xArray = ($Setting.ConcurrentSessionsState, $Setting.ZonePreferenceAndFailoverState)
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "User Workspace\Connections"
+		WriteWordLine 0 2 "User Workspace\Connections"
 		If($Setting.ConcurrentSessionsState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Limit total concurrent sessions: " $Setting.ConcurrentSessionsState
+			WriteWordLine 0 3 "Limit total concurrent sessions: " $Setting.ConcurrentSessionsState
 			If($Setting.ConcurrentSessionsState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Limit: " $Setting.ConcurrentSessionsLimit
+				WriteWordLine 0 4 "Limit: " $Setting.ConcurrentSessionsLimit
 			}
 		}
 		If($Setting.ZonePreferenceAndFailoverState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Zone preference and failover: " $Setting.ZonePreferenceAndFailoverState
+			WriteWordLine 0 3 "Zone preference and failover: " $Setting.ZonePreferenceAndFailoverState
 			If($Setting.ZonePreferenceAndFailoverState -eq "Enabled")
 			{
-				WriteWordLine 0 5 "Zone preference settings:"
+				WriteWordLine 0 4 "Zone preference settings:"
 				ForEach($Pref in $Setting.ZonePreferences)
 				{
-					WriteWordLine 0 6 $Pref
+					WriteWordLine 0 5 $Pref
 				}
 			}
 		}
@@ -1628,17 +1632,17 @@ Function Process2008Policies
 	
 	If($Setting.ContentRedirectionState -ne "NotConfigured")
 	{
-		WriteWordLine 0 3 "User Workspace\Content Redirection"
-		WriteWordLine 0 4 "Server to client: " $Setting.ContentRedirectionState
+		WriteWordLine 0 2 "User Workspace\Content Redirection"
+		WriteWordLine 0 3 "Server to client: " $Setting.ContentRedirectionState
 		If($Setting.ContentRedirectionState -eq "Enabled")
 		{
 			If($Setting.ContentRedirectionIsUsed)
 			{
-				WriteWordLine 0 5 "Use Content Redirection from server to client"
+				WriteWordLine 0 4 "Use Content Redirection from server to client"
 			}
 			Else
 			{
-				WriteWordLine 0 5 "Do not use Content Redirection from server to client"
+				WriteWordLine 0 4 "Do not use Content Redirection from server to client"
 			}
 		}
 	}
@@ -1646,43 +1650,43 @@ Function Process2008Policies
 	$xArray = ($Setting.ShadowingState, $Setting.ShadowingPermissionsState)
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "User Workspace\Shadowing"
+		WriteWordLine 0 2 "User Workspace\Shadowing"
 		If($Setting.ShadowingState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Configuration: " $Setting.ShadowingState
+			WriteWordLine 0 3 "Configuration: " $Setting.ShadowingState
 			If($Setting.ShadowingState -eq "Enabled")
 			{
 				If($Setting.ShadowingAllowed)
 				{
-					WriteWordLine 0 5 "Allow Shadowing"
-					WriteWordLine 0 5 "Prohibit Being Shadowed Without Notification: " $Setting.ShadowingProhibitedWithoutNotification
-					WriteWordLine 0 5 "Prohibit Remote Input When Being Shadowed: " $Setting.ShadowingRemoteInputProhibited
+					WriteWordLine 0 4 "Allow Shadowing"
+					WriteWordLine 0 4 "Prohibit Being Shadowed Without Notification: " $Setting.ShadowingProhibitedWithoutNotification
+					WriteWordLine 0 4 "Prohibit Remote Input When Being Shadowed: " $Setting.ShadowingRemoteInputProhibited
 				}
 				Else
 				{
-					WriteWordLine 0 4 "Do Not Allow Shadowing"
+					WriteWordLine 0 3 "Do Not Allow Shadowing"
 				}
 			}
 		}
 		If($Setting.ShadowingPermissionsState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Permissions: " $Setting.ShadowingPermissionsState
+			WriteWordLine 0 3 "Permissions: " $Setting.ShadowingPermissionsState
 			If($Setting.ShadowingPermissionsState -eq "Enabled")
 			{
 				If($Setting.ShadowingAccountsAllowed)
 				{
-					WriteWordLine 0 5 "Accounts allowed to shadow:"
+					WriteWordLine 0 4 "Accounts allowed to shadow:"
 					ForEach($Allowed in $Setting.ShadowingAccountsAllowed)
 					{
-						WriteWordLine 0 6 $Allowed
+						WriteWordLine 0 5 $Allowed
 					}
 				}
 				If($Setting.ShadowingAccountsDenied)
 				{
-					WriteWordLine 0 5 "Accounts denied from shadowing:"
+					WriteWordLine 0 4 "Accounts denied from shadowing:"
 					ForEach($Denied in $Setting.ShadowingAccountsDenied)
 					{
-						WriteWordLine 0 6 $Denied
+						WriteWordLine 0 5 $Denied
 					}
 				}
 			}
@@ -1692,54 +1696,54 @@ Function Process2008Policies
 	$xArray = ($Setting.TurnClientLocalTimeEstimationOffState, $Setting.TurnClientLocalTimeEstimationOffState)
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "User Workspace\Time Zones"
+		WriteWordLine 0 2 "User Workspace\Time Zones"
 		If($Setting.TurnClientLocalTimeEstimationOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Do not estimate local time for legacy clients: " $Setting.TurnClientLocalTimeEstimationOffState
+			WriteWordLine 0 3 "Do not estimate local time for legacy clients: " $Setting.TurnClientLocalTimeEstimationOffState
 		}
 		If($Setting.TurnClientLocalTimeEstimationOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Do not use Client's local time: " $Setting.TurnClientLocalTimeOffState
+			WriteWordLine 0 3 "Do not use Client's local time: " $Setting.TurnClientLocalTimeOffState
 		}
 	}
 	
 	$xArray = ($Setting.CentralCredentialStoreState, $Setting.TurnPasswordManagerOffState)
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
-		WriteWordLine 0 3 "User Workspace\Citrix Password Manager"
+		WriteWordLine 0 2 "User Workspace\Citrix Password Manager"
 		If($Setting.CentralCredentialStoreState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Central Credential Store: " $Setting.CentralCredentialStoreState
+			WriteWordLine 0 3 "Central Credential Store: " $Setting.CentralCredentialStoreState
 			If($Setting.CentralCredentialStoreState -eq "Enabled")
 			{
 				If($Setting.CentralCredentialStorePath)
 				{
-					WriteWordLine 0 5 "UNC path of Central Credential Store: " $Setting.CentralCredentialStorePath
+					WriteWordLine 0 4 "UNC path of Central Credential Store: " $Setting.CentralCredentialStorePath
 				}
 				Else
 				{
-					WriteWordLine 0 5 "No UNC path to Central Credential Store entered"
+					WriteWordLine 0 4 "No UNC path to Central Credential Store entered"
 				}
 			}
 		}
 		If($Setting.TurnPasswordManagerOffState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Do not use Citrix Password Manager: " $Setting.TurnPasswordManagerOffState
+			WriteWordLine 0 3 "Do not use Citrix Password Manager: " $Setting.TurnPasswordManagerOffState
 		}
 	}
 	
 	If($Setting.StreamingDeliveryProtocolState -ne "NotConfigured")
 	{
-		WriteWordLine 0 3 "User Workspace\Streamed Applications"
-		WriteWordLine 0 4 "Configure delivery protocol: " $Setting.StreamingDeliveryProtocolState
+		WriteWordLine 0 2 "User Workspace\Streamed Applications"
+		WriteWordLine 0 3 "Configure delivery protocol: " $Setting.StreamingDeliveryProtocolState
 		If($Setting.StreamingDeliveryProtocolState -eq "Enabled")
 		{
-			WriteWordLine 0 5 "Streaming Delivery Protocol option: " 
+			WriteWordLine 0 4 "Streaming Delivery Protocol option: " 
 			switch ($Setting.StreamingDeliveryOption)
 			{
-				"Unknown"                {WriteWordLine 0 6 "Unknown"}
-				"ForceServerAccess"      {WriteWordLine 0 6 "Do not allow applications to stream to the client"}
-				"ForcedStreamedDelivery" {WriteWordLine 0 6 "Force applications to stream to the client"}
+				"Unknown"                {WriteWordLine 0 5 "Unknown"}
+				"ForceServerAccess"      {WriteWordLine 0 5 "Do not allow applications to stream to the client"}
+				"ForcedStreamedDelivery" {WriteWordLine 0 5 "Force applications to stream to the client"}
 				Default {WriteWordLine 0 0 "Delivery protocol could not be determined: $($LoadBalancingPolicyConfiguration.StreamingDeliveryOption)"}
 			}
 		}
@@ -1748,10 +1752,10 @@ Function Process2008Policies
 	#Security
 	If($Setting.SecureIcaEncriptionState -ne "NotConfigured")
 	{
-		WriteWordLine 0 3 "Security\Encryption\SecureICA encryption: " $Setting.SecureIcaEncriptionState
+		WriteWordLine 0 2 "Security\Encryption\SecureICA encryption: " $Setting.SecureIcaEncriptionState
 		If($Setting.SecureIcaEncriptionState -eq "Enabled")
 		{
-			WriteWordLine 0 4 "Encryption level: " -nonewline
+			WriteWordLine 0 3 "Encryption level: " -nonewline
 			switch ($Setting.SecureIcaEncriptionLevel)
 			{
 				"Unknown" {WriteWordLine 0 0 "Unknown encryption"}
@@ -1767,10 +1771,10 @@ Function Process2008Policies
 	
 	If($Setting.SecureIcaEncriptionState -ne "NotConfigured")
 	{
-		WriteWordLine 0 3 "Service Level\Session Importance: " $Setting.SessionImportanceState
+		WriteWordLine 0 2 "Service Level\Session Importance: " $Setting.SessionImportanceState
 		If($Setting.SessionImportanceState -eq "Enabled")
 		{
-			WriteWordLine 0 4 "Importance level: " $Setting.SessionImportanceLevel
+			WriteWordLine 0 3 "Importance level: " $Setting.SessionImportanceLevel
 		}
 	}
 }
@@ -1833,6 +1837,8 @@ $wdStory = 6
 $wdMove = 0
 $wdSeekMainDocument = 0
 $wdColorGray15 = 14277081
+$wdColorRed = 255
+$wdColorBlack = 0
 
 # Setup word for output
 write-verbose "Create Word comObject.  Ignore the next message."
@@ -2838,7 +2844,7 @@ If( $? )
 	WriteWordLine 1 0 "Administrators:"
 	ForEach($Administrator in $Administrators)
 	{
-		WriteWordLine 2 1 "Administrator name: "$Administrator.AdministratorName
+		WriteWordLine 2 0 $Administrator.AdministratorName
 		WriteWordLine 0 1 "Administrator type: "$Administrator.AdministratorType -nonewline
 		WriteWordLine 0 0 " Administrator"
 		WriteWordLine 0 1 "Administrator account is " -NoNewLine
@@ -2960,9 +2966,9 @@ If( $? -and $Applications)
 			$streamedapp = $True
 		}
 		#name properties
-		WriteWordLine 2 1 "Display name: " $Application.DisplayName
-		WriteWordLine 0 2 "Application name`t`t: " $Application.BrowserName
-		WriteWordLine 0 2 "Disable application`t`t: " -NoNewLine
+		WriteWordLine 2 0 $Application.DisplayName
+		WriteWordLine 0 1 "Application name`t`t: " $Application.BrowserName
+		WriteWordLine 0 1 "Disable application`t`t: " -NoNewLine
 		#weird, if application is enabled, it is disabled!
 		If ($Application.Enabled) 
 		{
@@ -2971,7 +2977,7 @@ If( $? -and $Applications)
 		Else
 		{
 			WriteWordLine 0 0 "Yes"
-			WriteWordLine 0 2 "Hide disabled application`t: " -nonewline
+			WriteWordLine 0 1 "Hide disabled application`t: " -nonewline
 			If($Application.HideWhenDisabled)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -2984,11 +2990,11 @@ If( $? -and $Applications)
 
 		If(![String]::IsNullOrEmpty( $Application.Description))
 		{
-			WriteWordLine 0 2 "Application description`t`t: " $Application.Description
+			WriteWordLine 0 1 "Application description`t`t: " $Application.Description
 		}
 		
 		#type properties
-		WriteWordLine 0 2 "Application Type`t`t: " -nonewline
+		WriteWordLine 0 1 "Application Type`t`t: " -nonewline
 		switch ($Application.ApplicationType)
 		{
 			"Unknown"                            {WriteWordLine 0 0 "Unknown"}
@@ -3003,29 +3009,29 @@ If( $? -and $Applications)
 		}
 		If(![String]::IsNullOrEmpty( $Application.FolderPath))
 		{
-			WriteWordLine 0 2 "Folder path`t`t`t: " $Application.FolderPath
+			WriteWordLine 0 1 "Folder path`t`t`t: " $Application.FolderPath
 		}
 		If(![String]::IsNullOrEmpty( $Application.ContentAddress))
 		{
-			WriteWordLine 0 2 "Content Address`t`t: " $Application.ContentAddress
+			WriteWordLine 0 1 "Content Address`t`t: " $Application.ContentAddress
 		}
 	
 		#if a streamed app
 		If($streamedapp)
 		{
-			WriteWordLine 0 2 "Citrix streaming app profile address`t`t: " 
-			WriteWordLine 0 3 $Application.ProfileLocation
-			WriteWordLine 0 2 "App to launch from Citrix stream app profile`t: " 
-			WriteWordLine 0 3 $Application.ProfileProgramName
+			WriteWordLine 0 1 "Citrix streaming app profile address`t`t: " 
+			WriteWordLine 0 2 $Application.ProfileLocation
+			WriteWordLine 0 1 "App to launch from Citrix stream app profile`t: " 
+			WriteWordLine 0 2 $Application.ProfileProgramName
 			If(![String]::IsNullOrEmpty( $Application.ProfileProgramArguments))
 			{
-				WriteWordLine 0 2 "Extra command line parameters`t`t`t: " 
-				WriteWordLine 0 3 $Application.ProfileProgramArguments
+				WriteWordLine 0 1 "Extra command line parameters`t`t`t: " 
+				WriteWordLine 0 2 $Application.ProfileProgramArguments
 			}
 			#if streamed, Offline access properties
 			If($Application.OfflineAccessAllowed)
 			{
-				WriteWordLine 0 2 "Enable offline access`t`t`t`t: " -nonewline
+				WriteWordLine 0 1 "Enable offline access`t`t`t`t: " -nonewline
 				If($Application.OfflineAccessAllowed)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3037,7 +3043,7 @@ If( $? -and $Applications)
 			}
 			If($Application.CachingOption)
 			{
-				WriteWordLine 0 2 "Cache preference`t`t`t`t: " -nonewline
+				WriteWordLine 0 1 "Cache preference`t`t`t`t: " -nonewline
 				switch ($Application.CachingOption)
 				{
 					"Unknown"   {WriteWordLine 0 0 "Unknown"}
@@ -3055,24 +3061,24 @@ If( $? -and $Applications)
 			{
 				If($Application.CommandLineExecutable.Length -lt 40)
 				{
-					WriteWordLine 0 2 "Command Line`t`t`t: " $Application.CommandLineExecutable
+					WriteWordLine 0 1 "Command Line`t`t`t: " $Application.CommandLineExecutable
 				}
 				Else
 				{
-					WriteWordLine 0 2 "Command Line: " 
-					WriteWordLine 0 3 $Application.CommandLineExecutable
+					WriteWordLine 0 1 "Command Line: " 
+					WriteWordLine 0 2 $Application.CommandLineExecutable
 				}
 			}
 			If(![String]::IsNullOrEmpty( $Application.WorkingDirectory))
 			{
 				If($Application.WorkingDirectory.Length -lt 40)
 				{
-					WriteWordLine 0 2 "Working directory`t`t: " $Application.WorkingDirectory
+					WriteWordLine 0 1 "Working directory`t`t: " $Application.WorkingDirectory
 				}
 				Else
 				{
-					WriteWordLine 0 2 "Working directory: " 
-					WriteWordLine 0 3 $Application.WorkingDirectory
+					WriteWordLine 0 1 "Working directory: " 
+					WriteWordLine 0 2 $Application.WorkingDirectory
 				}
 			}
 			
@@ -3081,37 +3087,37 @@ If( $? -and $Applications)
 			{
 				If(![String]::IsNullOrEmpty( $AppServerInfo.ServerNames))
 				{
-					WriteWordLine 0 2 "Servers:"
+					WriteWordLine 0 1 "Servers:"
 					ForEach($servername in $AppServerInfo.ServerNames)
 					{
-						WriteWordLine 0 3 $servername
+						WriteWordLine 0 2 $servername
 					}
 				}
 			}
 			Else
 			{
-				WriteWordLine 0 3 "Unable to retrieve a list of Servers for this application"
+				WriteWordLine 0 2 "Unable to retrieve a list of Servers for this application"
 			}
 		}
 	
 		#users properties
 		If($Application.AnonymousConnectionsAllowed)
 		{
-			WriteWordLine 0 2 "Allow anonymous users: " $Application.AnonymousConnectionsAllowed
+			WriteWordLine 0 1 "Allow anonymous users: " $Application.AnonymousConnectionsAllowed
 		}
 		Else
 		{
 			If($AppServerInfoResults)
 			{
-				WriteWordLine 0 2 "Users:"
+				WriteWordLine 0 1 "Users:"
 				ForEach($user in $AppServerInfo.Accounts)
 				{
-					WriteWordLine 0 3 $user
+					WriteWordLine 0 2 $user
 				}
 			}
 			Else
 			{
-				WriteWordLine 0 3 "Unable to retrieve a list of Users for this application"
+				WriteWordLine 0 2 "Unable to retrieve a list of Users for this application"
 			}
 		}
 	
@@ -3121,31 +3127,31 @@ If( $? -and $Applications)
 		{
 			If($Application.ClientFolder.Length -lt 30)
 			{
-				WriteWordLine 0 2 "Client application folder`t`t`t`t: " $Application.ClientFolder
+				WriteWordLine 0 1 "Client application folder`t`t`t`t: " $Application.ClientFolder
 			}
 			Else
 			{
-				WriteWordLine 0 2 "Client application folder`t`t`t`t: " 
-				WriteWordLine 0 3 $Application.ClientFolder
+				WriteWordLine 0 1 "Client application folder`t`t`t`t: " 
+				WriteWordLine 0 2 $Application.ClientFolder
 			}
 		}
 		If($Application.AddToClientStartMenu)
 		{
-			WriteWordLine 0 2 "Add to client's start menu"
+			WriteWordLine 0 1 "Add to client's start menu"
 			If($Application.StartMenuFolder)
 			{
-				WriteWordLine 0 3 "Start menu folder`t`t`t: " $Application.StartMenuFolder
+				WriteWordLine 0 2 "Start menu folder`t`t`t: " $Application.StartMenuFolder
 			}
 		}
 		If($Application.AddToClientDesktop)
 		{
-			WriteWordLine 0 2 "Add shortcut to the client's desktop"
+			WriteWordLine 0 1 "Add shortcut to the client's desktop"
 		}
 	
 		#access control properties
 		If($Application.ConnectionsThroughAccessGatewayAllowed)
 		{
-			WriteWordLine 0 2 "Allow connections made through AGAE`t`t: " -nonewline
+			WriteWordLine 0 1 "Allow connections made through AGAE`t`t: " -nonewline
 			If($Application.ConnectionsThroughAccessGatewayAllowed)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -3157,7 +3163,7 @@ If( $? -and $Applications)
 		}
 		If($Application.OtherConnectionsAllowed)
 		{
-			WriteWordLine 0 2 "Any connection`t`t`t`t`t: " -nonewline
+			WriteWordLine 0 1 "Any connection`t`t`t`t`t: " -nonewline
 			If($Application.OtherConnectionsAllowed)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -3169,11 +3175,11 @@ If( $? -and $Applications)
 		}
 		If($Application.AccessSessionConditionsEnabled)
 		{
-			WriteWordLine 0 2 "Any connection that meets any of the following filters: " $Application.AccessSessionConditionsEnabled
-			WriteWordLine 0 2 "Access Gateway Filters:"
+			WriteWordLine 0 1 "Any connection that meets any of the following filters: " $Application.AccessSessionConditionsEnabled
+			WriteWordLine 0 1 "Access Gateway Filters:"
 			ForEach($filter in $Application.AccessSessionConditions)
 			{
-				WriteWordLine 0 3 $filter
+				WriteWordLine 0 2 $filter
 			}
 		}
 	
@@ -3182,7 +3188,7 @@ If( $? -and $Applications)
 		{
 			If($AppServerInfo.FileTypes)
 			{
-				WriteWordLine 0 2 "File type associations:"
+				WriteWordLine 0 1 "File type associations:"
 				ForEach($filetype in $AppServerInfo.FileTypes)
 				{
 					WriteWordLine 0 3 $filetype
@@ -3190,12 +3196,12 @@ If( $? -and $Applications)
 			}
 			Else
 			{
-				WriteWordLine 0 2 "File Type Associations for this application`t: None"
+				WriteWordLine 0 1 "File Type Associations for this application`t: None"
 			}
 		}
 		Else
 		{
-			WriteWordLine 0 2 "Unable to retrieve the list of FTAs for this application"
+			WriteWordLine 0 1 "Unable to retrieve the list of FTAs for this application"
 		}
 	
 		#if streamed app, Alternate profiles
@@ -3203,18 +3209,18 @@ If( $? -and $Applications)
 		{
 			If($Application.AlternateProfiles)
 			{
-				WriteWordLine 0 2 "Primary application profile location`t`t: " $Application.AlternateProfiles
+				WriteWordLine 0 1 "Primary application profile location`t`t: " $Application.AlternateProfiles
 			}
 		
 			#if streamed app, User privileges properties
 			If($Application.RunAsLeastPrivilegedUser)
 			{
-				WriteWordLine 0 2 "Run application as a least-privileged user account`t: " $Application.RunAsLeastPrivilegedUser
+				WriteWordLine 0 1 "Run application as a least-privileged user account`t: " $Application.RunAsLeastPrivilegedUser
 			}
 		}
 	
 		#limits properties
-		WriteWordLine 0 2 "Limit instances allowed to run in server farm`t: " -NoNewLine
+		WriteWordLine 0 1 "Limit instances allowed to run in server farm`t: " -NoNewLine
 
 		If($Application.InstanceLimit -eq -1)
 		{
@@ -3225,7 +3231,7 @@ If( $? -and $Applications)
 			WriteWordLine 0 0 $Application.InstanceLimit
 		}
 	
-		WriteWordLine 0 2 "Allow only 1 instance of app for each user`t: " -NoNewLine
+		WriteWordLine 0 1 "Allow only 1 instance of app for each user`t: " -NoNewLine
 	
 		If ($Application.MultipleInstancesPerUserAllowed) 
 		{
@@ -3238,7 +3244,7 @@ If( $? -and $Applications)
 	
 		If($Application.CpuPriorityLevel)
 		{
-			WriteWordLine 0 2 "Application importance`t`t`t`t: " -nonewline
+			WriteWordLine 0 1 "Application importance`t`t`t`t: " -nonewline
 			switch ($Application.CpuPriorityLevel)
 			{
 				"Unknown"     {WriteWordLine 0 0 "Unknown"}
@@ -3252,7 +3258,7 @@ If( $? -and $Applications)
 		}
 		
 		#client options properties
-		WriteWordLine 0 2 "Enable legacy audio`t`t`t`t: " -nonewline
+		WriteWordLine 0 1 "Enable legacy audio`t`t`t`t: " -nonewline
 		switch ($Application.AudioType)
 		{
 			"Unknown" {WriteWordLine 0 0 "Unknown"}
@@ -3260,7 +3266,7 @@ If( $? -and $Applications)
 			"Basic"   {WriteWordLine 0 0 "Enabled"}
 			Default {WriteWordLine 0 0 "Enable legacy audio could not be determined: $($Application.AudioType)"}
 		}
-		WriteWordLine 0 2 "Minimum requirement`t`t`t`t: " -nonewline
+		WriteWordLine 0 1 "Minimum requirement`t`t`t`t: " -nonewline
 		If($Application.AudioRequired)
 		{
 			WriteWordLine 0 0 "Enabled"
@@ -3271,7 +3277,7 @@ If( $? -and $Applications)
 		}
 		If($Application.SslConnectionEnabled)
 		{
-			WriteWordLine 0 2 "Enable SSL and TLS protocols`t`t`t: " -nonewline
+			WriteWordLine 0 1 "Enable SSL and TLS protocols`t`t`t: " -nonewline
 			If($Application.SslConnectionEnabled)
 			{
 				WriteWordLine 0 0 "Enabled"
@@ -3283,7 +3289,7 @@ If( $? -and $Applications)
 		}
 		If($Application.EncryptionLevel)
 		{
-			WriteWordLine 0 2 "Encryption`t`t`t`t`t: " -nonewline
+			WriteWordLine 0 1 "Encryption`t`t`t`t`t: " -nonewline
 			switch ($Application.EncryptionLevel)
 			{
 				"Unknown" {WriteWordLine 0 0 "Unknown"}
@@ -3297,7 +3303,7 @@ If( $? -and $Applications)
 		}
 		If($Application.EncryptionRequired)
 		{
-			WriteWordLine 0 2 "Minimum requirement`t`t`t`t: " -nonewline
+			WriteWordLine 0 1 "Minimum requirement`t`t`t`t: " -nonewline
 			If($Application.EncryptionRequired)
 			{
 				WriteWordLine 0 0 "Enabled"
@@ -3308,7 +3314,7 @@ If( $? -and $Applications)
 			}
 		}
 	
-		WriteWordLine 0 2 "Start app w/o waiting for printer creation`t: " -NoNewLine
+		WriteWordLine 0 1 "Start app w/o waiting for printer creation`t: " -NoNewLine
 		#another weird one, if True then this is Disabled
 		If ($Application.WaitOnPrinterCreation) 
 		{
@@ -3322,11 +3328,11 @@ If( $? -and $Applications)
 		#appearance properties
 		If($Application.WindowType)
 		{
-			WriteWordLine 0 2 "Session window size`t`t`t`t: " $Application.WindowType
+			WriteWordLine 0 1 "Session window size`t`t`t`t: " $Application.WindowType
 		}
 		If($Application.ColorDepth)
 		{
-			WriteWordLine 0 2 "Maximum color quality`t`t`t`t: " -nonewline
+			WriteWordLine 0 1 "Maximum color quality`t`t`t`t: " -nonewline
 			switch ($Application.ColorDepth)
 			{
 				"Colors16"  {WriteWordLine 0 0 "16 colors"}
@@ -3338,7 +3344,7 @@ If( $? -and $Applications)
 		}
 		If($Application.TitleBarHidden)
 		{
-			WriteWordLine 0 2 "Hide application title bar`t`t`t: " -nonewline
+			WriteWordLine 0 1 "Hide application title bar`t`t`t: " -nonewline
 			If($Application.TitleBarHidden)
 			{
 				WriteWordLine 0 0 "Enabled"
@@ -3350,7 +3356,7 @@ If( $? -and $Applications)
 		}
 		If($Application.MaximizedOnStartup)
 		{
-			WriteWordLine 0 2 "Maximize application at startup`t`t`t: " -nonewline
+			WriteWordLine 0 1 "Maximize application at startup`t`t`t: " -nonewline
 			If($Application.MaximizedOnStartup)
 			{
 				WriteWordLine 0 0 "Enabled"
@@ -3379,12 +3385,12 @@ If( $? )
 	WriteWordLine 1 0 "Servers:"
 	ForEach($server in $servers)
 	{
-		WriteWordLine 2 1 "Name: " $server.ServerName
-		WriteWordLine 0 2 "Product`t`t`t`t: " $server.CitrixProductName
-		WriteWordLine 0 2 "Edition`t`t`t`t: " $server.CitrixEdition
-		WriteWordLine 0 2 "Version`t`t`t`t: " $server.CitrixVersion
-		WriteWordLine 0 2 "Service Pack`t`t`t: " $server.CitrixServicePack
-		WriteWordLine 0 2 "Operating System Type`t`t: " -NoNewLine
+		WriteWordLine 2 0 $server.ServerName
+		WriteWordLine 0 1 "Product`t`t`t`t: " $server.CitrixProductName
+		WriteWordLine 0 1 "Edition`t`t`t`t: " $server.CitrixEdition
+		WriteWordLine 0 1 "Version`t`t`t`t: " $server.CitrixVersion
+		WriteWordLine 0 1 "Service Pack`t`t`t: " $server.CitrixServicePack
+		WriteWordLine 0 1 "Operating System Type`t`t: " -NoNewLine
 		If($server.Is64Bit)
 		{
 			WriteWordLine 0 0 "64 bit"
@@ -3393,8 +3399,8 @@ If( $? )
 		{
 			WriteWordLine 0 0 "32 bit"
 		}
-		WriteWordLine 0 2 "IP Address`t`t`t: " $server.IPAddresses
-		WriteWordLine 0 2 "Logons`t`t`t`t: " -NoNewLine
+		WriteWordLine 0 1 "IP Address`t`t`t: " $server.IPAddresses
+		WriteWordLine 0 1 "Logons`t`t`t`t: " -NoNewLine
 		If($server.LogOnsEnabled)
 		{
 			WriteWordLine 0 0 "Enabled"
@@ -3403,8 +3409,8 @@ If( $? )
 		{
 			WriteWordLine 0 0 "Disabled"
 		}
-		WriteWordLine 0 2 "Product Installation Date`t: " $server.CitrixInstallDate
-		WriteWordLine 0 2 "Operating System Version`t: " $server.OSVersion -NoNewLine
+		WriteWordLine 0 1 "Product Installation Date`t: " $server.CitrixInstallDate
+		WriteWordLine 0 1 "Operating System Version`t: " $server.OSVersion -NoNewLine
 		
 		#is the server running server 2008?
 		If($server.OSVersion.ToString().SubString(0,1) -eq "6")
@@ -3413,8 +3419,8 @@ If( $? )
 		}
 
 		WriteWordLine 0 0 " " $server.OSServicePack
-		WriteWordLine 0 2 "Zone`t`t`t`t: " $server.ZoneName
-		WriteWordLine 0 2 "Election Preference`t`t: " -nonewline
+		WriteWordLine 0 1 "Zone`t`t`t`t: " $server.ZoneName
+		WriteWordLine 0 1 "Election Preference`t`t: " -nonewline
 		switch ($server.ElectionPreference)
 		{
 			"Unknown"           {WriteWordLine 0 0 "Unknown"}
@@ -3425,16 +3431,16 @@ If( $? )
 			"WorkerMode"        {WriteWordLine 0 0 "Worker Mode"}
 			Default {WriteWordLine 0 0 "Server election preference could not be determined: $($server.ElectionPreference)"}
 		}
-		WriteWordLine 0 2 "Folder`t`t`t`t: " $server.FolderPath
-		WriteWordLine 0 2 "Product Installation Path`t: " $server.CitrixInstallPath
+		WriteWordLine 0 1 "Folder`t`t`t`t: " $server.FolderPath
+		WriteWordLine 0 1 "Product Installation Path`t: " $server.CitrixInstallPath
 		If($server.ICAPortNumber -gt 0)
 		{
-			WriteWordLine 0 2 "ICA Port Number`t`t: " $server.ICAPortNumber
+			WriteWordLine 0 1 "ICA Port Number`t`t: " $server.ICAPortNumber
 		}
 		$ServerConfig = Get-XAServerConfiguration -ServerName $Server.ServerName -EA 0
 		If( $? )
 		{
-			WriteWordLine 0 2 "Server Configuration Data:"
+			WriteWordLine 0 1 "Server Configuration Data:"
 			
 			If($FarmOS -eq "2003")
 			{
@@ -3447,15 +3453,15 @@ If( $? )
 			
 			If($ServerConfig.AcrUseFarmSettings)
 			{
-				WriteWordLine 0 3 "$($Text)\Auto Client Reconnect: Server is using farm settings"
+				WriteWordLine 0 2 "$($Text)\Auto Client Reconnect: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "$($Text)\Auto Client Reconnect: Server is not using farm settings"
+				WriteWordLine 0 2 "$($Text)\Auto Client Reconnect: Server is not using farm settings"
 				If($ServerConfig.AcrEnabled)
 				{
-					WriteWordLine 0 4 "Reconnect automatically"
-					WriteWordLine 0 5 "Log automatic reconnection attempts: " -nonewline
+					WriteWordLine 0 3 "Reconnect automatically"
+					WriteWordLine 0 4 "Log automatic reconnection attempts: " -nonewline
 					If($ServerConfig.AcrLogReconnections)
 					{
 						WriteWordLine 0 0 "Yes"
@@ -3467,10 +3473,10 @@ If( $? )
 				}
 				Else
 				{
-					WriteWordLine 0 4 "Require user authentication"
+					WriteWordLine 0 3 "Require user authentication"
 				}
 			}
-			WriteWordLine 0 3 "$($Text)\Browser\Create browser listener on UDP network: " -nonewline
+			WriteWordLine 0 2 "$($Text)\Browser\Create browser listener on UDP network: " -nonewline
 			If($ServerConfig.BrowserUdpListener)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -3479,7 +3485,7 @@ If( $? )
 			{
 				WriteWordLine 0 0 "No"
 			}
-			WriteWordLine 0 3 "$($Text)\Browser\Server responds to client broadcast messages: " -nonewline
+			WriteWordLine 0 2 "$($Text)\Browser\Server responds to client broadcast messages: " -nonewline
 			If($ServerConfig.BrowserRespondToClientBroadcasts)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -3490,12 +3496,12 @@ If( $? )
 			}
 			If($ServerConfig.DisplayUseFarmSettings)
 			{
-				WriteWordLine 0 3 "$($Text)\Display: Server is using farm settings"
+				WriteWordLine 0 2 "$($Text)\Display: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "$($Text)\Display: Server is not using farm settings"
-				WriteWordLine 0 4 "Discard queued image that is replaced by another image: " -nonewline
+				WriteWordLine 0 2 "$($Text)\Display: Server is not using farm settings"
+				WriteWordLine 0 3 "Discard queued image that is replaced by another image: " -nonewline
 				If($ServerConfig.DisplayDiscardQueuedImages)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3504,7 +3510,7 @@ If( $? )
 				{
 					WriteWordLine 0 0 "No"
 				}
-				WriteWordLine 0 4 "Cache image to make scrolling smoother: " -nonewline
+				WriteWordLine 0 3 "Cache image to make scrolling smoother: " -nonewline
 				If($ServerConfig.DisplayCacheImageForSmoothScrolling)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3513,17 +3519,17 @@ If( $? )
 				{
 					WriteWordLine 0 0 "No"
 				}
-				WriteWordLine 0 4 "Maximum memory to use for each session's graphics (KB): " $ServerConfig.DisplayMaximumGraphicsMemory
-				WriteWordLine 0 4 "Degradation bias: " 
+				WriteWordLine 0 3 "Maximum memory to use for each session's graphics (KB): " $ServerConfig.DisplayMaximumGraphicsMemory
+				WriteWordLine 0 3 "Degradation bias: " 
 				If($ServerConfig.DisplayDegradationBias -eq "Resolution")
 				{
-					WriteWordLine 0 5 "Degrade resolution first"
+					WriteWordLine 0 4 "Degrade resolution first"
 				}
 				Else
 				{
-					WriteWordLine 0 5 "Degrade color depth first"
+					WriteWordLine 0 4 "Degrade color depth first"
 				}
-				WriteWordLine 0 4 "Notify user of session degradation: " -nonewline
+				WriteWordLine 0 3 "Notify user of session degradation: " -nonewline
 				If($ServerConfig.DisplayNotifyUser)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3535,18 +3541,18 @@ If( $? )
 			}
 			If($ServerConfig.KeepAliveUseFarmSettings)
 			{
-				WriteWordLine 0 3 "$($Text)\Keep-Alive: Server is using farm settings"
+				WriteWordLine 0 2 "$($Text)\Keep-Alive: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "$($Text)\Keep-Alive: Server is not using farm settings"
+				WriteWordLine 0 2 "$($Text)\Keep-Alive: Server is not using farm settings"
 				If($FarmOS -eq "2003")
 				{
-					WriteWordLine 0 4 "HDX Broadcast Keep-Alive time-out value seconds: " -NoNewLine
+					WriteWordLine 0 3 "HDX Broadcast Keep-Alive time-out value seconds: " -NoNewLine
 				}
 				Else
 				{
-					WriteWordLine 0 4 "ICA Keep-Alive time-out value seconds: " -NoNewLine
+					WriteWordLine 0 3 "ICA Keep-Alive time-out value seconds: " -NoNewLine
 				}
 				If($ServerConfig.KeepAliveEnabled)
 				{
@@ -3561,27 +3567,27 @@ If( $? )
 			{
 				If($FarmOS -eq "2003")
 				{
-					WriteWordLine 0 3 "$($Text)\Printer Bandwidth\Unlimited bandwidth"
+					WriteWordLine 0 2 "$($Text)\Printer Bandwidth\Unlimited bandwidth"
 				}
 				Else
 				{
-					WriteWordLine 0 3 "$($Text)\Printer Bandwidth\Unlimited client printer bandwidth"
+					WriteWordLine 0 2 "$($Text)\Printer Bandwidth\Unlimited client printer bandwidth"
 				}
 			}
 			Else
 			{
-				WriteWordLine 0 3 "$($Text)\Printer Bandwidth\Limit bandwidth to use (kbps): " $ServerConfig.PrinterBandwidth
+				WriteWordLine 0 2 "$($Text)\Printer Bandwidth\Limit bandwidth to use (kbps): " $ServerConfig.PrinterBandwidth
 			}
 			If($FarmOS -eq "2003")
 			{
 				If($ServerConfig.RemoteConsoleUseFarmSettings)
 				{
-					WriteWordLine 0 3 "$($Text)\Remote Console Connections: Server is using farm settings"
+					WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is using farm settings"
 				}
 				Else
 				{
-					WriteWordLine 0 3 "$($Text)\Remote Console Connections: Server is not using farm settings"
-					WriteWordLine 0 4 "Remote connections to the console: " -nonewline
+					WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is not using farm settings"
+					WriteWordLine 0 3 "Remote connections to the console: " -nonewline
 					If($ServerConfig.RemoteConsoleEnabled)
 					{
 						WriteWordLine 0 0 "Yes"
@@ -3597,22 +3603,22 @@ If( $? )
 
 			If($ServerConfig.LicenseServerUseFarmSettings)
 			{
-				WriteWordLine 0 3 "License Server: Server is using farm settings"
+				WriteWordLine 0 2 "License Server: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "License Server: Server is not using farm settings"
-				WriteWordLine 0 4 "License server name: " $ServerConfig.LicenseServerName
-				WriteWordLine 0 4 "License server port: " $ServerConfig.LicenseServerPortNumber
+				WriteWordLine 0 2 "License Server: Server is not using farm settings"
+				WriteWordLine 0 3 "License server name: " $ServerConfig.LicenseServerName
+				WriteWordLine 0 3 "License server port: " $ServerConfig.LicenseServerPortNumber
 			}
 			If($ServerConfig.HmrUseFarmSettings)
 			{
-				WriteWordLine 0 3 "Health Monitoring & Recovery: Server is using farm settings"
+				WriteWordLine 0 2 "Health Monitoring & Recovery: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "Health Monitoring & Recovery: Server is not using farm settings"
-				WriteWordLine 0 4 "Run health monitoring tests on this server: " -nonewline
+				WriteWordLine 0 2 "Health Monitoring & Recovery: Server is not using farm settings"
+				WriteWordLine 0 3 "Run health monitoring tests on this server: " -nonewline
 				If($ServerConfig.HmrEnabled)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3626,19 +3632,19 @@ If( $? )
 					$HMRTests = Get-XAHmrTest -ServerName $Server.ServerName -EA 0
 					If( $? )
 					{
-						WriteWordLine 0 4 "Health Monitoring Tests:"
+						WriteWordLine 0 3 "Health Monitoring Tests:"
 						ForEach($HMRTest in $HMRTests)
 						{
-							WriteWordLine 0 5 "Test Name`t: " $Hmrtest.TestName
-							WriteWordLine 0 5 "Interval`t`t: " $Hmrtest.Interval
-							WriteWordLine 0 5 "Threshold`t: " $Hmrtest.Threshold
-							WriteWordLine 0 5 "Time-out`t: " $Hmrtest.Timeout
-							WriteWordLine 0 5 "Test File Name`t: " $Hmrtest.FilePath
+							WriteWordLine 0 4 "Test Name`t: " $Hmrtest.TestName
+							WriteWordLine 0 4 "Interval`t`t: " $Hmrtest.Interval
+							WriteWordLine 0 4 "Threshold`t: " $Hmrtest.Threshold
+							WriteWordLine 0 4 "Time-out`t: " $Hmrtest.Timeout
+							WriteWordLine 0 4 "Test File Name`t: " $Hmrtest.FilePath
 							If(![String]::IsNullOrEmpty($Hmrtest.Arguments))
 							{
-								WriteWordLine 0 5 "Arguments`t: " $Hmrtest.Arguments
+								WriteWordLine 0 4 "Arguments`t: " $Hmrtest.Arguments
 							}
-							WriteWordLine 0 5 "Recovery Action : " -nonewline
+							WriteWordLine 0 4 "Recovery Action : " -nonewline
 							switch ($Hmrtest.RecoveryAction)
 							{
 								"AlertOnly"                     {WriteWordLine 0 0 "Alert Only"}
@@ -3659,12 +3665,12 @@ If( $? )
 			}
 			If($ServerConfig.CpuUseFarmSettings)
 			{
-				WriteWordLine 0 3 "CPU Utilization Management: Server is using farm settings"
+				WriteWordLine 0 2 "CPU Utilization Management: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "CPU Utilization Management: Server is not using farm settings"
-				WriteWordLine 0 4 "CPU Utilization Management: " -nonewline
+				WriteWordLine 0 2 "CPU Utilization Management: Server is not using farm settings"
+				WriteWordLine 0 3 "CPU Utilization Management: " -nonewline
 				switch ($ServerConfig.CpuManagementLevel)
 				{
 					"NoManagement"  {WriteWordLine 0 0 "No CPU utilization management"}
@@ -3675,12 +3681,12 @@ If( $? )
 			}
 			If($ServerConfig.MemoryUseFarmSettings)
 			{
-				WriteWordLine 0 3 "Memory Optimization: Server is using farm settings"
+				WriteWordLine 0 2 "Memory Optimization: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "Memory Optimization: Server is not using farm settings"
-				WriteWordLine 0 4 "Memory Optimization: " -nonewline
+				WriteWordLine 0 2 "Memory Optimization: Server is not using farm settings"
+				WriteWordLine 0 3 "Memory Optimization: " -nonewline
 				If($ServerConfig.MemoryOptimizationEnabled)
 				{
 					WriteWordLine 0 0 "Enabled"
@@ -3702,12 +3708,12 @@ If( $? )
 			
 			If($ServerConfig.ContentRedirectionUseFarmSettings )
 			{
-				WriteWordLine 0 3 "$($Text)/Content Redirection: Server is using farm settings"
+				WriteWordLine 0 2 "$($Text)/Content Redirection: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "$($Text)/Content Redirection: Server is not using farm settings"
-				WriteWordLine 0 4 "Content redirection from server to client: " -nonewline
+				WriteWordLine 0 2 "$($Text)/Content Redirection: Server is not using farm settings"
+				WriteWordLine 0 3 "Content redirection from server to client: " -nonewline
 				If($ServerConfig.ContentRedirectionEnabled)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3724,12 +3730,12 @@ If( $? )
 			{
 				If($ServerConfig.RemoteConsoleUseFarmSettings)
 				{
-					WriteWordLine 0 3 "$($Text)\Remote Console Connections: Server is using farm settings"
+					WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is using farm settings"
 				}
 				Else
 				{
-					WriteWordLine 0 3 "$($Text)\Remote Console Connections: Server is not using farm settings"
-					WriteWordLine 0 4 "Remote connections to the console: " -nonewline
+					WriteWordLine 0 2 "$($Text)\Remote Console Connections: Server is not using farm settings"
+					WriteWordLine 0 3 "Remote connections to the console: " -nonewline
 					If($ServerConfig.RemoteConsoleEnabled)
 					{
 						WriteWordLine 0 0 "Yes"
@@ -3743,15 +3749,15 @@ If( $? )
 
 			If($ServerConfig.SnmpUseFarmSettings )
 			{
-				WriteWordLine 0 3 "SNMP: Server is using farm settings"
+				WriteWordLine 0 2 "SNMP: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "SNMP: Server is not using farm settings"
+				WriteWordLine 0 2 "SNMP: Server is not using farm settings"
 				# SnmpEnabled is not working
-				WriteWordLine 0 4 "Send session traps to selected SNMP agent on all farm servers"
-				WriteWordLine 0 5 "SNMP agent session traps:"
-				WriteWordLine 0 6 "Logon`t`t`t: " -nonewline
+				WriteWordLine 0 3 "Send session traps to selected SNMP agent on all farm servers"
+				WriteWordLine 0 4 "SNMP agent session traps:"
+				WriteWordLine 0 5 "Logon`t`t`t: " -nonewline
 				If($ServerConfig.SnmpLogOnEnabled)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3760,7 +3766,7 @@ If( $? )
 				{
 					WriteWordLine 0 0 "No"
 				}
-				WriteWordLine 0 6 "Logoff`t`t`t: " -nonewline
+				WriteWordLine 0 5 "Logoff`t`t`t: " -nonewline
 				If($ServerConfig.SnmpLogOffEnabled)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3769,7 +3775,7 @@ If( $? )
 				{
 					WriteWordLine 0 0 "No"
 				}
-				WriteWordLine 0 6 "Disconnect`t`t: " -nonewline
+				WriteWordLine 0 5 "Disconnect`t`t: " -nonewline
 				If($ServerConfig.SnmpDisconnectEnabled)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3778,7 +3784,7 @@ If( $? )
 				{
 					WriteWordLine 0 0 "No"
 				}
-				WriteWordLine 0 6 "Session limit per server`t: " -nonewline
+				WriteWordLine 0 5 "Session limit per server`t: " -nonewline
 				If($ServerConfig.SnmpLimitEnabled)
 				{
 					WriteWordLine 0 0 " " $ServerConfig.SnmpLimitPerServer
@@ -3800,12 +3806,12 @@ If( $? )
 			
 			If($ServerConfig.BrowserAccelerationUseFarmSettings )
 			{
-				WriteWordLine 0 3 "$($Text)/Browser Acceleration: Server is using farm settings"
+				WriteWordLine 0 2 "$($Text)/Browser Acceleration: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "$($Text)/Browser Acceleration: Server is not using farm settings"
-				WriteWordLine 0 4 "$($Text)/$($Text)Browser Acceleration: " -nonewline
+				WriteWordLine 0 2 "$($Text)/Browser Acceleration: Server is not using farm settings"
+				WriteWordLine 0 3 "$($Text)/$($Text)Browser Acceleration: " -nonewline
 				If($ServerConfig.BrowserAccelerationEnabled)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3816,7 +3822,7 @@ If( $? )
 				}
 				If($ServerConfig.BrowserAccelerationEnabled)
 				{
-					WriteWordLine 0 5 "Compress JPEG images to improve bandwidth: " -nonewline
+					WriteWordLine 0 4 "Compress JPEG images to improve bandwidth: " -nonewline
 					If($ServerConfig.BrowserAccelerationCompressionEnabled)
 					{
 						WriteWordLine 0 0 "Yes"
@@ -3827,8 +3833,8 @@ If( $? )
 					}
 					If($ServerConfig.BrowserAccelerationCompressionEnabled)
 					{
-						WriteWordLine 0 5 "Image compression level: " $ServerConfig.BrowserAccelerationCompressionLevel
-						WriteWordLine 0 5 "Adjust compression level based on available bandwidth: " -nonewline
+						WriteWordLine 0 4 "Image compression level: " $ServerConfig.BrowserAccelerationCompressionLevel
+						WriteWordLine 0 4 "Adjust compression level based on available bandwidth: " -nonewline
 						If($ServerConfig.BrowserAccelerationVariableImageCompression)
 						{
 							WriteWordLine 0 0 "Yes"
@@ -3852,18 +3858,18 @@ If( $? )
 			
 			If($ServerConfig.FlashAccelerationUseFarmSettings )
 			{
-				WriteWordLine 0 3 "$($Text)/Flash: Server is using farm settings"
+				WriteWordLine 0 2 "$($Text)/Flash: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "$($Text)/Flash: Server is not using farm settings"
+				WriteWordLine 0 2 "$($Text)/Flash: Server is not using farm settings"
 				If($FarmOS -eq "2003")
 				{
-					WriteWordLine 0 4 "Enable Flash for XenApp sessions: " -nonewline
+					WriteWordLine 0 3 "Enable Flash for XenApp sessions: " -nonewline
 				}
 				Else
 				{
-					WriteWordLine 0 4 "Enable Adobe Flash Player: " -nonewline
+					WriteWordLine 0 3 "Enable Adobe Flash Player: " -nonewline
 				}
 				If($ServerConfig.FlashAccelerationEnabled)
 				{
@@ -3877,21 +3883,21 @@ If( $? )
 				{
 					switch ($ServerConfig.FlashAccelerationOption)
 					{
-						"RestrictedBandwidth" {WriteWordLine 0 4 "Restricted bandwidth connections"}
-						"NoOptimization"      {WriteWordLine 0 4 "Do not optimize"}
-						"AllConnections"      {WriteWordLine 0 4 "All connections"}
+						"RestrictedBandwidth" {WriteWordLine 0 3 "Restricted bandwidth connections"}
+						"NoOptimization"      {WriteWordLine 0 3 "Do not optimize"}
+						"AllConnections"      {WriteWordLine 0 3 "All connections"}
 						Default {WriteWordLine 0 0 "Server-side acceleration could not be determined: $($ServerConfig.FlashAccelerationOption)"}
 					}
 				}
 			}
 			If($ServerConfig.MultimediaAccelerationUseFarmSettings )
 			{
-				WriteWordLine 0 3 "$($Text)/Multimedia Acceleration: Server is using farm settings"
+				WriteWordLine 0 2 "$($Text)/Multimedia Acceleration: Server is using farm settings"
 			}
 			Else
 			{
-				WriteWordLine 0 3 "$($Text)/Multimedia Acceleration: Server is not using farm settings"
-				WriteWordLine 0 4 "Multimedia acceleration: " -nonewline
+				WriteWordLine 0 2 "$($Text)/Multimedia Acceleration: Server is not using farm settings"
+				WriteWordLine 0 3 "Multimedia acceleration: " -nonewline
 				If($ServerConfig.MultimediaAccelerationEnabled)
 				{
 					WriteWordLine 0 0 "Yes"
@@ -3904,15 +3910,15 @@ If( $? )
 				{
 					If($ServerConfig.MultimediaAccelerationDefaultBuffer)
 					{
-						WriteWordLine 0 4 "Use the default buffer of 5 seconds"
+						WriteWordLine 0 3 "Use the default buffer of 5 seconds"
 					}
 					Else
 					{
-						WriteWordLine 0 4 "Custom buffer time in seconds: " $ServerConfig.MultimediaAccelerationCustomBuffer
+						WriteWordLine 0 3 "Custom buffer time in seconds: " $ServerConfig.MultimediaAccelerationCustomBuffer
 					}
 				}
 			}
-			WriteWordLine 0 3 "Virtual IP/Enable virtual IP for this server: " -nonewline
+			WriteWordLine 0 2 "Virtual IP/Enable virtual IP for this server: " -nonewline
 			If($ServerConfig.VirtualIPEnabled)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -3921,7 +3927,7 @@ If( $? )
 			{
 				WriteWordLine 0 0 "No"
 			}
-			WriteWordLine 0 3 "Virtual IP/Use farm setting for IP address logging: " -nonewline
+			WriteWordLine 0 2 "Virtual IP/Use farm setting for IP address logging: " -nonewline
 			If($ServerConfig.VirtualIPUseFarmLoggingSettings)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -3930,7 +3936,7 @@ If( $? )
 			{
 				WriteWordLine 0 0 "No"
 			}
-			WriteWordLine 0 3 "Virtual IP/Enable logging of IP address assignment and release: " -nonewline
+			WriteWordLine 0 2 "Virtual IP/Enable logging of IP address assignment and release: " -nonewline
 			If($ServerConfig.VirtualIPLoggingEnabled)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -3939,7 +3945,7 @@ If( $? )
 			{
 				WriteWordLine 0 0 "No"
 			}
-			WriteWordLine 0 3 "Virtual IP/Enable virtual loopback for this server: " -nonewline
+			WriteWordLine 0 2 "Virtual IP/Enable virtual loopback for this server: " -nonewline
 			If($ServerConfig.VirtualIPLoopbackEnabled)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -3948,7 +3954,7 @@ If( $? )
 			{
 				WriteWordLine 0 0 "No"
 			}
-			WriteWordLine 0 3 "XML Service/Trust requests sent to the XML service: " -nonewline
+			WriteWordLine 0 2 "XML Service/Trust requests sent to the XML service: " -nonewline
 			If($ServerConfig.XmlServiceTrustRequests)
 			{
 				WriteWordLine 0 0 "Yes"
@@ -3961,13 +3967,13 @@ If( $? )
 			{
 				If($ServerConfig.RestartsEnabled)
 				{
-					WriteWordLine 0 3 "Automatic restarts are enabled"
-					WriteWordLine 0 4 "Restart server from: " $ServerConfig.RestartFrom
-					WriteWordLine 0 4 "Restart frequency in days: " $ServerConfig.RestartFrequency
+					WriteWordLine 0 2 "Automatic restarts are enabled"
+					WriteWordLine 0 3 "Restart server from: " $ServerConfig.RestartFrom
+					WriteWordLine 0 3 "Restart frequency in days: " $ServerConfig.RestartFrequency
 				}
 				Else
 				{
-					WriteWordLine 0 3 "Automatic restarts are not enabled"
+					WriteWordLine 0 2 "Automatic restarts are not enabled"
 				}
 			}
 			WriteWordLine 0 0 ""
@@ -3980,34 +3986,34 @@ If( $? )
 		$Applications = Get-XAApplication -ServerName $server.ServerName -EA 0 | sort-object FolderPath, DisplayName
 		If( $? -and $Applications )
 		{
-			WriteWordLine 0 2 "Published applications:"
+			WriteWordLine 0 1 "Published applications:"
 			ForEach($app in $Applications)
 			{
-				WriteWordLine 0 3 "Display name`t: " $app.DisplayName
-				WriteWordLine 0 3 "Folder path`t: " $app.FolderPath
+				WriteWordLine 0 2 "Display name`t: " $app.DisplayName
+				WriteWordLine 0 2 "Folder path`t: " $app.FolderPath
 				WriteWordLine 0 0 ""
 			}
 		}
 
 		#list citrix services
-		write-verbose "Testing to see if $($server.ServerName) is online and reachable"
+		Write-Verbose "`t`tTesting to see if $($server.ServerName) is online and reachable"
 		If(Test-Connection -ComputerName $server.servername -quiet -EA 0)
 		{
-			write-verbose "$($server.ServerName) is online.  Citrix Services and Hotfix areas processed."
-			write-verbose "Processing Citrix services for server $($server.ServerName)"
+			Write-Verbose "`t`t$($server.ServerName) is online.  Citrix Services and Hotfix areas processed."
+			Write-Verbose "`t`tProcessing Citrix services for server $($server.ServerName)"
 			$services = get-service -ComputerName $server.ServerName -EA 0 | where-object {$_.DisplayName -like "*Citrix*"} | sort-object DisplayName
-			WriteWordLine 0 2 "Citrix Services"
-			write-verbose "Create Word Table for Citrix services"
+			WriteWordLine 0 1 "Citrix Services"
+			Write-Verbose "`t`tCreate Word Table for Citrix services"
 			$TableRange = $doc.Application.Selection.Range
 			[int]$Columns = 2
 			[int]$Rows = $services.count + 1
-			write-verbose "add Citrix Services table to doc"
+			Write-Verbose "`t`tadd Citrix Services table to doc"
 			$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
 			$table.Style = "Table Grid"
 			$table.Borders.InsideLineStyle = 1
 			$table.Borders.OutsideLineStyle = 1
 			$xRow = 1
-			write-verbose "format first row with column headings"
+			Write-Verbose "`t`tformat first row with column headings"
 			$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
 			$Table.Cell($xRow,1).Range.Font.Bold = $True
 			$Table.Cell($xRow,1).Range.Text = "Display Name"
@@ -4018,23 +4024,29 @@ If( $? )
 			{
 				$xRow++
 				$Table.Cell($xRow,1).Range.Text = $Service.DisplayName
+				If($Service.Status -eq "Stopped")
+				{
+					$Table.Cell($xRow,2).Shading.BackgroundPatternColor = $wdColorRed
+					$Table.Cell($xRow,2).Range.Font.Bold  = $True
+					$Table.Cell($xRow,2).Range.Font.Color = $WDColorBlack
+				}
 				$Table.Cell($xRow,2).Range.Text = $Service.Status
 			}
 
-			write-verbose "Move table of Citrix services to the right"
-			$Table.Rows.SetLeftIndent(75,1)
+			Write-Verbose "`t`tMove table of Citrix services to the right"
+			$Table.Rows.SetLeftIndent(43,1)
 			$table.AutoFitBehavior(1)
 
 			#return focus back to document
-			write-verbose "return focus back to document"
+			Write-Verbose "`t`treturn focus back to document"
 			$doc.ActiveWindow.ActivePane.view.SeekView=$wdSeekMainDocument
 
 			#move to the end of the current document
-			write-verbose "move to the end of the current document"
+			Write-Verbose "`t`tmove to the end of the current document"
 			$selection.EndKey($wdStory,$wdMove) | Out-Null
 			
 			#Citrix hotfixes installed
-			write-verbose "Get list of Citrix hotfixes installed"
+			Write-Verbose "`t`tGet list of Citrix hotfixes installed"
 			$hotfixes = Get-XAServerHotfix -ServerName $server.ServerName -EA 0 | sort-object HotfixName
 			If( $? -and $hotfixes )
 			{
@@ -4046,21 +4058,21 @@ If( $? )
 				}
 				$Rows++
 				
-				write-verbose "number of hotfixes is $($Rows-1)"
+				Write-Verbose "`t`tnumber of hotfixes is $($Rows-1)"
 				$HotfixArray = ""
 				$HRP1Installed = $False
 				WriteWordLine 0 0 ""
-				WriteWordLine 0 2 "Citrix Installed Hotfixes:"
-				write-verbose "Create Word Table for Citrix Hotfixes"
+				WriteWordLine 0 1 "Citrix Installed Hotfixes:"
+				Write-Verbose "`t`tCreate Word Table for Citrix Hotfixes"
 				$TableRange = $doc.Application.Selection.Range
 				$Columns = 5
-				write-verbose "add Citrix installed hotfix table to doc"
+				Write-Verbose "`t`tadd Citrix installed hotfix table to doc"
 				$Table = $doc.Tables.Add($TableRange, $Rows, $Columns)
 				$table.Style = "Table Grid"
 				$table.Borders.InsideLineStyle = 1
 				$table.Borders.OutsideLineStyle = 1
 				$xRow = 1
-				write-verbose "format first row with column headings"
+				Write-Verbose "`t`tformat first row with column headings"
 				$Table.Cell($xRow,1).Shading.BackgroundPatternColor = $wdColorGray15
 				$Table.Cell($xRow,1).Range.Font.Bold = $True
 				$Table.Cell($xRow,1).Range.Font.Size = "10"
@@ -4098,23 +4110,23 @@ If( $? )
 					$Table.Cell($xRow,5).Range.Font.Size = "10"
 					$Table.Cell($xRow,5).Range.Text = $hotfix.Valid
 				}
-				write-verbose "Move table of Citrix installed hotfixes to the right"
-				$Table.Rows.SetLeftIndent(75,1)
+				Write-Verbose "`t`tMove table of Citrix installed hotfixes to the right"
+				$Table.Rows.SetLeftIndent(43,1)
 				$table.AutoFitBehavior(1)
 
 				#return focus back to document
-				write-verbose "return focus back to document"
+				Write-Verbose "`t`treturn focus back to document"
 				$doc.ActiveWindow.ActivePane.view.SeekView=$wdSeekMainDocument
 
 				#move to the end of the current document
-				write-verbose "move to the end of the current document"
+				Write-Verbose "`t`tmove to the end of the current document"
 				$selection.EndKey($wdStory,$wdMove) | Out-Null
 				WriteWordLine 0 0 ""
 			}
 		}
 		Else
 		{
-			write-verbose "$($server.ServerName) is offline or unreachable.  Citrix Services and Hotfix areas skipped."
+			Write-Verbose "`t`t$($server.ServerName) is offline or unreachable.  Citrix Services and Hotfix areas skipped."
 			WriteWordLine 0 0 "Server $($server.ServerName) was offline or unreachable at "(get-date).ToString()
 			WriteWordLine 0 0 "The Citrix Services and Hotfix areas were skipped."
 		}
@@ -4136,16 +4148,16 @@ If( $? )
 	WriteWordLine 1 0 "Zones:"
 	ForEach($Zone in $Zones)
 	{
-		WriteWordLine 2 1 "Zone Name: " $Zone.ZoneName
-		WriteWordLine 0 2 "Current Data Collector: " $Zone.DataCollector
+		WriteWordLine 2 0 $Zone.ZoneName
+		WriteWordLine 0 1 "Current Data Collector: " $Zone.DataCollector
 		$Servers = Get-XAServer -ZoneName $Zone.ZoneName -EA 0 | sort-object ElectionPreference, ServerName
 		If( $? )
 		{		
-			WriteWordLine 0 2 "Servers in Zone"
+			WriteWordLine 0 1 "Servers in Zone"
 	
 			ForEach($Server in $Servers)
 			{
-				WriteWordLine 0 3 "Server Name and Preference: " $server.ServerName -NoNewLine
+				WriteWordLine 0 2 "Server Name and Preference: " $server.ServerName -NoNewLine
 				WriteWordLine 0 0  " - " -nonewline
 				switch ($server.ElectionPreference)
 				{
@@ -4161,7 +4173,7 @@ If( $? )
 		}
 		Else
 		{
-			WriteWordLine 0 2 "Unable to enumerate servers in the zone"
+			WriteWordLine 0 1 "Unable to enumerate servers in the zone"
 		}
 	}
 }
@@ -4184,65 +4196,65 @@ If( $? )
 	WriteWordLine 1 0 "Load Evaluators:"
 	ForEach($LoadEvaluator in $LoadEvaluators)
 	{
-		WriteWordLine 2 1 "Name: " $LoadEvaluator.LoadEvaluatorName
-		WriteWordLine 0 2 "Description: " $LoadEvaluator.Description
+		WriteWordLine 2 0 $LoadEvaluator.LoadEvaluatorName
+		WriteWordLine 0 1 "Description: " $LoadEvaluator.Description
 		
 		If($LoadEvaluator.IsBuiltIn)
 		{
-			WriteWordLine 0 2 "Built-in Load Evaluator"
+			WriteWordLine 0 1 "Built-in Load Evaluator"
 		} 
 		Else 
 		{
-			WriteWordLine 0 2 "User created load evaluator"
+			WriteWordLine 0 1 "User created load evaluator"
 		}
 	
 		If($LoadEvaluator.ApplicationUserLoadEnabled)
 		{
-			WriteWordLine 0 2 "Application User Load Settings"
-			WriteWordLine 0 3 "Report full load when the # of users for this application =: " $LoadEvaluator.ApplicationUserLoad
-			WriteWordLine 0 3 "Application: " $LoadEvaluator.ApplicationBrowserName
+			WriteWordLine 0 1 "Application User Load Settings"
+			WriteWordLine 0 2 "Report full load when the # of users for this application =: " $LoadEvaluator.ApplicationUserLoad
+			WriteWordLine 0 2 "Application: " $LoadEvaluator.ApplicationBrowserName
 		}
 	
 		If($LoadEvaluator.ContextSwitchesEnabled)
 		{
-			WriteWordLine 0 2 "Context Switches Settings"
-			WriteWordLine 0 3 "Report full load when the # of context switches per second is >= than: " $LoadEvaluator.ContextSwitches[1]
-			WriteWordLine 0 3 "Report no load when the # of context switches per second is <= to: " $LoadEvaluator.ContextSwitches[0]
+			WriteWordLine 0 1 "Context Switches Settings"
+			WriteWordLine 0 2 "Report full load when the # of context switches per second is >= than: " $LoadEvaluator.ContextSwitches[1]
+			WriteWordLine 0 2 "Report no load when the # of context switches per second is <= to: " $LoadEvaluator.ContextSwitches[0]
 		}
 	
 		If($LoadEvaluator.CpuUtilizationEnabled)
 		{
-			WriteWordLine 0 2 "CPU Utilization Settings"
-			WriteWordLine 0 3 "Report full load when the processor utilization % is > than: " $LoadEvaluator.CpuUtilization[1]
-			WriteWordLine 0 3 "Report no load when the processor utilization % is <= to: " $LoadEvaluator.CpuUtilization[0]
+			WriteWordLine 0 1 "CPU Utilization Settings"
+			WriteWordLine 0 2 "Report full load when the processor utilization % is > than: " $LoadEvaluator.CpuUtilization[1]
+			WriteWordLine 0 2 "Report no load when the processor utilization % is <= to: " $LoadEvaluator.CpuUtilization[0]
 		}
 	
 		If($LoadEvaluator.DiskDataIOEnabled)
 		{
-			WriteWordLine 0 2 "Disk Data I/O Settings"
-			WriteWordLine 0 3 "Report full load when the total disk I/O in kbps > than: " $LoadEvaluator.DiskDataIO[1]
-			WriteWordLine 0 3 "Report no load when the total disk I/O in kbps <= to: " $LoadEvaluator.DiskDataIO[0]
+			WriteWordLine 0 1 "Disk Data I/O Settings"
+			WriteWordLine 0 2 "Report full load when the total disk I/O in kbps > than: " $LoadEvaluator.DiskDataIO[1]
+			WriteWordLine 0 2 "Report no load when the total disk I/O in kbps <= to: " $LoadEvaluator.DiskDataIO[0]
 		}
 	
 		If($LoadEvaluator.DiskOperationsEnabled)
 		{
-			WriteWordLine 0 2 "Disk Operations Settings"
-			WriteWordLine 0 3 "Report full load when the total # of R/W operations per second is > than: " $LoadEvaluator.DiskOperations[1]
-			WriteWordLine 0 3 "Report no load when the total # of R/W operations per second is <= to: " $LoadEvaluator.DiskOperations[0]
+			WriteWordLine 0 1 "Disk Operations Settings"
+			WriteWordLine 0 2 "Report full load when the total # of R/W operations per second is > than: " $LoadEvaluator.DiskOperations[1]
+			WriteWordLine 0 2 "Report no load when the total # of R/W operations per second is <= to: " $LoadEvaluator.DiskOperations[0]
 		}
 	
 		If($LoadEvaluator.IPRangesEnabled)
 		{
-			WriteWordLine 0 2 "IP Range Settings"
+			WriteWordLine 0 1 "IP Range Settings"
 			If($LoadEvaluator.IPRangesAllowed)
 			{
-				WriteWordLine 0 3 "Allow " -NoNewLine
+				WriteWordLine 0 2 "Allow " -NoNewLine
 			} 
 			Else 
 			{
-				WriteWordLine 0 3 "Deny " -NoNewLine
+				WriteWordLine 0 2 "Deny " -NoNewLine
 			}
-			WriteWordLine 0 3 "client connections from the listed IP Ranges"
+			WriteWordLine 0 2 "client connections from the listed IP Ranges"
 			ForEach($IPRange in $LoadEvaluator.IPRanges)
 			{
 				WriteWordLine 0 4 "IP Address Ranges: " $IPRange
@@ -4251,8 +4263,8 @@ If( $? )
 
 		If($LoadEvaluator.LoadThrottlingEnabled)
 		{
-			WriteWordLine 0 2 "Load Throttling Settings"
-			WriteWordLine 0 3 "Impact of logons on load: " -nonewline
+			WriteWordLine 0 1 "Load Throttling Settings"
+			WriteWordLine 0 2 "Impact of logons on load: " -nonewline
 			switch ($LoadEvaluator.LoadThrottling)
 			{
 				"Unknown"    {WriteWordLine 0 0 "Unknown"}
@@ -4267,41 +4279,41 @@ If( $? )
 		
 		If($LoadEvaluator.MemoryUsageEnabled)
 		{
-			WriteWordLine 0 2 "Memory Usage Settings"
-			WriteWordLine 0 3 "Report full load when the memory usage is > than: " $LoadEvaluator.MemoryUsage[1]
-			WriteWordLine 0 3 "Report no load when the memory usage is <= to: " $LoadEvaluator.MemoryUsage[0]
+			WriteWordLine 0 1 "Memory Usage Settings"
+			WriteWordLine 0 2 "Report full load when the memory usage is > than: " $LoadEvaluator.MemoryUsage[1]
+			WriteWordLine 0 2 "Report no load when the memory usage is <= to: " $LoadEvaluator.MemoryUsage[0]
 		}
 	
 		If($LoadEvaluator.PageFaultsEnabled)
 		{
-			WriteWordLine 0 2 "Page Faults Settings"
-			WriteWordLine 0 3 "Report full load when the # of page faults per second is > than: " $LoadEvaluator.PageFaults[1]
-			WriteWordLine 0 3 "Report no load when the # of page faults per second is <= to: " $LoadEvaluator.PageFaults[0]
+			WriteWordLine 0 1 "Page Faults Settings"
+			WriteWordLine 0 2 "Report full load when the # of page faults per second is > than: " $LoadEvaluator.PageFaults[1]
+			WriteWordLine 0 2 "Report no load when the # of page faults per second is <= to: " $LoadEvaluator.PageFaults[0]
 		}
 	
 		If($LoadEvaluator.PageSwapsEnabled)
 		{
-			WriteWordLine 0 2 "Page Swaps Settings"
-			WriteWordLine 0 3 "Report full load when the # of page swaps per second is > than: " $LoadEvaluator.PageSwaps[1]
-			WriteWordLine 0 3 "Report no load when the # of page swaps per second is <= to: " $LoadEvaluator.PageSwaps[0]
+			WriteWordLine 0 1 "Page Swaps Settings"
+			WriteWordLine 0 2 "Report full load when the # of page swaps per second is > than: " $LoadEvaluator.PageSwaps[1]
+			WriteWordLine 0 2 "Report no load when the # of page swaps per second is <= to: " $LoadEvaluator.PageSwaps[0]
 		}
 	
 		If($LoadEvaluator.ScheduleEnabled)
 		{
-			WriteWordLine 0 2 "Scheduling Settings"
-			WriteWordLine 0 3 "Sunday Schedule`t: " $LoadEvaluator.SundaySchedule
-			WriteWordLine 0 3 "Monday Schedule`t: " $LoadEvaluator.MondaySchedule
-			WriteWordLine 0 3 "Tuesday Schedule`t: " $LoadEvaluator.TuesdaySchedule
-			WriteWordLine 0 3 "Wednesday Schedule`t: " $LoadEvaluator.WednesdaySchedule
-			WriteWordLine 0 3 "Thursday Schedule`t: " $LoadEvaluator.ThursdaySchedule
-			WriteWordLine 0 3 "Friday Schedule`t`t: " $LoadEvaluator.FridaySchedule
-			WriteWordLine 0 3 "Saturday Schedule`t: " $LoadEvaluator.SaturdaySchedule
+			WriteWordLine 0 1 "Scheduling Settings"
+			WriteWordLine 0 2 "Sunday Schedule`t: " $LoadEvaluator.SundaySchedule
+			WriteWordLine 0 2 "Monday Schedule`t: " $LoadEvaluator.MondaySchedule
+			WriteWordLine 0 2 "Tuesday Schedule`t: " $LoadEvaluator.TuesdaySchedule
+			WriteWordLine 0 2 "Wednesday Schedule`t: " $LoadEvaluator.WednesdaySchedule
+			WriteWordLine 0 2 "Thursday Schedule`t: " $LoadEvaluator.ThursdaySchedule
+			WriteWordLine 0 2 "Friday Schedule`t`t: " $LoadEvaluator.FridaySchedule
+			WriteWordLine 0 2 "Saturday Schedule`t: " $LoadEvaluator.SaturdaySchedule
 		}
 
 		If($LoadEvaluator.ServerUserLoadEnabled)
 		{
-			WriteWordLine 0 2 "Server User Load Settings"
-			WriteWordLine 0 3 "Report full load when the # of server users equals: " $LoadEvaluator.ServerUserLoad
+			WriteWordLine 0 1 "Server User Load Settings"
+			WriteWordLine 0 2 "Report full load when the # of server users equals: " $LoadEvaluator.ServerUserLoad
 		}
 	
 		WriteWordLine 0 0 ""
@@ -4321,10 +4333,11 @@ If( $? -and $Policies)
 	WriteWordLine 1 0 "Policies:"
 	ForEach($Policy in $Policies)
 	{
-		WriteWordLine 2 1 "Policy Name: " $Policy.PolicyName
-		WriteWordLine 0 2 "Description: " $Policy.Description
-		WriteWordLine 0 2 "Enabled: " $Policy.Enabled
-		WriteWordLine 0 2 "Priority: " $Policy.Priority
+		Write-Verbose "`t`tProcessing policy $($Policy.PolicyName)"
+		WriteWordLine 2 0 $Policy.PolicyName
+		WriteWordLine 0 1 "Description: " $Policy.Description
+		WriteWordLine 0 1 "Enabled: " $Policy.Enabled
+		WriteWordLine 0 1 "Priority: " $Policy.Priority
 
 		$filter = Get-XAPolicyFilter -PolicyName $Policy.PolicyName -EA 0
 
@@ -4332,30 +4345,30 @@ If( $? -and $Policies)
 		{
 			If($Filter)
 			{
-				WriteWordLine 0 2 "Policy Filters:"
+				WriteWordLine 0 1 "Policy Filters:"
 				
 				If($Filter.AccessControlEnabled)
 				{
 					If($Filter.AllowConnectionsThroughAccessGateway)
 					{
-						WriteWordLine 0 3 "Apply to connections made through Access Gateway"
+						WriteWordLine 0 2 "Apply to connections made through Access Gateway"
 						If($Filter.AccessSessionConditions)
 						{
-							WriteWordLine 0 4 "Any connection that meets any of the following filters"
+							WriteWordLine 0 3 "Any connection that meets any of the following filters"
 							ForEach($Condition in $Filter.AccessSessionConditions)
 							{
 								$Colon = $Condition.IndexOf(":")
 								$CondName = $Condition.SubString(0,$Colon)
 								$CondFilter = $Condition.SubString($Colon+1)
-								WriteWordLine 0 5 "Access Gateway Farm Name: " $CondName -NoNewLine
+								WriteWordLine 0 4 "Access Gateway Farm Name: " $CondName -NoNewLine
 								WriteWordLine 0 0 " Filter Name: " $CondFilter
 							}
 						}
 						Else
 						{
-							WriteWordLine 0 4 "Any connection"
+							WriteWordLine 0 3 "Any connection"
 						}
-						WriteWordLine 0 4 "Apply to all other connections: " -nonewline
+						WriteWordLine 0 3 "Apply to all other connections: " -nonewline
 						If($Filter.AllowOtherConnections)
 						{
 							WriteWordLine 0 0 "Yes"
@@ -4367,12 +4380,12 @@ If( $? -and $Policies)
 					}
 					Else
 					{
-						WriteWordLine 0 3 "Do not apply to connections made through Access Gateway"
+						WriteWordLine 0 2 "Do not apply to connections made through Access Gateway"
 					}
 				}
 				If($Filter.ClientIPAddressEnabled)
 				{
-					WriteWordLine 0 3 "Apply to all client IP addresses: " -nonewline
+					WriteWordLine 0 2 "Apply to all client IP addresses: " -nonewline
 					If($Filter.ApplyToAllClientIPAddresses)
 					{
 						WriteWordLine 0 0 "Yes"
@@ -4383,24 +4396,24 @@ If( $? -and $Policies)
 					}
 					If($Filter.AllowedIPAddresses)
 					{
-						WriteWordLine 0 3 "Allowed IP Addresses:"
+						WriteWordLine 0 2 "Allowed IP Addresses:"
 						ForEach($Allowed in $Filter.AllowedIPAddresses)
 						{
-							WriteWordLine 0 4 $Allowed
+							WriteWordLine 0 3 $Allowed
 						}
 					}
 					If($Filter.DeniedIPAddresses)
 					{
-						WriteWordLine 0 3 "Denied IP Addresses:"
+						WriteWordLine 0 2 "Denied IP Addresses:"
 						ForEach($Denied in $Filter.DeniedIPAddresses)
 						{
-							WriteWordLine 0 4 $Denied
+							WriteWordLine 0 3 $Denied
 						}
 					}
 				}
 				If($Filter.ClientNameEnabled)
 				{
-					WriteWordLine 0 3 "Apply to all client names: " -nonewline
+					WriteWordLine 0 2 "Apply to all client names: " -nonewline
 					If($Filter.ApplyToAllClientNames)
 					{
 						WriteWordLine 0 0 "Yes"
@@ -4411,18 +4424,18 @@ If( $? -and $Policies)
 					}
 					If($Filter.AllowedClientNames)
 					{
-						WriteWordLine 0 3 "Allowed Client Names:"
+						WriteWordLine 0 2 "Allowed Client Names:"
 						ForEach($Allowed in $Filter.AllowedClientNames)
 						{
-							WriteWordLine 0 4 $Allowed
+							WriteWordLine 0 3 $Allowed
 						}
 					}
 					If($Filter.DeniedClientNames)
 					{
-						WriteWordLine 0 3 "Denied Client Names:"
+						WriteWordLine 0 2 "Denied Client Names:"
 						ForEach($Denied in $Filter.DeniedClientNames)
 						{
-							WriteWordLine 0 4 $Denied
+							WriteWordLine 0 3 $Denied
 						}
 					}
 				}
@@ -4430,40 +4443,40 @@ If( $? -and $Policies)
 				{
 					If($Filter.AllowedServerNames)
 					{
-						WriteWordLine 0 3 "Allowed Server Names:"
+						WriteWordLine 0 2 "Allowed Server Names:"
 						ForEach($Allowed in $Filter.AllowedServerNames)
 						{
-							WriteWordLine 0 4 $Allowed
+							WriteWordLine 0 3 $Allowed
 						}
 					}
 					If($Filter.DeniedServerNames)
 					{
-						WriteWordLine 0 3 "Denied Server Names:"
+						WriteWordLine 0 2 "Denied Server Names:"
 						ForEach($Denied in $Filter.DeniedServerNames)
 						{
-							WriteWordLine 0 4 $Denied
+							WriteWordLine 0 3 $Denied
 						}
 					}
 					If($Filter.AllowedServerFolders)
 					{
-						WriteWordLine 0 3 "Allowed Server Folders:"
+						WriteWordLine 0 2 "Allowed Server Folders:"
 						ForEach($Allowed in $Filter.AllowedServerFolders)
 						{
-							WriteWordLine 0 4 $Allowed
+							WriteWordLine 0 3 $Allowed
 						}
 					}
 					If($Filter.DeniedServerFolders)
 					{
-						WriteWordLine 0 3 "Denied Server Folders:"
+						WriteWordLine 0 2 "Denied Server Folders:"
 						ForEach($Denied in $Filter.DeniedServerFolders)
 						{
-							WriteWordLine 0 4 $Denied
+							WriteWordLine 0 3 $Denied
 						}
 					}
 				}
 				If($Filter.AccountEnabled)
 				{
-					WriteWordLine 0 3 "Apply to all explicit (non-anonymous) users: " -nonewline
+					WriteWordLine 0 2 "Apply to all explicit (non-anonymous) users: " -nonewline
 					If($Filter.ApplyToAllExplicitAccounts)
 					{
 						WriteWordLine 0 0 "Yes"
@@ -4472,7 +4485,7 @@ If( $? -and $Policies)
 					{
 						WriteWordLine 0 0 "No"
 					}
-					WriteWordLine 0 3 "Apply to anonymous users: " -nonewline
+					WriteWordLine 0 2 "Apply to anonymous users: " -nonewline
 					If($Filter.ApplyToAnonymousAccounts)
 					{
 						WriteWordLine 0 0 "Yes"
@@ -4483,37 +4496,37 @@ If( $? -and $Policies)
 					}
 					If($Filter.AllowedAccounts)
 					{
-						WriteWordLine 0 3 "Allowed Accounts:"
+						WriteWordLine 0 2 "Allowed Accounts:"
 						ForEach($Allowed in $Filter.AllowedAccounts)
 						{
-							WriteWordLine 0 4 $Allowed
+							WriteWordLine 0 3 $Allowed
 						}
 					}
 					If($Filter.DeniedAccounts)
 					{
-						WriteWordLine 0 3 "Denied Accounts:"
+						WriteWordLine 0 2 "Denied Accounts:"
 						ForEach($Denied in $Filter.DeniedAccounts)
 						{
-							WriteWordLine 0 4 $Denied
+							WriteWordLine 0 3 $Denied
 						}
 					}
 				}
 			}
 			Else
 			{
-				WriteWordLine 0 2 "No filter information"
+				WriteWordLine 0 1 "No filter information"
 			}
 		}
 		Else
 		{
-			WriteWordLine 0 2 "Unable to retrieve Filter settings"
+			WriteWordLine 0 1 "Unable to retrieve Filter settings"
 		}
 
 		$Global:Settings = Get-XAPolicyConfiguration -PolicyName $Policy.PolicyName -EA 0
 
 		If( $? )
 		{
-			WriteWordLine 0 2 "Policy Settings:"
+			WriteWordLine 0 1 "Policy Settings:"
 			ForEach($Setting in $Settings)
 			{
 				If($FarmOS -eq "2003")
@@ -4528,7 +4541,7 @@ If( $? -and $Policies)
 		}
 		Else
 		{
-			WriteWordLine 0 2 "Unable to retrieve settings"
+			WriteWordLine 0 1 "Unable to retrieve settings"
 		}
 	
 		$Global:Settings = $null
