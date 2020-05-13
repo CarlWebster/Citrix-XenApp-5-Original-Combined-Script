@@ -139,9 +139,9 @@
 	No objects are output from this script.  This script creates a Word document.
 .NOTES
 	NAME: XA5_Inventory_V4.ps1
-	VERSION: 4.00
+	VERSION: 4.01
 	AUTHOR: Carl Webster (with a lot of help from Michael B. Smith and Jeff Wouters)
-	LASTEDIT: November 2, 2013
+	LASTEDIT: November 12, 2013
 #>
 
 
@@ -238,6 +238,8 @@ $PSDefaultParameterValues = @{"*:Verbose"=$True}
 #	Strongly type all possible variables
 #	Verify Get-HotFix cmdlet worked.  If not, write error & suggestion to document
 #	Verify Word object is created.  If not, write error & suggestion to document and abort script
+#Updated 12-Nov-2013
+#	Added back in the French sections that somehow got removed
 
 Set-StrictMode -Version 2
 
@@ -316,6 +318,12 @@ Switch ($PSUICulture.Substring(0,3))
 	'fi-'	{
 			$hash.($($PSUICulture)) = @{
 				'Word_TableOfContents' = 'Automaattinen taulukko 2';
+			}
+		}
+
+	'fr-'	{
+			$hash.($($PSUICulture)) = @{
+				'Word_TableOfContents' = 'Sommaire Automatique 2';
 			}
 		}
 
