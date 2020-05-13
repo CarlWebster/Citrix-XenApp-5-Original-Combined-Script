@@ -8,12 +8,35 @@ This is the first documentation script I created. I was learning PowerShell for 
 
 A bit of history.
 The first script was the XenApp 5 script.
-Second was XenApp 6.0.
-Third was XenApp 6.5.
-Fourth was XenDesktop 4.
-Fifth was PVS.
+The second was XenApp 6.0.
+The third was XenApp 6.5.
+The fourth was XenDesktop 4.
+The fifth was PVS.
 
-As of 13-May-2020, there are 27 documentation scripts and 32 other scripts and files available for download on https://CarlWebster.com/Downloads
+As of 13-May-2020, there are 27 documentation scripts and 32 other scripts and files available for download on https://lnkd.in/eKZ7dJF
+
+There would have been no scripts released without the encouragement of Jarian Gibson & the patience of my main teacher, mentor, & friend Michael B. Smith.
+
+Many people were involved in the scripts over the years. It all started with a blog post by Michael Bogobowicz.
+
+https://lnkd.in/erR7mQq
+
+A partial list of contributors, sorry for those I left out but there are 100s of contributors.
+
+Kees Baggerman
+Esther Barthel
+Jeff Wouters
+Bart Jacobs
+Barry Schiffer
+Jeremy Saunders
+Sam Jacobs
+David O'Brien
+Andrew Morgan
+Andrew McCullough
+Arnaud PAIN
+Wouter Arts
+
+Between all the various PowerShell scripts, I manage over 300,000 lines of code.
 
 	Creates a complete inventory of a Citrix XenApp 5 farm using Microsoft Word and PowerShell.
 	Works for XenApp 5 Server 2003 32-bit and 64-bit and XenApp 5 Server 2008 32-bit and 64-bit
