@@ -87,9 +87,9 @@
 	http://www.carlwebster.com/documenting-a-citrix-xenapp-5-farm-with-microsoft-powershell-and-word-version-2
 .NOTES
 	NAME: XA5_Inventory_V2.ps1
-	VERSION: 2
+	VERSION: 2.01
 	AUTHOR: Carl Webster (with a lot of help from Michael B. Smith and Jeff Wouters)
-	LASTEDIT: March 14, 2013
+	LASTEDIT: April 20, 2013
 #>
 
 
@@ -119,6 +119,9 @@ Param([parameter(
 	[ValidateNotNullOrEmpty()]
 	[string]$UserName=$env:username )
 
+
+Set-StrictMode -Version 2
+
 #Original Script created 8/17/2010 by Michael Bogobowicz, Citrix Systems.
 #To contact, please message @mikebogo on Twitter
 #The original script was designed to be run on a XenApp 6 server
@@ -144,6 +147,9 @@ Param([parameter(
 #	Created a table for Microsoft hotfixes
 #Updated March 14, 2013
 #	?{?_.SessionId -eq $SessionID} should have been ?{$_.SessionId -eq $SessionID} in the CheckWordPrereq function
+#Updated April 20, 2013
+#	Fixed five typos dealing with Session Printer policy settings
+#	Fixed a compatibility issue with the way the Word file was saved and Set-StrictMode -Version 2
 
 Function CheckWordPrereq
 {
@@ -733,10 +739,10 @@ Function Process2003Policies
 				}
 			}
 		}
-		If($Setting.SessionPrinters.State -ne "NotConfigured")
+		If($Setting.SessionPrintersState -ne "NotConfigured")
 		{
-			WriteWordLine 0 4 "Printing\Session printers\Session printers: " $Setting.SessionPrinters.State
-			If($Setting.SessionPrinters.State -eq "Enabled")
+			WriteWordLine 0 4 "Printing\Session printers\Session printers: " $Setting.SessionPrintersState
+			If($Setting.SessionPrintersState -eq "Enabled")
 			{
 				If($Setting.SessionPrinterList)
 				{
@@ -1135,7 +1141,7 @@ Function Process2008Policies
 
 	$xArray = (	$Setting.SessionAudioPercentState,		$Setting.SessionClipboardPercentState,		$Setting.SessionComportsPercentState, 
 			$Setting.SessionDrivesPercentState,		$Setting.SessionLptPortsPercentState,		$Setting.SessionOemChannelsPercentState, 
-			$Setting.SessionOverallPercentState,	$Setting.SessionPrinterBandwidthPercentState,	$Setting.SessionTwainRedirectionPercentState )
+			$Setting.SessionOverallState,	$Setting.SessionPrinterPercentState,	$Setting.SessionTwainRedirectionPercentState )
 	If($xArray -contains "Enabled" -or $xArray -contains "Disabled")
 	{
 		WriteWordLine 0 3 'Bandwidth\Session Limits (%)\'
@@ -1831,7 +1837,6 @@ $wdColorGray15 = 14277081
 # Setup word for output
 write-verbose "Create Word comObject.  Ignore the next message."
 $Word = New-Object -comobject "Word.Application"
-[ref]$SaveFormat = "microsoft.office.interop.word.WdSaveFormat" -as [type] 
 $WordVersion = [int] $Word.Version
 If ( $WordVersion -eq 14)
 {
@@ -4655,10 +4660,17 @@ If($CoverPagesExist)
 	$doc.TablesOfContents.item(1).Update()
 }
 
+#the $saveFormat below passes StrictMode 2
+#I found this at the following two links
+#http://blogs.technet.com/b/bshukla/archive/2011/09/27/3347395.aspx
+#http://msdn.microsoft.com/en-us/library/microsoft.office.interop.word.wdsaveformat(v=office.14).aspx
 write-verbose "Save and Close document and Shutdown Word"
-$doc.SaveAs([REF]$filename, [ref]$SaveFormat::wdFormatDocument)
-
+$saveFormat = [Enum]::Parse([Microsoft.Office.Interop.Word.WdSaveFormat], "wdFormatDocumentDefault")
+$doc.SaveAs([REF]$filename, [ref]$SaveFormat)
 $doc.Close()
 $Word.Quit()
+[System.Runtime.Interopservices.Marshal]::ReleaseComObject($Word) | out-null
+Remove-Variable -Name word
 [gc]::collect() 
 [gc]::WaitForPendingFinalizers()
+
